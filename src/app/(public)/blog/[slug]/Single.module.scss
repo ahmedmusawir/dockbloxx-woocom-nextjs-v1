@@ -1,0 +1,200 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+.wp-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 5rem;
+  background-color: #fff;
+  border-radius: 15px;
+  border: 1px solid #e3e3e3;
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.05);
+
+  /* Typography styles */
+  h1 {
+    font-size: 2.5rem;
+    color: #0070f3;
+    font-family: "Poppins", sans-serif;
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid #ddd;
+    padding-bottom: 0.5rem;
+  }
+
+  h2 {
+    font-size: 2rem;
+    color: #0070f3;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 1.75rem;
+    color: #0070f3;
+    // color: #555;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+  }
+
+  p {
+    font-family: "Poppins", sans-serif;
+    line-height: 1.7;
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Styling for blockquotes */
+  blockquote {
+    padding: 1.5rem;
+    margin: 2rem 0;
+    background-color: #f7f7f7;
+    border-left: 5px solid #0070f3;
+    font-style: italic;
+    font-size: 1.2rem;
+  }
+
+  // em {
+  //   border: 2px dotted red;
+  // }
+
+  img {
+    display: block;
+    margin: 2rem auto;
+    border-radius: 5px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    max-width: 100%;
+  }
+
+  [data-id] {
+    /* Target elements that have a data-id attribute */
+    padding: 10px;
+    border: 1px solid #d5d4d4;
+    box-shadow: 13px 13px 8px #e3e3e3;
+  }
+
+  /* Links */
+  a {
+    color: #0070f3;
+    text-decoration: underline;
+    &:hover {
+      color: #005bb5;
+    }
+  }
+
+  /* Lists */
+  //   ul {
+  //     margin: 2rem 0;
+  //     padding-left: 1.5rem;
+  //     list-style-type: disc;
+
+  //     li {
+  //       margin-bottom: 1rem;
+  //     }
+  //   }
+
+  //   ol {
+  //     margin: 2rem 0;
+  //     padding-left: 1.5rem;
+  //     list-style-type: decimal;
+
+  //     li {
+  //       margin-bottom: 1rem;
+  //     }
+  //   }
+
+  ul {
+    list-style-type: none; /* Remove default bullets */
+    padding-left: 20px; /* Add some padding to the left */
+
+    li {
+      position: relative;
+      padding-left: 20px; /* Space for custom bullet */
+
+      /* Custom bullet using ::before */
+      &::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0.5em; /* Adjust positioning */
+        width: 10px; /* Size of the bullet */
+        height: 10px;
+        background-color: red; /* Bullet color */
+        border-radius: 50%; /* Make it a circle */
+      }
+    }
+  }
+
+  ol {
+    padding-left: 20px;
+    list-style-type: none; /* Remove default numbering */
+
+    li {
+      counter-increment: list-counter;
+      position: relative;
+      padding-left: 25px;
+
+      &::before {
+        content: counter(list-counter) "."; /* Custom numbering */
+        position: absolute;
+        left: 0;
+        top: 0;
+        font-weight: bold;
+        color: red;
+      }
+    }
+  }
+
+  /* Styling for tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2rem 0;
+
+    th,
+    td {
+      padding: 1.5rem;
+      border: 1px solid #ddd;
+      text-align: center;
+      font-family: "Poppins", sans-serif;
+    }
+
+    th {
+      background-color: darken(slategray, 30%);
+      color: white !important;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    td {
+      background-color: #f4f4f4;
+    }
+
+    tr:nth-child(even) td {
+      background-color: #eaeaea;
+    }
+
+    tr:hover td {
+      background-color: #d6e0f5;
+    }
+  }
+
+  /* Responsive styling */
+  @media (max-width: 768px) {
+    padding: 3rem;
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      font-size: 16px;
+    }
+  }
+}
