@@ -33,7 +33,6 @@ export const fetchPaginatedProducts = async (
     headers: {
       "Content-Type": "application/json",
     },
-    next: { revalidate: 60 }, // Cache the response for 60 seconds
   });
 
   if (!response.ok) {
