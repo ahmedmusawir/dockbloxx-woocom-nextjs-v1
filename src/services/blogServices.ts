@@ -1,4 +1,4 @@
-const WORDPRESS_API_URL = process.env.NEXT_PUBLIC_WORDPRESS_API_URL!;
+const WORDPRESS_GRAPHQL_URL = process.env.NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL!;
 /**
  * Import: GraphQL Query for Fetching a Single Post by Slug
  *
@@ -43,7 +43,7 @@ export const fetchAllPostSlugs = async (): Promise<string[]> => {
   let endCursor: string | null = null;
 
   while (hasNextPage) {
-    const response: PostSlugResponse = await fetch(WORDPRESS_API_URL, {
+    const response: PostSlugResponse = await fetch(WORDPRESS_GRAPHQL_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -114,7 +114,7 @@ export const fetchAllPostSlugs = async (): Promise<string[]> => {
  * - **Error Handling**: Throws an error if the API request fails or the response is invalid.
  *
  * ## Dependencies
- * - Requires `NEXT_PUBLIC_WORDPRESS_API_URL` environment variable.
+ * - Requires `NEXT_PUBLIC_WORDPRESS_GRAPHQL_URL` environment variable.
  * - GraphQL query is imported from `/graphql/queries/posts/getAllPosts.ts`.
  *
  * ## Use Case
@@ -132,7 +132,7 @@ export const fetchBlogPosts = async (
   first: number,
   after: string | null
 ): Promise<BlogPostsResponse> => {
-  const response = await fetch(WORDPRESS_API_URL, {
+  const response = await fetch(WORDPRESS_GRAPHQL_URL, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -144,6 +144,7 @@ export const fetchBlogPosts = async (
     next: {
       revalidate: 60, // Revalidate the cached data every 60 seconds
     },
+    // cache: "no-store",
   });
 
   if (!response.ok) {
@@ -198,7 +199,7 @@ export const fetchBlogPosts = async (
  * - **Revalidation**: Sets a 60-second cache revalidation to improve performance and freshness.
  *
  * ## Dependencies
- * - Requires `WORDPRESS_API_URL` environment variable for the WordPress GraphQL endpoint.
+ * - Requires `WORDPRESS_GRAPHQL_URL` environment variable for the WordPress GraphQL endpoint.
  *
  * ## Error Handling
  * - Throws an error if the API request fails or the response is not `ok`.
@@ -215,7 +216,7 @@ interface SinglePostRespone {
 export const fetchSinglePostBySlug = async (
   slug: string | null
 ): Promise<SinglePostRespone> => {
-  const response = await fetch(WORDPRESS_API_URL || "", {
+  const response = await fetch(WORDPRESS_GRAPHQL_URL || "", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

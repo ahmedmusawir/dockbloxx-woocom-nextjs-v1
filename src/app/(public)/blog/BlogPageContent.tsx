@@ -9,6 +9,8 @@ const BlogPageContent = async () => {
     hasNextPage,
   } = await fetchBlogPosts(6, null); // Fetch first 6 posts
 
+  console.log("posts [BlogPageContent.tsx]", initialPosts);
+
   return (
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
