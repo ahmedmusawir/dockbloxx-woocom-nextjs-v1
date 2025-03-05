@@ -90,7 +90,7 @@ export const fetchInitialProducts = async (
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 60 }, // Cache the response for 60 seconds
+      next: { revalidate: 300 }, // Cache the response for 60 seconds
     });
 
     if (!response.ok) {
@@ -233,7 +233,7 @@ export const fetchProductBySlug = async (
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 60 }, // Cache the response for 60 seconds
+      next: { revalidate: 300 }, // Cache the response for 60 seconds
     });
 
     if (!response.ok) {
@@ -301,7 +301,7 @@ export const fetchProductVariationsById = async (
             headers: {
               "Content-Type": "application/json",
             },
-            next: { revalidate: 60 }, // Cache the response for 60 seconds
+            next: { revalidate: 300 }, // Cache the response for 60 seconds
           }
         );
 
@@ -369,7 +369,7 @@ export const fetchRelatedProductsById = async (
             headers: {
               "Content-Type": "application/json",
             },
-            next: { revalidate: 60 }, // Cache the response for 60 seconds
+            next: { revalidate: 300 }, // Cache the response for 60 seconds
           }
         );
 
@@ -459,7 +459,7 @@ export const fetchPoleShapeStyles = async (): Promise<
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 60 }, // Cache the response for 60 seconds
+      next: { revalidate: 300 }, // Cache the response for 60 seconds
     });
 
     if (!response.ok) {

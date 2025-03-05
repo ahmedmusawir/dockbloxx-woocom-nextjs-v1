@@ -142,7 +142,7 @@ export const fetchBlogPosts = async (
       variables: { first, after },
     }),
     next: {
-      revalidate: 60, // Revalidate the cached data every 60 seconds
+      revalidate: 300, // Revalidate the cached data every 60 seconds
     },
     // cache: "no-store",
   });
@@ -226,7 +226,7 @@ export const fetchSinglePostBySlug = async (
       variables: { slug },
     }),
     next: {
-      revalidate: 60, // Revalidate the cached data every 60 seconds
+      revalidate: 300, // Revalidate the cached data every 60 seconds
     },
   });
 

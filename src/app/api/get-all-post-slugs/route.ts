@@ -47,7 +47,7 @@ export async function GET() {
         variables,
       }),
       next: {
-        revalidate: 60, // Revalidate cache every 60 seconds
+        revalidate: 300, // Revalidate cache every 60 seconds
       },
     });
 
