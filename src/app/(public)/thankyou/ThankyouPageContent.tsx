@@ -21,12 +21,27 @@ const ThankyouPageContent = () => {
     clearCart();
     removeCoupon();
 
+    // Scroll to the top of the page when the component loads
+    window.scrollTo(0, 0);
+
     // Retrieve the latest order from localStorage
     const storedOrder = localStorage.getItem("latestOrder");
     if (storedOrder) {
       setLatestOrder(JSON.parse(storedOrder));
     }
   }, [clearCart, removeCoupon]);
+
+  // useEffect(() => {
+  //   // Clear the cart and coupon AFTER the order is finalized
+  //   clearCart();
+  //   removeCoupon();
+
+  //   // Retrieve the latest order from localStorage
+  //   const storedOrder = localStorage.getItem("latestOrder");
+  //   if (storedOrder) {
+  //     setLatestOrder(JSON.parse(storedOrder));
+  //   }
+  // }, [clearCart, removeCoupon]);
 
   // Makes sure Zustand states are loaded
   if (isLoading) {
