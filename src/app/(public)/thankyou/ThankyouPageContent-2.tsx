@@ -5,13 +5,13 @@ import { regCustomer } from "@/services/customerService";
 import { useCartStore } from "@/store/useCartStore";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 const ThankyouPageContent = () => {
   const { isLoading, clearCart } = useCartStore();
   const { removeCoupon, checkoutData, enableRegistration } = useCheckoutStore();
   const [latestOrder, setLatestOrder] = useState<any>(null);
-  const isCustomerRegistered = useRef(false);
+  const [isCustomerRegistered, setIsCustomerRegistered] = useState(false);
 
   useEffect(() => {
     // Clear the cart and coupon AFTER the order is finalized
@@ -27,13 +27,13 @@ const ThankyouPageContent = () => {
       setLatestOrder(JSON.parse(storedOrder));
     }
 
-    // Register customer only once
+    // Register customer only once and avoid re-renders
     if (
-      !isCustomerRegistered.current &&
+      !isCustomerRegistered &&
       enableRegistration &&
       checkoutData.billing.email
     ) {
-      isCustomerRegistered.current = true; // Prevent infinite loop
+      setIsCustomerRegistered(true); // Prevent infinite loop
       regCustomer({
         email: checkoutData.billing.email,
         first_name: checkoutData.billing.first_name,

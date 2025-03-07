@@ -39,6 +39,8 @@ interface CheckoutStore {
   setEmailSaved: (value: boolean) => void;
   isAnyBlockEditing: boolean;
   setIsAnyBlockEditing: (value: boolean) => void;
+  enableRegistration: boolean; // NEW: Tracks if user wants to register an account
+  setEnableRegistration: (value: boolean) => void; // NEW: Setter function for enableRegistration
 }
 
 type CheckoutPersist = (
@@ -49,6 +51,9 @@ type CheckoutPersist = (
 export const useCheckoutStore = create<CheckoutStore>()(
   persist(
     (set, get) => ({
+      enableRegistration: true, // Default: Registration is enabled
+      setEnableRegistration: (value: boolean) =>
+        set({ enableRegistration: value }),
       orderId: null,
       setOrderId: (id) => set({ orderId: id }),
       paymentIntentClientSecret: "", // Initially empty

@@ -8,8 +8,6 @@ const ContactEmail = () => {
     setShipping,
     setEmailSaved,
     setIsAnyBlockEditing,
-    enableRegistration,
-    setEnableRegistration,
   } = useCheckoutStore();
   const email = checkoutData.billing.email || "";
   const [error, setError] = useState("");
@@ -85,23 +83,6 @@ const ContactEmail = () => {
           </button>
         </div>
       )}
-
-      {/* Enable Registration Checkbox */}
-      <div className="mt-3 flex items-center">
-        <input
-          id="enable-registration"
-          type="checkbox"
-          checked={enableRegistration}
-          onChange={() => setEnableRegistration(!enableRegistration)}
-          className="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
-        />
-        <label
-          htmlFor="enable-registration"
-          className="ml-2 text-sm text-gray-900"
-        >
-          Enable Registration
-        </label>
-      </div>
     </div>
   );
 };
