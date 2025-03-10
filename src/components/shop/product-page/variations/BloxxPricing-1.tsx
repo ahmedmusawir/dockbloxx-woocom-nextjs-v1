@@ -235,49 +235,6 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
     }
   }, [selectedShape]);
 
-  // Handle shape selection
-  const handleShapeSelection = (shape: string) => {
-    setSelectedShape(shape); // Update the selected shape
-    filterOptionsByShape(shape); // Reset versions and sizes for the new shape
-
-    // Determine the default pole style based on the shape
-    let defaultStyle: string | null = null;
-    switch (shape.toLowerCase()) {
-      case "square":
-        defaultStyle = "square";
-        break;
-      case "round":
-        defaultStyle = "round";
-        break;
-      case "octagon":
-        defaultStyle = "round_octagon"; // Default for Octagon
-        break;
-      default:
-        defaultStyle = null;
-    }
-    setSelectedPoleStyle(defaultStyle);
-
-    // Ensure the first size option is selected as default
-    const defaultSize = filteredSizes.length > 0 ? filteredSizes[0] : "Unknown";
-    setSelectedSize(defaultSize);
-
-    // Update the cart item to reflect the selected shape, style, and size
-    setCartItem((prev) => {
-      const updatedVariations = [
-        ...(prev.variations || []).filter(
-          (v) => v.name !== "Pole Shape" && v.name !== "Pole Size"
-        ),
-        { name: "Pole Shape", value: shape },
-        { name: "Pole Size", value: defaultSize },
-      ];
-
-      return {
-        ...prev,
-        variations: updatedVariations,
-      };
-    });
-  };
-
   // ---------- UTILITY FUNCTIONS --------------------------------------------
 
   // Extract unique Pole Shapes
@@ -330,7 +287,13 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
 
   // Calculate current price when all selections are made
   const calculatePrice = () => {
+    let variationId = null;
+
     const matchedVariation = variations.find((variation) => {
+      console.log(
+        "Variation ID [BloxxPrice.tsx: calculatePrice]",
+        variation.id
+      );
       const shapeMatch = variation.attributes.find(
         (attr) => attr.name === "Pole Shape" && attr.option === selectedShape
       );
@@ -353,15 +316,67 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
     setCurrentPrice(price ? `$${price}` : "Select options");
     onPriceChange(price); // Pass the price to the parent component
 
+    if (matchedVariation) {
+      variationId = matchedVariation.id; // 2. Extract variation.id and store it
+      console.log(
+        "Extracted Variation ID [BloxxPrice.tsx: calculatePrice]:",
+        variationId
+      ); // Verification log
+    }
+
     // Update cart item with the calculated price
     setCartItem((prev) => ({
       ...prev,
+      variation_id: variationId || undefined,
       basePrice: price || 0,
       price: (price || 0) * prev.quantity,
     }));
   };
 
   // ---------- HANDLER FUNCTIONS -------------------------------------------
+
+  // Handle shape selection
+  const handleShapeSelection = (shape: string) => {
+    setSelectedShape(shape); // Update the selected shape
+    filterOptionsByShape(shape); // Reset versions and sizes for the new shape
+
+    // Determine the default pole style based on the shape
+    let defaultStyle: string | null = null;
+    switch (shape.toLowerCase()) {
+      case "square":
+        defaultStyle = "square";
+        break;
+      case "round":
+        defaultStyle = "round";
+        break;
+      case "octagon":
+        defaultStyle = "round_octagon"; // Default for Octagon
+        break;
+      default:
+        defaultStyle = null;
+    }
+    setSelectedPoleStyle(defaultStyle);
+
+    // Ensure the first size option is selected as default
+    const defaultSize = filteredSizes.length > 0 ? filteredSizes[0] : "Unknown";
+    setSelectedSize(defaultSize);
+
+    // Update the cart item to reflect the selected shape, style, and size
+    setCartItem((prev) => {
+      const updatedVariations = [
+        ...(prev.variations || []).filter(
+          (v) => v.name !== "Pole Shape" && v.name !== "Pole Size"
+        ),
+        { name: "Pole Shape", value: shape },
+        { name: "Pole Size", value: defaultSize },
+      ];
+
+      return {
+        ...prev,
+        variations: updatedVariations,
+      };
+    });
+  };
 
   // Handle Pole Style Change
   const handlePoleStyleChange = (selectedStyle: string) => {

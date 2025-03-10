@@ -501,14 +501,15 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
       )}
 
       {/* Pole Size Options */}
+      {/* Pole Size Options */}
       <div className="mb-4">
         <h3 className="text-sm text-gray-600">Pole Size</h3>
-        <div className="flex gap-3 mt-2">
+        <div className="flex flex-wrap gap-3 mt-2 justify-start">
           {filteredSizes.map((size) => (
             <button
               key={size}
               onClick={() => handleSizeSelection(size)}
-              className={`px-4 py-2 rounded-md text-sm font-medium shadow-sm ${
+              className={`px-3 py-2 min-w-[50px] rounded-md text-sm font-medium shadow-sm ${
                 selectedSize === size
                   ? "bg-indigo-500 text-white"
                   : "bg-white text-gray-900 border border-gray-300 hover:bg-gray-100"
@@ -518,6 +519,7 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
             </button>
           ))}
         </div>
+
         {/* Render the custom size input if "Other" is selected */}
         {selectedSize === "Other" && (
           <div className="mt-3">

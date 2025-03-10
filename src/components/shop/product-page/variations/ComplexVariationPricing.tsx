@@ -126,12 +126,12 @@ const ComplexVariationPricing = ({ onPriceChange, setCartItem }: Props) => {
             <h3 className="text-sm font-medium text-gray-600">
               {attributeName}
             </h3>
-            <div className="flex gap-3 mt-2">
+            <div className="flex flex-wrap gap-3 mt-2 justify-start">
               {filterOptions(attributeName).map((option) => (
                 <button
                   key={option}
                   onClick={() => handleOptionClick(attributeName, option)}
-                  className={`px-4 py-2 rounded-md text-sm font-medium shadow-sm border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-indigo-500 focus:ring-offset-1 ${
+                  className={`px-3 py-2 min-w-[50px] rounded-md text-sm font-medium shadow-sm border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-indigo-500 focus:ring-offset-1 ${
                     selectedOptions[attributeName] === option
                       ? "bg-indigo-500 text-white"
                       : "bg-white text-gray-900"

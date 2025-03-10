@@ -8,11 +8,7 @@ interface Props {
   setCartItem: React.Dispatch<React.SetStateAction<CartItem>>; // Function to update cart item
 }
 
-const ComplexVariationPricing = ({
-  onPriceChange,
-  cartItem,
-  setCartItem,
-}: Props) => {
+const ComplexVariationPricing = ({ onPriceChange, setCartItem }: Props) => {
   const [variations, setVariations] = useState<ProductVariation[]>([]);
   const [selectedOptions, setSelectedOptions] = useState<
     Record<string, string>
@@ -91,14 +87,6 @@ const ComplexVariationPricing = ({
   // ------------------ HANDLER FUNCTIONS ----------------------------------
 
   // Handle option selection
-  // const handleOptionClick = (attributeName: string, option: string) => {
-  //   setSelectedOptions((prev) => ({
-  //     ...prev,
-  //     [attributeName]: option,
-  //   }));
-  // };
-
-  // Handle option selection
   const handleOptionClick = (attributeName: string, option: string) => {
     setSelectedOptions((prev) => ({
       ...prev,
@@ -114,6 +102,21 @@ const ComplexVariationPricing = ({
       return { ...prev, variations: updatedVariations };
     });
   };
+
+  // NEW: Update the cart item with the correct variation id
+  useEffect(() => {
+    const matchedVariation = variations.find((variation) =>
+      variation.attributes.every(
+        (attr) => selectedOptions[attr.name] === attr.option
+      )
+    );
+    if (matchedVariation) {
+      setCartItem((prev) => ({
+        ...prev,
+        variation_id: matchedVariation.id,
+      }));
+    }
+  }, [selectedOptions, variations, setCartItem]);
 
   return (
     <div className="mt-10">
