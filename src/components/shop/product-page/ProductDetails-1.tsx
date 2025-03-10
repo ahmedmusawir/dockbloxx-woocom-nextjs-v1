@@ -128,18 +128,9 @@ const ProductDetails = ({ product }: Props) => {
   return (
     <div className="lg:grid lg:grid-cols-[60%_40%] lg:items-start lg:gap-x-8">
       {/* Image gallery */}
-      <div>
-        {/* Desktop Image Gallery (Hidden on Mobile) */}
-        <div className="hidden lg:block">
-          <ProductImageGallery product={product} />
-        </div>
-
-        {/* Mobile Slider (Hidden on Desktop) */}
-        <div className="block lg:hidden">
-          <MobileProductSlider product={product} />
-        </div>
+      <div className="">
+        <ProductImageGallery product={product} />
       </div>
-
       {/* Product info */}
       <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
         <ProductInfo product={product} />
