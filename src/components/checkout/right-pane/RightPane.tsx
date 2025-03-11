@@ -8,6 +8,8 @@ import CheckoutCartItems from "./CheckoutCartItems";
 import ApplyCoupon from "./ApplyCoupon";
 import { useRouter } from "next/navigation";
 import OrderDetailsDesktop from "./OrderDetailsDesktop";
+import OrderDetailsMobile from "./OrderDetailsMobile";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 const RightPane = () => {
   const {
@@ -84,6 +86,18 @@ const RightPane = () => {
           couponMessage={couponMessage}
         />
       </div>
+
+      {/* Mobile Order Summary - Dialog */}
+      <Dialog>
+        <OrderDetailsMobile
+          checkoutData={checkoutData}
+          cartSubtotal={cartSubtotal}
+          shipping={shipping}
+          total={total}
+          editInCart={editInCart}
+          couponMessage={couponMessage}
+        />
+      </Dialog>
     </div>
   );
 };
