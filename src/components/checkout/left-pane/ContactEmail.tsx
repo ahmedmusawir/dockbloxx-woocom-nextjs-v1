@@ -48,7 +48,7 @@ const ContactEmail = () => {
         htmlFor="email-address"
         className="block text-sm font-medium text-gray-700"
       >
-        Email address
+        {/* Email address */}
       </label>
 
       {isEditing ? (
@@ -58,14 +58,15 @@ const ContactEmail = () => {
             name="email-address"
             type="email"
             autoComplete="email"
+            placeholder="Email"
             value={checkoutData.billing.email}
             onChange={handleEmailChange}
-            className="block w-full rounded-md bg-white px-3 py-2 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm"
+            className="block w-full rounded-none bg-white px-3 py-3 text-base text-gray-900 outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600 sm:text-sm"
           />
           {error && <p className="text-red-500 text-sm mt-1">{error}</p>}
           <button
             onClick={handleSaveEmail}
-            className="mt-2 bg-indigo-600 text-white py-1 px-3 rounded-md"
+            className="mt-2 bg-blue-700 text-white uppercase  py-3 px-10 rounded-none"
           >
             Save & Continue
           </button>

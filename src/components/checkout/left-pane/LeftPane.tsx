@@ -16,15 +16,15 @@ const LeftPane = () => {
       <OrderValidation />
 
       <div className="mt-10">
-        <h1 className="text-2xl text-gray-900">Contact information</h1>
+        <h1 className="text-2xl text-gray-900">Customer</h1>
 
         <ContactEmail />
       </div>
 
-      <div className="mt-10 border-t border-gray-200 pt-10">
-        <h1 className="text-2xl text-gray-900">Shipping information</h1>
-
-        {/* <ShippingInfo /> */}
+      {/* The separator */}
+      <div className="mt-10 border-t border-gray-400 pt-10">
+        {/* Shipping info */}
+        <h1 className="text-2xl text-gray-900">Shipping</h1>
 
         {emailSaved ? (
           <ShippingInfo />
@@ -35,8 +35,9 @@ const LeftPane = () => {
         )}
       </div>
 
-      {/* Payment */}
-      <div className="mt-10 border-t border-gray-200 pt-10">
+      {/* The separator   */}
+      <div className="mt-10 border-t border-gray-400 pt-10">
+        {/* Payment */}
         <h1 className="text-2xl text-gray-900">Payment</h1>
 
         <PaymentMethods />
