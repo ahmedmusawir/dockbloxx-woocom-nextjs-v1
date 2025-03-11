@@ -81,7 +81,7 @@ const BillingForm = () => {
   // When billingSameAsShipping is true, we show a closed view with "Same as Shipping".
   if (billingSameAsShipping) {
     return (
-      <div className="mt-4">
+      <div className="mt-">
         <h2 className="text-2xl font-bold text-gray-900">
           Billing Information
         </h2>
@@ -99,7 +99,7 @@ const BillingForm = () => {
 
       {!isEditing ? (
         // Display mode: Show the billing info as text along with an Edit button.
-        <div className="mt-4 border p-4 rounded-md">
+        <div className="mt-4 border border-gray-300 p-4 rounded-md">
           {checkoutData.billing.first_name ? (
             <>
               <p className="text-gray-700">
@@ -125,7 +125,8 @@ const BillingForm = () => {
               setIsEditing(true);
               setIsAnyBlockEditing(true);
             }}
-            className="mt-2 text-indigo-600 border border-black px-4 py-1 rounded-md"
+            // className="mt-2 text-indigo-600 border border-black px-4 py-1 rounded-md"
+            className="mt-2 border border-black px-16 py-1 rounded-none hover:bg-blue-700 text-blue-500 hover:text-white"
           >
             Edit
           </button>
@@ -142,11 +143,12 @@ const BillingForm = () => {
               htmlFor="first-name"
               className="block text-sm font-medium text-gray-700"
             >
-              First name
+              {/* First name */}
             </label>
             <input
               {...register("first_name")}
-              className="block w-full rounded-md px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
+              placeholder="First Name"
+              className="block w-full rounded-none px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
             />
             {errors.first_name && (
               <p className="text-red-500 text-sm">
@@ -161,11 +163,12 @@ const BillingForm = () => {
               htmlFor="last-name"
               className="block text-sm font-medium text-gray-700"
             >
-              Last name
+              {/* Last name */}
             </label>
             <input
               {...register("last_name")}
-              className="block w-full rounded-md px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
+              placeholder="Last Name"
+              className="block w-full rounded-none px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
             />
             {errors.last_name && (
               <p className="text-red-500 text-sm">{errors.last_name.message}</p>
@@ -176,13 +179,14 @@ const BillingForm = () => {
           <div className="sm:col-span-2">
             <label
               htmlFor="address"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              Address
+              {/* Address */}
             </label>
             <input
               {...register("address_1")}
-              className="block w-full rounded-md px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
+              placeholder="Address"
+              className="block w-full rounded-none px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
             />
             {errors.address_1 && (
               <p className="text-red-500 text-sm">{errors.address_1.message}</p>
@@ -193,13 +197,14 @@ const BillingForm = () => {
           <div>
             <label
               htmlFor="city"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              City
+              {/* City */}
             </label>
             <input
               {...register("city")}
-              className="block w-full rounded-md px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
+              placeholder="City"
+              className="block w-full rounded-none px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
             />
             {errors.city && (
               <p className="text-red-500 text-sm">{errors.city.message}</p>
@@ -210,9 +215,9 @@ const BillingForm = () => {
           <div>
             <label
               htmlFor="state"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              State
+              {/* State */}
             </label>
             <Controller
               name="state"
@@ -237,13 +242,14 @@ const BillingForm = () => {
           <div>
             <label
               htmlFor="postcode"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              Postal Code
+              {/* Postal Code */}
             </label>
             <input
               {...register("postcode")}
-              className="block w-full rounded-md px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
+              placeholder="Zip Code"
+              className="block w-full rounded-none px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
             />
             {errors.postcode && (
               <p className="text-red-500 text-sm">{errors.postcode.message}</p>
@@ -254,13 +260,14 @@ const BillingForm = () => {
           <div>
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              Phone Number
+              {/* Phone Number */}
             </label>
             <input
               {...register("phone")}
-              className="block w-full rounded-md px-3 py-2 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
+              placeholder="Phone"
+              className="block w-full rounded-none px-3 py-3 border border-gray-300 placeholder-gray-400 focus:outline-indigo-600"
             />
             {errors.phone && (
               <p className="text-red-500 text-sm">{errors.phone.message}</p>
@@ -271,7 +278,7 @@ const BillingForm = () => {
           <div className="sm:col-span-2">
             <button
               type="submit"
-              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
+              className="-mt-6 w-full bg-blue-600 text-white py-3 rounded-none hover:bg-blue-700"
             >
               Save &amp; Continue
             </button>

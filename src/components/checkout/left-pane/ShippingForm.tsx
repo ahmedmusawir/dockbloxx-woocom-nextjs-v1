@@ -96,15 +96,15 @@ const ShippingForm = () => {
   return (
     <div className="mt-4">
       {/* Display Country/Region: USA on top (not part of the form) */}
-      <div className="mb-2">
+      <div className="mb-4 flex">
         <label className="block text-sm font-medium text-gray-700">
           Country/Region
         </label>
-        <p className="text-base text-gray-900">USA</p>
+        <p className="text-base text-gray-900 ml-5">USA</p>
       </div>
 
       {/* Billing Address same as shipping */}
-      <div className="mb-2 flex items-center space-x-2">
+      <div className="mb-6 flex items-center space-x-2">
         <input
           id="billing-same-checkbox"
           type="checkbox"
@@ -132,11 +132,12 @@ const ShippingForm = () => {
               htmlFor="first-name"
               className="block text-sm font-medium text-gray-700"
             >
-              First name
+              {/* First name */}
             </label>
             <input
               {...register("first_name")}
-              className="block w-full rounded-md px-3 py-2 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
+              placeholder="First Name"
+              className="block w-full rounded-none px-3 py-3 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
             />
             {errors.first_name && (
               <p className="text-red-500 text-sm">
@@ -151,11 +152,12 @@ const ShippingForm = () => {
               htmlFor="last-name"
               className="block text-sm font-medium text-gray-700"
             >
-              Last name
+              {/* Last name */}
             </label>
             <input
               {...register("last_name")}
-              className="block w-full rounded-md px-3 py-2 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
+              placeholder="Last Name"
+              className="block w-full rounded-none px-3 py-3 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
             />
             {errors.last_name && (
               <p className="text-red-500 text-sm">{errors.last_name.message}</p>
@@ -166,13 +168,14 @@ const ShippingForm = () => {
           <div className="sm:col-span-2">
             <label
               htmlFor="address"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              Address
+              {/* Address */}
             </label>
             <input
               {...register("address_1")}
-              className="block w-full rounded-md px-3 py-2 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
+              placeholder="Address"
+              className="block w-full rounded-none px-3 py-3 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
             />
             {errors.address_1 && (
               <p className="text-red-500 text-sm">{errors.address_1.message}</p>
@@ -183,13 +186,14 @@ const ShippingForm = () => {
           <div>
             <label
               htmlFor="city"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              City
+              {/* City */}
             </label>
             <input
               {...register("city")}
-              className="block w-full rounded-md px-3 py-2 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
+              placeholder="City"
+              className="block w-full rounded-none px-3 py-3 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
             />
             {errors.city && (
               <p className="text-red-500 text-sm">{errors.city.message}</p>
@@ -200,9 +204,9 @@ const ShippingForm = () => {
           <div>
             <label
               htmlFor="state"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              State
+              {/* State */}
             </label>
             <Controller
               name="state"
@@ -227,13 +231,14 @@ const ShippingForm = () => {
           <div>
             <label
               htmlFor="postcode"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              Postal Code
+              {/* Postal Code */}
             </label>
             <input
               {...register("postcode")}
-              className="block w-full rounded-md px-3 py-2 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
+              placeholder="Zip Code"
+              className="block w-full rounded-none px-3 py-3 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
             />
             {errors.postcode && (
               <p className="text-red-500 text-sm">{errors.postcode.message}</p>
@@ -244,13 +249,14 @@ const ShippingForm = () => {
           <div>
             <label
               htmlFor="phone"
-              className="block text-sm font-medium text-gray-700"
+              className="block text-sm font-medium text-gray-700 -m-3"
             >
-              Phone Number
+              {/* Phone Number */}
             </label>
             <input
               {...register("phone")}
-              className="block w-full rounded-md px-3 py-2 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
+              placeholder="Phone"
+              className="block w-full rounded-none px-3 py-3 text-base outline outline-1 outline-gray-300 placeholder:text-gray-400 focus:outline-indigo-600"
             />
             {errors.phone && (
               <p className="text-red-500 text-sm">{errors.phone.message}</p>
@@ -261,7 +267,7 @@ const ShippingForm = () => {
           <div className="sm:col-span-2">
             <button
               type="submit"
-              className="mt-4 w-full bg-indigo-600 text-white py-2 rounded-md hover:bg-indigo-700"
+              className="-mt-3 w-full bg-blue-600 text-white py-3 rounded-none hover:bg-blue-700"
             >
               Save &amp; Continue
             </button>
@@ -269,7 +275,7 @@ const ShippingForm = () => {
         </form>
       ) : (
         // Display mode: show shipping info as text with an Edit button.
-        <div className="border p-4 rounded-md">
+        <div className="border border-gray-300 p-4 rounded-md">
           {checkoutData.shipping.first_name ? (
             <>
               <p className="text-gray-700">
@@ -293,7 +299,7 @@ const ShippingForm = () => {
               setIsEditing(true);
               setIsAnyBlockEditing(true);
             }}
-            className="mt-2 text-indigo-600 border border-black px-4 py-1 rounded-md"
+            className="mt-2 border border-black px-16 py-1 rounded-none hover:bg-blue-700 text-blue-500 hover:text-white"
           >
             Edit
           </button>

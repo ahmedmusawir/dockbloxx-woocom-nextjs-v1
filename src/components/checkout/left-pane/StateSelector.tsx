@@ -85,15 +85,14 @@ const StateSelector = ({ value, onChange }: StateSelectorProps) => {
       onChange={(option) => onChange(option ? option.value : null)}
       isClearable
       placeholder="Select a state..."
+      styles={{
+        control: (base) => ({
+          ...base,
+          paddingTop: "5px", // Adjust top padding
+          paddingBottom: "5px", // Adjust bottom padding
+        }),
+      }}
     />
-
-    // <Select
-    //   options={states}
-    //   value={selectedOption}
-    //   onChange={(option) => onChange(option ? option.value : null)}
-    //   isClearable
-    //   placeholder="Select a state..."
-    // />
   );
 };
 

@@ -31,30 +31,19 @@ const CheckoutCartItems = ({ cartData }: Props) => {
               <div className="ml-6 flex flex-1 flex-col">
                 <div className="flex">
                   <div className="min-w-0 flex-1">
-                    <h4 className="text-sm font-medium text-gray-700 hover:text-gray-800">
+                    <h4 className="text-lg font-bold text-gray-700 hover:text-gray-800">
                       {product.name}
                     </h4>
                     <p className="mt-1 text-sm text-gray-500">
                       {product.categories.map((cat) => cat.name)}
                     </p>
                   </div>
-                  <div className="ml-4 flow-root shrink-0">
-                    <button
-                      type="button"
-                      className="-m-2.5 flex items-center justify-center bg-white p-2.5 text-gray-400 hover:text-gray-500"
-                      onClick={editInCart}
-                    >
-                      <span className="sr-only">Remove</span>
-                      {/* <TrashIcon className="h-5 w-5" /> */}
-                      Edit
-                    </button>
-                  </div>
                 </div>
                 <div className="flex flex-1 items-end justify-between pt-2">
-                  <p className="mt-1 text-sm font-medium text-gray-900">
-                    {product.price}
+                  <p className="mt-1 text-lg font-medium text-gray-900">
+                    ${product.price}
                   </p>
-                  <p>{product.quantity} Items</p>
+                  <p>{product.quantity} Item/s</p>
                 </div>
               </div>
             </li>

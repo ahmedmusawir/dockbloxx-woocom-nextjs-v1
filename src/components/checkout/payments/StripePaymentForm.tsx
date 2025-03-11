@@ -235,7 +235,7 @@ const StripePaymentForm = () => {
         <button
           type="submit"
           disabled={!stripe || isProcessing}
-          className="w-full bg-indigo-600 text-white py-3 rounded-md hover:bg-indigo-700"
+          className="w-full bg-lime-500 text-white py-3 rounded-none hover:bg-lime-700"
         >
           {isProcessing ? "Processing..." : "Place Order"}
         </button>

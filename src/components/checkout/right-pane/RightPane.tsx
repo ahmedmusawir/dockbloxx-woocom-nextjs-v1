@@ -7,6 +7,7 @@ import Spinner from "@/components/common/Spinner";
 import CheckoutCartItems from "./CheckoutCartItems";
 import ApplyCoupon from "./ApplyCoupon";
 import { useRouter } from "next/navigation";
+import OrderDetailsDesktop from "./OrderDetailsDesktop";
 
 const RightPane = () => {
   const {
@@ -61,66 +62,27 @@ const RightPane = () => {
   const shipping = checkoutData.shippingCost || 0;
   const total = checkoutData.total;
 
+  // Redirect to shop if cart is empty
+  const editInCart = () => {
+    router.push("/cart");
+  };
+
   if (isLoading) {
     return <Spinner />;
   }
 
   return (
     <div className="mt-10 lg:mt-0">
-      <h2 className="text-2xl text-gray-900">Order summary</h2>
-
-      <div className="mt-4 rounded-lg border border-gray-200 bg-white shadow-sm">
-        <CheckoutCartItems cartData={checkoutData.cartItems} />
-
-        <dl className="space-y-6 border-t border-gray-200 px-4 py-6 sm:px-6">
-          <div className="flex items-center justify-between">
-            <dt className="text-sm">Subtotal</dt>
-            <dd className="text-sm font-medium text-gray-900">
-              ${cartSubtotal().toFixed(2)}
-            </dd>
-          </div>
-          <div className="flex items-center justify-between">
-            <dt className="text-sm">Shipping</dt>
-            <dd className="text-sm font-medium text-gray-900">
-              ${shipping.toFixed(2)}
-            </dd>
-          </div>
-
-          {checkoutData.coupon && (
-            <div className="flex flex-col text-green-600">
-              <div className="flex items-center justify-between">
-                <dt className="text-sm">
-                  Coupon Applied ({checkoutData.coupon.code}):
-                </dt>
-                <dd className="text-sm font-medium">
-                  -${checkoutData.discountTotal.toFixed(2)}
-                </dd>
-              </div>
-              {checkoutData.coupon.description && (
-                <p className="text-xs text-gray-500">
-                  {checkoutData.coupon.description}
-                </p>
-              )}
-            </div>
-          )}
-
-          {/* The coupon input block */}
-          <ApplyCoupon />
-
-          {/* If the subtotal changed while a coupon was active, show our message */}
-          {couponMessage && (
-            <p className="mt-1 text-sm font-bold text-red-600">
-              {couponMessage}
-            </p>
-          )}
-
-          <div className="flex items-center justify-between border-t border-gray-200 pt-6">
-            <dt className="text-base font-medium">Total</dt>
-            <dd className="text-base font-medium text-gray-900">
-              ${total.toFixed(2)}
-            </dd>
-          </div>
-        </dl>
+      {/* Desktop Order Summary */}
+      <div className="hidden lg:block">
+        <OrderDetailsDesktop
+          checkoutData={checkoutData}
+          cartSubtotal={cartSubtotal}
+          shipping={shipping}
+          total={total}
+          editInCart={editInCart}
+          couponMessage={couponMessage}
+        />
       </div>
     </div>
   );

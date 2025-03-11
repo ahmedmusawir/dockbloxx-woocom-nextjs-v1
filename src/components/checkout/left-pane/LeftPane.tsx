@@ -29,7 +29,7 @@ const LeftPane = () => {
         {emailSaved ? (
           <ShippingInfo />
         ) : (
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-gray-600 mt-2">
             Please save your email to proceed with shipping details.
           </p>
         )}
@@ -39,7 +39,6 @@ const LeftPane = () => {
       <div className="mt-10 border-t border-gray-400 pt-10">
         {/* Payment */}
         <h1 className="text-2xl text-gray-900">Payment</h1>
-
         <PaymentMethods />
       </div>
     </div>

@@ -23,7 +23,7 @@ const PaymentMethods = () => {
         </>
       ) : (
         // If order is not validated, display an info message
-        <div className="mt-6">
+        <div className="mt-2">
           <p className="text-sm text-gray-600">
             Please complete your order details (shipping, billing, cart) to
             enable payment.

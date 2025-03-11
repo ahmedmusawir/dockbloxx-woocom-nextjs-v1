@@ -67,7 +67,7 @@ const ApplyCoupon = () => {
           </span>
           <button
             onClick={handleRemove}
-            className="text-sm text-red-600 hover:underline"
+            className="text-sm text-red-600 hover:underline rounded-none"
           >
             Remove
           </button>
@@ -77,7 +77,7 @@ const ApplyCoupon = () => {
         <div className="mt-2 flex space-x-2">
           <input
             type="text"
-            className="flex-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-sm"
+            className="flex-1 block w-full rounded-none border border-gray-300 px-3 py-3 text-sm"
             placeholder="Enter coupon code"
             value={couponCode}
             onChange={(e) => setCouponCode(e.target.value)}
@@ -85,10 +85,8 @@ const ApplyCoupon = () => {
           <button
             onClick={handleApply}
             disabled={isLoading}
-            className={` bg-indigo-600 text-white py-2 px-4 rounded-md ${
-              isLoading
-                ? "opacity-50 cursor-not-allowed"
-                : "hover:bg-indigo-700"
+            className={` bg-blue-600 text-white py-2 px-4 rounded-none ${
+              isLoading ? "opacity-50 cursor-not-allowed" : "hover:bg-blue-700"
             }`}
           >
             {isLoading ? "Applying..." : "Apply"}

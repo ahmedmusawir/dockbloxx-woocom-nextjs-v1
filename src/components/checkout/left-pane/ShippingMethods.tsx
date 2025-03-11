@@ -22,12 +22,6 @@ const ShippingMethods = ({
 
   // // Compute the applicable flat rate cost based on subtotal.
   const computedFlatRate = useMemo(() => {
-    // Assuming flat_rates is an array from the JSON:
-    // [
-    //   { subtotal_threshold: 100, shipping_cost: 10 },
-    //   { subtotal_threshold: 250, shipping_cost: 20 },
-    //   { subtotal_threshold: 300, shipping_cost: 35 }
-    // ]
     if (subtotal < 100) {
       // For orders under $100, use the $10 rate.
       return flat_rates.find((rate) => rate.subtotal_threshold === 100);
@@ -112,12 +106,12 @@ const ShippingMethods = ({
   }, [selectedMethod, shippingOptions, setShippingMethod]);
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 mb-10">
       <h1 className="text-2xl text-gray-900">Delivery method</h1>
 
       {/* Show an empty message if no shipping methods are available */}
       {availableMethods.length === 0 ? (
-        <div className="mt-4 p-4 border border-gray-300 rounded-md bg-white text-center text-gray-500">
+        <div className="mt-4 p-4 border border-gray-300 rounded-none bg-white text-center text-gray-500">
           Please select a shipping address in order to see shipping quotes
         </div>
       ) : (
@@ -130,7 +124,7 @@ const ShippingMethods = ({
             <RadioGroup.Option
               key={option.id}
               value={option.id}
-              className="group relative flex cursor-pointer rounded-lg border border-gray-300 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-indigo-500"
+              className="group relative flex cursor-pointer rounded-none border border-gray-300 bg-white p-4 shadow-sm focus:outline-none data-[checked]:border-transparent data-[focus]:ring-2 data-[focus]:ring-blue-500"
             >
               <span className="flex flex-1">
                 <span className="flex flex-col">
@@ -141,7 +135,7 @@ const ShippingMethods = ({
               </span>
               <CheckCircleIcon
                 aria-hidden="true"
-                className="size-5 text-indigo-600 [.group:not([data-checked])_&]:hidden"
+                className="size-5 text-blue-500 [.group:not([data-checked])_&]:hidden"
               />
               <span
                 aria-hidden="true"

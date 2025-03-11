@@ -80,7 +80,7 @@ const ContactEmail = () => {
               setEmailSaved(false);
               setIsAnyBlockEditing(true);
             }}
-            className="text-indigo-600 border-2 border-black px-10"
+            className="mt-2 border border-black px-16 py-1 rounded-none hover:bg-blue-700 text-blue-500 hover:text-white"
           >
             Edit
           </button>
