@@ -487,3 +487,35 @@ export const fetchPoleShapeStyles = async (): Promise<
 };
 
 // --------------------------- FETCH POLE SHAPE STYLES FROM ACF ENDS ------------------------------------------------------------
+
+// --------------------------- FEATURED PRODUCTS FROM WOOCOM PRODUCTS STARTS ------------------------------------------------------------
+/**
+ * Fetches the featured products from the Next.js API route.
+ * This function is used to retrieve products marked as "featured"
+ * in the WooCommerce backend.
+ *
+ * @returns {Promise<{ products: any[] }>} A promise that resolves to an object containing an array of featured products.
+ * If the request fails, an empty array is returned.
+ *
+ * - Uses `fetch` to call the `/api/featured-products` endpoint.
+ * - Throws an error if the API response is not successful.
+ * - Logs any errors encountered during the request.
+ *
+ * This function is designed for use in server-side components (SSR)
+ * to ensure featured products are preloaded before rendering.
+ */
+
+export async function fetchFeaturedProducts() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL}/api/featured-products`
+    );
+    if (!res.ok) throw new Error("Failed to fetch featured products");
+    return await res.json();
+  } catch (error) {
+    console.error("[Service] Error fetching featured products:", error);
+    return { products: [] };
+  }
+}
+
+// --------------------------- FEATURED PRODUCTS FROM WOOCOM PRODUCTS ENDS ------------------------------------------------------------

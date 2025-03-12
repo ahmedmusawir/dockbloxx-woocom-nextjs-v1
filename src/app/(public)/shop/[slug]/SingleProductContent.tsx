@@ -15,7 +15,7 @@ const SingleProductContent = ({
   return (
     <div className="bg-white">
       {/* <main className="mx-auto max-w-7xl sm:px-6 sm:pt-16 lg:px-8"> */}
-      <Page FULL className="px-2">
+      <Page FULL className="sm:px-5 lg:px-20">
         <div className="mx-auto max-w-2xl lg:max-w-none">
           {/* Product */}
           <ProductDetails product={product} />
