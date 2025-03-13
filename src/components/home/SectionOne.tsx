@@ -43,14 +43,14 @@ const SectionOne = () => {
                 </div>
               ))}
             </dl>
-            <div className="mt-20">
+            {/* <div className="mt-20">
               <Link
                 href="/shop"
                 className="bg-lime-500 text-white py-5 px-20 rounded-none hover:bg-lime-700"
               >
                 Shop Now
               </Link>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

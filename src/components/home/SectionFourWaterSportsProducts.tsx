@@ -67,9 +67,9 @@ const SectionFourWaterSportsProducts = () => {
                 <div className="mt-10">
                   <Link
                     href="/shop"
-                    className="bg-lime-500 text-white py-5 px-20 rounded-none hover:bg-lime-700"
+                    className="bg-lime-300 text-blue-500 font-bold py-5 px-20 rounded-none hover:bg-lime-700"
                   >
-                    Select Option
+                    SELECT OPTIONS
                   </Link>
                 </div>
               </div>

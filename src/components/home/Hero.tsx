@@ -44,9 +44,9 @@ const Hero = () => {
                 <div className="mt-10 flex items-center gap-x-6">
                   <Link
                     href="/shop"
-                    className="mt-10 bg-lime-500 text-white py-5 px-20 rounded-none hover:bg-lime-700"
+                    className="mt-10 bg-lime-300 text-blue-600 font-bold py-5 px-20 rounded-none hover:bg-lime-700"
                   >
-                    Shop Now
+                    SHOP NOW
                   </Link>
                   {/* <a href="#" className="text-sm/6 font-semibold text-gray-900">
                     Learn more <span aria-hidden="true">→</span>
