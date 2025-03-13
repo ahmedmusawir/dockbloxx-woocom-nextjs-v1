@@ -57,7 +57,7 @@ const Navbar = () => {
   }
 
   return (
-    <div className="bg-slate-700 dark:bg-slate-700 py-2 px-5 flex justify-between">
+    <div className="bg-blue-800 dark:bg-slate-700 py-2 px-5 flex justify-between">
       <Link href={"/"}>
         <Image
           src={
