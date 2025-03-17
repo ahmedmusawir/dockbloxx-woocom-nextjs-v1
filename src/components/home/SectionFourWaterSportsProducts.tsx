@@ -48,8 +48,7 @@ const SectionFourWaterSportsProducts = () => {
 
           <div className="mt-6 space-y-12 lg:grid lg:grid-cols-4 lg:gap-x-6 lg:space-y-0 ">
             {callouts.map((callout) => (
-              // <div key={callout.name} className="group relative">
-              <div key={callout.name} className="group">
+              <div key={callout.name} className="group relative">
                 <img
                   alt={callout.imageAlt}
                   src={callout.imageSrc}

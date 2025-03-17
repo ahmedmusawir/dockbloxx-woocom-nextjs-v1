@@ -4,10 +4,18 @@ import SectionFourWaterSportsProducts from "@/components/home/SectionFourWaterSp
 import SectionOne from "@/components/home/SectionOne";
 import SectionThreeWaterSports from "@/components/home/SectionThreeWaterSports";
 import SectionTwoBestSellers from "@/components/home/SectionTwoBestSellers";
+import { fetchHomePageData } from "@/services/pageServices";
+import { fetchTestPageData } from "@/services/testServices";
 import Head from "next/head";
-import React, { ReactNode } from "react";
+import React from "react";
 
-const HomePageContent = () => {
+const HomePageContent = async () => {
+  const homeData = await fetchHomePageData();
+  // console.log("Home Page Data:", homeData);
+
+  // const testData = await fetchTestPageData("best-sellers");
+  // console.log("Home Page Data: [HomePageContent.tsx]", testData);
+
   return (
     <>
       <Head>
@@ -21,7 +29,7 @@ const HomePageContent = () => {
 
         <SectionTwoBestSellers />
 
-        <SectionThreeWaterSports />
+        <SectionThreeWaterSports homeData={homeData} />
 
         <SectionFourWaterSportsProducts />
       </Page>

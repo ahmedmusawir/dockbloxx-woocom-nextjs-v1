@@ -9,6 +9,10 @@ body {
   scroll-behavior: smooth;
 }
 
+// .clip-right {
+//   clip-path: polygon(7px 0, 100% 0, 100% 100%, 7px 100%);
+// }
+
 @layer base {
   h1 {
     @apply text-4xl font-bold text-gray-900 dark:text-white;

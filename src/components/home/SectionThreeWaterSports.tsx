@@ -1,26 +1,19 @@
+import { fetchHomePageData } from "@/services/pageServices";
+import { HomeData } from "@/types/page";
 import {
   CloudArrowUpIcon,
   LockClosedIcon,
   ServerIcon,
 } from "@heroicons/react/20/solid";
 import Link from "next/link";
+import parse from "html-react-parser";
 
-const features = [
-  {
-    name: "Push to deploy.",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores impedit perferendis suscipit eaque, iste dolor cupiditate blanditiis ratione.",
-    icon: CloudArrowUpIcon,
-  },
-  {
-    name: "Database backups.",
-    description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus. Et magna sit morbi lobortis.",
-    icon: ServerIcon,
-  },
-];
+interface Props {
+  homeData: HomeData;
+}
 
-const SectionThreeWaterSports = () => {
+const SectionThreeWaterSports = ({ homeData }: Props) => {
+  const section3 = homeData.section_3[0];
   return (
     <div className="overflow-hidden bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -28,43 +21,28 @@ const SectionThreeWaterSports = () => {
           <div className="lg:pr-8 lg:pt-4">
             <div className="lg:max-w-lg">
               <h2 className="text-base/7 font-semibold text-indigo-600">
-                Deploy faster
+                {section3.subtitle}
               </h2>
               <p className="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-                Water Sports
+                {section3.title}
               </p>
-              <p className="mt-6 text-lg/8 text-gray-600">
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Maiores impedit perferendis suscipit eaque, iste dolor
-                cupiditate blanditiis ratione.
-              </p>
-              <dl className="mt-10 max-w-xl space-y-8 text-base/7 text-gray-600 lg:max-w-none">
-                {features.map((feature) => (
-                  <div key={feature.name} className="relative pl-9">
-                    <dt className="inline font-semibold text-gray-900">
-                      <feature.icon
-                        aria-hidden="true"
-                        className="absolute left-1 top-1 size-5 text-indigo-600"
-                      />
-                      {feature.name}
-                    </dt>{" "}
-                    <dd className="inline">{feature.description}</dd>
-                  </div>
-                ))}
-              </dl>
+              <section className="mt-6 text-lg/8 text-gray-600">
+                {parse(section3.content)}
+              </section>
             </div>
             <div className="mt-24">
               <Link
                 href="/blog"
                 className="bg-lime-300 text-blue-500 font-bold py-5 px-20 rounded-none hover:bg-lime-700"
               >
-                LEARN MORE
+                {section3.button_text}
               </Link>
             </div>
           </div>
           <img
             alt="Product screenshot"
-            src="/home-section_3_water_sports.jpg"
+            src={section3.image}
+            // src="/home-section_3_water_sports.jpg"
             width={2432}
             height={1442}
             className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] md:-ml-4 lg:-ml-0"
