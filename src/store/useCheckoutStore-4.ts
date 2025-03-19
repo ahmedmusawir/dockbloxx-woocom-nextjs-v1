@@ -194,25 +194,13 @@ export const useCheckoutStore = create<CheckoutStore>()(
 
       // Set Coupon Data
       setCoupon: (coupon) =>
-        set((state) => {
-          // Simply store the coupon as-is, without overwriting discountTotal
-          const updatedCheckoutData = {
+        set((state) => ({
+          checkoutData: {
             ...state.checkoutData,
             coupon,
-          };
-          // Recalculate totals based on the new coupon and current cart items
-          const newTotals = updateCheckoutTotals(updatedCheckoutData);
-          return { checkoutData: newTotals };
-        }),
-
-      // setCoupon: (coupon) =>
-      //   set((state) => ({
-      //     checkoutData: {
-      //       ...state.checkoutData,
-      //       coupon,
-      //       discountTotal: coupon ? coupon.discount_value : 0,
-      //     },
-      //   })),
+            discountTotal: coupon ? coupon.discount_value : 0,
+          },
+        })),
 
       // Calculate Totals
       calculateTotals: () =>

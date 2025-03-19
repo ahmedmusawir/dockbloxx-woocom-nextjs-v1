@@ -233,48 +233,55 @@ export const removeCoupon = (checkoutData: CheckoutData): CheckoutData => {
  * - Ensures compliance with coupon restrictions (expiration, min/max spend, exclusions)
  * - Prevents discounts from making the total negative
  */
-/**
- * Calculates the dollar discount for a given coupon & cart.
- * - Does NOT mutate the `coupon` object.
- * - Returns a numeric discount in dollars.
- */
-export function calculateCouponDiscount(
+
+export const calculateCouponDiscount = (
   coupon: Coupon,
   cartItems: CartItem[],
   subtotal: number
-): number {
+): number => {
+  // Validate expiration date
   const now = new Date();
   const expiryDate = new Date(coupon.expires_on);
   if (now > expiryDate) {
-    console.warn(`Coupon ${coupon.code} is expired.`);
+    console.warn(`Coupon ${coupon.code} has expired.`);
     return 0;
   }
 
+  // Validate min/max spend
   const minSpend = parseFloat(coupon.min_spend || "0");
   const maxSpend = parseFloat(coupon.max_spend || "0");
-  if (subtotal < minSpend) return 0;
-  if (maxSpend > 0 && subtotal > maxSpend) return 0;
-
-  let discount = 0;
-  switch (coupon.discount_type) {
-    case "fixed_cart":
-      discount = Number(coupon.discount_value);
-      break;
-    case "percent":
-      discount = (Number(coupon.discount_value) / 100) * subtotal;
-      break;
-    case "fixed_product":
-      discount = cartItems.reduce((acc, item) => {
-        if (coupon.products_included.includes(item.id)) {
-          return acc + Number(coupon.discount_value) * item.quantity;
-        }
-        return acc;
-      }, 0);
-      break;
+  if (subtotal < minSpend) {
+    console.warn(
+      `Coupon ${coupon.code} requires a minimum spend of $${minSpend}.`
+    );
+    return 0;
+  }
+  if (maxSpend > 0 && subtotal > maxSpend) {
+    console.warn(
+      `Coupon ${coupon.code} can only be used on orders up to $${maxSpend}.`
+    );
+    return 0;
   }
 
+  let discount = 0;
+
+  // Apply discount based on type
+  if (coupon.discount_type === "fixed_cart") {
+    discount = coupon.discount_value;
+  } else if (coupon.discount_type === "percent") {
+    discount = (coupon.discount_value / 100) * subtotal;
+  } else if (coupon.discount_type === "fixed_product") {
+    discount = cartItems.reduce((totalDiscount, item) => {
+      if (coupon.products_included.includes(item.id)) {
+        return totalDiscount + coupon.discount_value * item.quantity;
+      }
+      return totalDiscount;
+    }, 0);
+  }
+
+  // Ensure discount does not exceed subtotal
   return Math.min(discount, subtotal);
-}
+};
 
 /**
  * Retrieves the embedded coupon data from the checkout page.

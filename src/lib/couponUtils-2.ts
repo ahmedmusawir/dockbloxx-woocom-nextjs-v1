@@ -243,6 +243,7 @@ export function calculateCouponDiscount(
   cartItems: CartItem[],
   subtotal: number
 ): number {
+  // 1. Check if coupon is expired
   const now = new Date();
   const expiryDate = new Date(coupon.expires_on);
   if (now > expiryDate) {
@@ -250,30 +251,47 @@ export function calculateCouponDiscount(
     return 0;
   }
 
+  // 2. Check min/max spend
   const minSpend = parseFloat(coupon.min_spend || "0");
   const maxSpend = parseFloat(coupon.max_spend || "0");
-  if (subtotal < minSpend) return 0;
-  if (maxSpend > 0 && subtotal > maxSpend) return 0;
+  if (subtotal < minSpend) {
+    console.warn(`Coupon ${coupon.code} requires min spend of $${minSpend}.`);
+    return 0;
+  }
+  if (maxSpend > 0 && subtotal > maxSpend) {
+    console.warn(`Coupon ${coupon.code} has max spend of $${maxSpend}.`);
+    return 0;
+  }
 
+  // 3. Calculate discount
   let discount = 0;
+
   switch (coupon.discount_type) {
     case "fixed_cart":
-      discount = Number(coupon.discount_value);
+      discount = coupon.discount_value;
       break;
+
     case "percent":
-      discount = (Number(coupon.discount_value) / 100) * subtotal;
+      // e.g. if discount_value=10 => 10%
+      discount = (coupon.discount_value / 100) * subtotal;
       break;
+
     case "fixed_product":
+      // If coupon is e.g. "$2 off each included product"
       discount = cartItems.reduce((acc, item) => {
+        // Only apply to products_included
         if (coupon.products_included.includes(item.id)) {
-          return acc + Number(coupon.discount_value) * item.quantity;
+          return acc + coupon.discount_value * item.quantity;
         }
         return acc;
       }, 0);
       break;
   }
 
-  return Math.min(discount, subtotal);
+  // 4. Ensure discount <= subtotal
+  discount = Math.min(discount, subtotal);
+
+  return discount;
 }
 
 /**

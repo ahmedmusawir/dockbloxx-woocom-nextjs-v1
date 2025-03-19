@@ -4,8 +4,6 @@ import { Coupon } from "@/types/coupon";
 import { CartItem } from "@/types/cart";
 import { persist, createJSONStorage, PersistOptions } from "zustand/middleware";
 import type { StateCreator } from "zustand";
-// Import our new utility
-import { updateCheckoutTotals } from "@/lib/checkoutUtils";
 
 import {
   applyCoupon,
@@ -141,78 +139,50 @@ export const useCheckoutStore = create<CheckoutStore>()(
       },
 
       // Set Cart Items
-      // setCartItems: (items) => {
-      //   set((state) => {
-      //     const updatedSubtotal = items.reduce(
-      //       (sum, item) => sum + item.price * item.quantity,
-      //       0
-      //     );
-
-      //     let discountTotal = state.checkoutData.discountTotal;
-
-      //     // Ensure coupon exists and matches expected type
-      //     const validCoupon = state.checkoutData.coupon as Coupon | null;
-
-      //     if (validCoupon) {
-      //       discountTotal = calculateCouponDiscount(
-      //         validCoupon,
-      //         items,
-      //         updatedSubtotal
-      //       );
-      //     }
-
-      //     return {
-      //       checkoutData: {
-      //         ...state.checkoutData,
-      //         cartItems: items,
-      //         subtotal: updatedSubtotal,
-      //         discountTotal,
-      //         total:
-      //           updatedSubtotal +
-      //           state.checkoutData.shippingCost -
-      //           discountTotal,
-      //       },
-      //     };
-      //   });
-      // },
-
-      /**
-       * 1) When we setCartItems, we just store them in state,
-       *    then re-run updateCheckoutTotals immediately.
-       */
       setCartItems: (items) => {
         set((state) => {
-          const updatedCheckoutData = {
-            ...state.checkoutData,
-            cartItems: items,
+          const updatedSubtotal = items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
+
+          let discountTotal = state.checkoutData.discountTotal;
+
+          // Ensure coupon exists and matches expected type
+          const validCoupon = state.checkoutData.coupon as Coupon | null;
+
+          if (validCoupon) {
+            discountTotal = calculateCouponDiscount(
+              validCoupon,
+              items,
+              updatedSubtotal
+            );
+          }
+
+          return {
+            checkoutData: {
+              ...state.checkoutData,
+              cartItems: items,
+              subtotal: updatedSubtotal,
+              discountTotal,
+              total:
+                updatedSubtotal +
+                state.checkoutData.shippingCost -
+                discountTotal,
+            },
           };
-          // Now recalc everything
-          const newTotals = updateCheckoutTotals(updatedCheckoutData);
-          return { checkoutData: newTotals };
         });
       },
 
       // Set Coupon Data
       setCoupon: (coupon) =>
-        set((state) => {
-          // Simply store the coupon as-is, without overwriting discountTotal
-          const updatedCheckoutData = {
+        set((state) => ({
+          checkoutData: {
             ...state.checkoutData,
             coupon,
-          };
-          // Recalculate totals based on the new coupon and current cart items
-          const newTotals = updateCheckoutTotals(updatedCheckoutData);
-          return { checkoutData: newTotals };
-        }),
-
-      // setCoupon: (coupon) =>
-      //   set((state) => ({
-      //     checkoutData: {
-      //       ...state.checkoutData,
-      //       coupon,
-      //       discountTotal: coupon ? coupon.discount_value : 0,
-      //     },
-      //   })),
+            discountTotal: coupon ? coupon.discount_value : 0,
+          },
+        })),
 
       // Calculate Totals
       calculateTotals: () =>
@@ -235,35 +205,51 @@ export const useCheckoutStore = create<CheckoutStore>()(
         }),
 
       // Apply Coupon Zustand Function
+      applyCoupon: (coupon) =>
+        set((state) => {
+          const { checkoutData } = state;
 
-      /**
-       * 2) Apply a coupon:
-       *    - Validate the coupon
-       *    - If valid, store it in checkoutData.coupon (unchanged)
-       *    - Then recalc totals using updateCheckoutTotals
-       */
-      applyCoupon: (coupon) => {
-        const { checkoutData } = get();
+          if (!coupon || !validateCoupon(coupon, checkoutData)) {
+            return {
+              checkoutData: {
+                ...checkoutData,
+                coupon: null,
+                discountTotal: 0,
+              },
+            };
+          }
 
-        const { isValid, message } = validateCoupon(coupon, checkoutData);
-        if (!isValid) {
-          console.warn("Invalid coupon:", message);
-          // Optionally set some error state, or do nothing
-          return;
-        }
+          // Apply the coupon and get updated checkout data
+          const updatedCheckoutData = applyCoupon(coupon, checkoutData);
 
-        // Store the coupon as-is, do NOT override coupon.discount_value
-        const updatedCheckoutData = {
-          ...checkoutData,
-          coupon,
-        };
+          // Extract discount value
+          const discountTotal = calculateCouponDiscount(
+            coupon,
+            checkoutData.cartItems,
+            checkoutData.subtotal
+          );
 
-        // Recalculate totals with the newly applied coupon
-        const newTotals = updateCheckoutTotals(updatedCheckoutData);
+          // First, update Zustand state
+          set((prevState) => {
+            const newState = {
+              checkoutData: {
+                ...prevState.checkoutData,
+                ...updatedCheckoutData,
+                discountTotal,
+              },
+            };
+            // console.log("Updated Zustand state with discount:", newState);
+            return newState;
+          });
 
-        // Update Zustand store
-        set({ checkoutData: newTotals });
-      },
+          // Ensure total is recalculated after the state has updated
+          setTimeout(() => {
+            // console.log("Triggering calculateTotals...");
+            get().calculateTotals();
+          }, 50);
+
+          return { checkoutData: { ...updatedCheckoutData, discountTotal } };
+        }),
 
       removeCoupon: () =>
         set((state) => {
