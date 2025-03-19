@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { CheckoutData } from "@/types/checkout";
+import { Coupon } from "@/types/coupon";
 import { CartItem } from "@/types/cart";
 import { persist, createJSONStorage, PersistOptions } from "zustand/middleware";
 import type { StateCreator } from "zustand";
@@ -9,7 +10,6 @@ import {
   calculateCouponDiscount,
   validateCoupon,
 } from "@/lib/couponUtils";
-import { Coupon } from "@/types/coupon";
 
 interface CheckoutStore {
   checkoutData: CheckoutData;
@@ -174,18 +174,13 @@ export const useCheckoutStore = create<CheckoutStore>()(
         });
       },
 
-      // setCartItems: (items) =>
-      //   set((state) => ({
-      //     checkoutData: { ...state.checkoutData, cartItems: items },
-      //   })),
-
       // Set Coupon Data
       setCoupon: (coupon) =>
         set((state) => ({
           checkoutData: {
             ...state.checkoutData,
             coupon,
-            discountTotal: coupon ? coupon.discount : 0,
+            discountTotal: coupon ? coupon.discount_value : 0,
           },
         })),
 
@@ -226,11 +221,6 @@ export const useCheckoutStore = create<CheckoutStore>()(
 
           // Apply the coupon and get updated checkout data
           const updatedCheckoutData = applyCoupon(coupon, checkoutData);
-
-          // console.log(
-          //   "applyCoupon fn [useCheckoutStore.ts]",
-          //   updatedCheckoutData
-          // );
 
           // Extract discount value
           const discountTotal = calculateCouponDiscount(

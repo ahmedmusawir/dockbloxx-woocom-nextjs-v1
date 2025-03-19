@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { CheckoutData } from "@/types/checkout";
+import { Coupon } from "@/types/coupon";
 import { CartItem } from "@/types/cart";
 import { persist, createJSONStorage, PersistOptions } from "zustand/middleware";
 import type { StateCreator } from "zustand";
@@ -9,7 +10,6 @@ import {
   calculateCouponDiscount,
   validateCoupon,
 } from "@/lib/couponUtils";
-import { Coupon } from "@/types/coupon";
 
 interface CheckoutStore {
   checkoutData: CheckoutData;
@@ -139,10 +139,40 @@ export const useCheckoutStore = create<CheckoutStore>()(
       },
 
       // Set Cart Items
-      setCartItems: (items) =>
-        set((state) => ({
-          checkoutData: { ...state.checkoutData, cartItems: items },
-        })),
+      setCartItems: (items) => {
+        set((state) => {
+          const updatedSubtotal = items.reduce(
+            (sum, item) => sum + item.price * item.quantity,
+            0
+          );
+
+          let discountTotal = state.checkoutData.discountTotal;
+
+          // Ensure coupon exists and matches expected type
+          const validCoupon = state.checkoutData.coupon as Coupon | null;
+
+          if (validCoupon) {
+            discountTotal = calculateCouponDiscount(
+              validCoupon,
+              items,
+              updatedSubtotal
+            );
+          }
+
+          return {
+            checkoutData: {
+              ...state.checkoutData,
+              cartItems: items,
+              subtotal: updatedSubtotal,
+              discountTotal,
+              total:
+                updatedSubtotal +
+                state.checkoutData.shippingCost -
+                discountTotal,
+            },
+          };
+        });
+      },
 
       // Set Coupon Data
       setCoupon: (coupon) =>
@@ -150,7 +180,7 @@ export const useCheckoutStore = create<CheckoutStore>()(
           checkoutData: {
             ...state.checkoutData,
             coupon,
-            discountTotal: coupon ? coupon.discount : 0,
+            discountTotal: coupon ? coupon.discount_value : 0,
           },
         })),
 
@@ -191,11 +221,6 @@ export const useCheckoutStore = create<CheckoutStore>()(
 
           // Apply the coupon and get updated checkout data
           const updatedCheckoutData = applyCoupon(coupon, checkoutData);
-
-          // console.log(
-          //   "applyCoupon fn [useCheckoutStore.ts]",
-          //   updatedCheckoutData
-          // );
 
           // Extract discount value
           const discountTotal = calculateCouponDiscount(

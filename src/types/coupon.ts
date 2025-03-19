@@ -19,21 +19,3 @@ export interface Coupon {
   used_by: string[]; // NEW: Track which users have used the coupon
   expires_on: string;
 }
-
-// export interface Coupon {
-//   id: number;
-//   code: string;
-//   discount_type: DiscountType;
-//   description: string;
-//   discount_value: number;
-//   free_shipping: boolean;
-//   min_spend: string;
-//   max_spend: string;
-//   products_included: number[];
-//   products_excluded: number[];
-//   categories_included: number[];
-//   categories_excluded: number[];
-//   usage_limit: number | null;
-//   usage_limit_per_user: number | null;
-//   expires_on: string;
-// }

@@ -1,5 +1,4 @@
 import { CartItem } from "./cart";
-import { Coupon } from "./coupon";
 
 export interface CheckoutData {
   billing: {
@@ -30,7 +29,12 @@ export interface CheckoutData {
   shippingMethod: "flat_rate" | "free_shipping" | "local_pickup";
   shippingCost: number;
   cartItems: CartItem[];
-  coupon?: Coupon | null;
+  coupon?: {
+    code: string;
+    discount: number;
+    free_shipping: boolean;
+    description: string;
+  } | null; // Allow null explicitly
   subtotal: number;
   taxTotal: number;
   discountTotal: number;

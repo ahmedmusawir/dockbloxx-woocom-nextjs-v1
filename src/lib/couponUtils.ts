@@ -204,9 +204,10 @@ export const applyCoupon = (
     total: checkoutData.subtotal + updatedShippingCost - discountAmount,
     shippingCost: updatedShippingCost,
     coupon: {
+      ...coupon,
       code: coupon.code,
       description: coupon.description,
-      discount: discountAmount, // Ensuring this is set correctly
+      discount_value: discountAmount, // Ensuring this is set correctly
       free_shipping: coupon.free_shipping,
     },
   };
