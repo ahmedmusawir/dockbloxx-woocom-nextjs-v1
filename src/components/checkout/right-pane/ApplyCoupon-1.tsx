@@ -61,7 +61,7 @@ const ApplyCoupon = () => {
 
       {/* If a coupon is applied, show the applied coupon */}
       {checkoutData.coupon ? (
-        <div className="mt-2 flex items-center justify-between border border-lime-300 p-5 rounded-none bg-lime-300">
+        <div className="mt-2 flex items-center justify-between border border-gray-300 p-2 rounded-md bg-gray-100">
           <span className="text-sm font-medium text-gray-900">
             Coupon Applied: {checkoutData.coupon.code}
           </span>

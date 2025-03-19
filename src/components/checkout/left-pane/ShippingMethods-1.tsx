@@ -71,12 +71,6 @@ const ShippingMethods = ({
 
   // Compute the default selection based on availableMethods.
   const computedDefaultSelection = useMemo(() => {
-    // If coupon says free shipping, override everything
-    if (checkoutData.coupon?.free_shipping) {
-      return "free_shipping";
-    }
-
-    // Otherwise, fallback to the normal logic
     if (availableMethods.includes("Free Shipping")) {
       return "free_shipping";
     } else if (availableMethods.includes("Local Pickup")) {
@@ -85,7 +79,7 @@ const ShippingMethods = ({
       return "flat_rate";
     }
     return "";
-  }, [availableMethods, checkoutData.coupon?.free_shipping]);
+  }, [availableMethods]);
 
   console.log(
     "[ShippingMethods.tsx] computedDefaultSelection =>",
@@ -115,6 +109,17 @@ const ShippingMethods = ({
       );
     }
   }, [selectedMethod, shippingOptions, setShippingMethod]);
+
+  useEffect(() => {
+    // If the store’s coupon provides free shipping,
+    // override any default or user selection with "free_shipping".
+    if (checkoutData.coupon?.free_shipping) {
+      console.log(
+        "[ShippingMethods.tsx] Overriding with free_shipping due to coupon"
+      );
+      setSelectedMethod("free_shipping");
+    }
+  }, [checkoutData.coupon?.free_shipping, setSelectedMethod]);
 
   return (
     <div className="mt-4 mb-10">

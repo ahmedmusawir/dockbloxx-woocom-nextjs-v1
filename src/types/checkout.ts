@@ -39,4 +39,5 @@ export interface CheckoutData {
   taxTotal: number;
   discountTotal: number;
   total: number;
+  // appliedAt: number | null;
 }

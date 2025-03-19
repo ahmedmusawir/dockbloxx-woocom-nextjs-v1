@@ -139,45 +139,10 @@ export const useCheckoutStore = create<CheckoutStore>()(
       },
 
       // Set Cart Items
-      setCartItems: (items) => {
-        set((state) => {
-          const updatedSubtotal = items.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
-          let discountTotal = state.checkoutData.discountTotal;
-
-          // Ensure coupon exists and matches expected type
-          const validCoupon = state.checkoutData.coupon as Coupon | null;
-
-          if (validCoupon) {
-            discountTotal = calculateCouponDiscount(
-              validCoupon,
-              items,
-              updatedSubtotal
-            );
-          }
-
-          return {
-            checkoutData: {
-              ...state.checkoutData,
-              cartItems: items,
-              subtotal: updatedSubtotal,
-              discountTotal,
-              total:
-                updatedSubtotal +
-                state.checkoutData.shippingCost -
-                discountTotal,
-            },
-          };
-        });
-      },
-
-      // setCartItems: (items) =>
-      //   set((state) => ({
-      //     checkoutData: { ...state.checkoutData, cartItems: items },
-      //   })),
+      setCartItems: (items) =>
+        set((state) => ({
+          checkoutData: { ...state.checkoutData, cartItems: items },
+        })),
 
       // Set Coupon Data
       setCoupon: (coupon) =>

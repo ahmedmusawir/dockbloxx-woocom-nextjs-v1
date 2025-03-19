@@ -3,12 +3,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
+import Spinner from "@/components/common/Spinner";
+import CheckoutCartItems from "./CheckoutCartItems";
+import ApplyCoupon from "./ApplyCoupon";
+import { useRouter } from "next/navigation";
 import OrderDetailsDesktop from "./OrderDetailsDesktop";
 import OrderDetailsMobile from "./OrderDetailsMobile";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
-import { useRouter } from "next/navigation";
-import Spinner from "@/components/common/Spinner";
-import { Coupon } from "@/types/coupon";
 
 const RightPane = () => {
   const {
@@ -18,17 +19,8 @@ const RightPane = () => {
     setIsCartOpen,
   } = useCartStore();
 
-  const {
-    checkoutData,
-    setCartItems,
-    calculateTotals,
-    setShippingMethod,
-    setCoupon,
-    isHydrated,
-  } = useCheckoutStore();
+  const { checkoutData, setCartItems, calculateTotals } = useCheckoutStore();
   const router = useRouter();
-
-  console.log("shipping cost [RightPane.tsx]", checkoutData.shippingCost);
 
   // Hide any side-cart on mount
   useEffect(() => {
@@ -40,20 +32,6 @@ const RightPane = () => {
     setCartItems(cartItems); // Overwrite checkoutData.cartItems with cartItems
     calculateTotals(); // Recalculate totals
   }, [cartItems, setCartItems, calculateTotals]);
-
-  // IMPORTANT: This keeps applied coupon data discounts, freeshipping intact at page refresh
-  useEffect(() => {
-    if (!checkoutData.coupon) return;
-
-    // 1) If the coupon has free_shipping, set shipping method & cost to 0
-    if (checkoutData.coupon.free_shipping) {
-      setShippingMethod("free_shipping", 0);
-    }
-
-    // 2) Re-trigger the discount logic so it's accurate
-    //    We'll just call setCoupon again, which re-sets the discountTotal
-    setCoupon(checkoutData.coupon);
-  }, []);
 
   // ------------- MAIN LOGIC FOR SUBTOTAL CHECK -------------
   const [couponMessage, setCouponMessage] = useState("");
@@ -86,8 +64,6 @@ const RightPane = () => {
   const shipping = checkoutData.shippingCost || 0;
   const total = checkoutData.total;
 
-  console.log("shipping [RightPane.tsx]", shipping);
-
   // Redirect to shop if cart is empty
   const editInCart = () => {
     router.push("/cart");
@@ -95,10 +71,6 @@ const RightPane = () => {
 
   if (isLoading) {
     return <Spinner />;
-  }
-
-  if (!isHydrated) {
-    return <Spinner />; // or any loading indicator you prefer
   }
 
   return (

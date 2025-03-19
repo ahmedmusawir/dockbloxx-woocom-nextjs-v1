@@ -41,8 +41,6 @@ interface CheckoutStore {
   setIsAnyBlockEditing: (value: boolean) => void;
   enableRegistration: boolean; // NEW: Tracks if user wants to register an account
   setEnableRegistration: (value: boolean) => void; // NEW: Setter function for enableRegistration
-  isHydrated: boolean;
-  setIsHydrated: (value: boolean) => void;
 }
 
 type CheckoutPersist = (
@@ -53,8 +51,6 @@ type CheckoutPersist = (
 export const useCheckoutStore = create<CheckoutStore>()(
   persist(
     (set, get) => ({
-      isHydrated: false,
-      setIsHydrated: (value: boolean) => set(() => ({ isHydrated: value })),
       enableRegistration: true, // Default: Registration is enabled
       setEnableRegistration: (value: boolean) =>
         set({ enableRegistration: value }),
@@ -139,45 +135,10 @@ export const useCheckoutStore = create<CheckoutStore>()(
       },
 
       // Set Cart Items
-      setCartItems: (items) => {
-        set((state) => {
-          const updatedSubtotal = items.reduce(
-            (sum, item) => sum + item.price * item.quantity,
-            0
-          );
-
-          let discountTotal = state.checkoutData.discountTotal;
-
-          // Ensure coupon exists and matches expected type
-          const validCoupon = state.checkoutData.coupon as Coupon | null;
-
-          if (validCoupon) {
-            discountTotal = calculateCouponDiscount(
-              validCoupon,
-              items,
-              updatedSubtotal
-            );
-          }
-
-          return {
-            checkoutData: {
-              ...state.checkoutData,
-              cartItems: items,
-              subtotal: updatedSubtotal,
-              discountTotal,
-              total:
-                updatedSubtotal +
-                state.checkoutData.shippingCost -
-                discountTotal,
-            },
-          };
-        });
-      },
-
-      // setCartItems: (items) =>
-      //   set((state) => ({
-      //     checkoutData: { ...state.checkoutData, cartItems: items },
-      //   })),
+      setCartItems: (items) =>
+        set((state) => ({
+          checkoutData: { ...state.checkoutData, cartItems: items },
+        })),
 
       // Set Coupon Data
       setCoupon: (coupon) =>
@@ -354,15 +315,6 @@ export const useCheckoutStore = create<CheckoutStore>()(
         paymentIntentClientSecret: state.paymentIntentClientSecret, // Persist the PaymentIntent secret
         emailSaved: state.emailSaved, // Persist the emailSaved flag
       }),
-      // 🔥 NEW: Fix shipping cost during rehydration
-      onRehydrateStorage: () => (store, error) => {
-        console.log("Rehydration callback fired");
-        if (error) {
-          console.error("Error:", error);
-        }
-        store?.setIsHydrated(true);
-        console.log("store?.isHydrated after set?", store?.isHydrated);
-      },
     }
   )
 );
