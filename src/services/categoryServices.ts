@@ -17,7 +17,10 @@ export async function fetchCategoryProducts(
     const url = `${NEXT_APP_URL}/api/products-by-category?category=${categorySlug}`;
     // console.log("[Service] Fetching URL:", url); // Log the actual request
 
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      next: { revalidate: 600 }, // <-- ISR caching here
+    });
+
     const data = await response.json(); // Read response as text first
 
     // console.log("[Service] Raw Response:", response.json()); // Log raw response

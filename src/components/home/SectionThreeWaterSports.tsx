@@ -1,10 +1,4 @@
-import { fetchHomePageData } from "@/services/pageServices";
 import { HomeData } from "@/types/page";
-import {
-  CloudArrowUpIcon,
-  LockClosedIcon,
-  ServerIcon,
-} from "@heroicons/react/20/solid";
 import Link from "next/link";
 import parse from "html-react-parser";
 

@@ -94,7 +94,6 @@ export async function GET(request: Request) {
     const productsUrl = `${WOOCOM_REST_API_URL}/products?category=${categoryId}&per_page=${perPage}&page=${page}&orderby=${orderBy}&order=${order}&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}`;
     const productsResponse = await fetch(productsUrl, {
       headers: { "Content-Type": "application/json" },
-      // next: { revalidate: 600 }, // ISR (600 sec)
     });
 
     if (!productsResponse.ok) {

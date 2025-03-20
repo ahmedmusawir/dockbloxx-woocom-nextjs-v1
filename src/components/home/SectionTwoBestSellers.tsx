@@ -1,11 +1,12 @@
-import { fetchCategoryProducts } from "@/services/categoryServices";
 import Link from "next/link";
 import parse from "html-react-parser";
+import { Product } from "@/types/product";
 
-const SectionTwoBestSellers = async () => {
-  const bestSellers = await fetchCategoryProducts("best-sellers");
-  console.log("Best Sellers [SectionTwoBestSellers.tsx]", bestSellers);
+interface Props {
+  bestSellers: Product[];
+}
 
+const SectionTwoBestSellers = async ({ bestSellers }: Props) => {
   return (
     <div className="bg-gray-100  pb-20">
       <div className="mx-auto px-4 sm:px-6 lg:px-8">
