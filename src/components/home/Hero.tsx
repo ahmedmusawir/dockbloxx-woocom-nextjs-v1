@@ -31,8 +31,7 @@ const Hero = () => {
                   </div>
                 </div>
                 <h1 className="text-pretty text-6xl font-semibold tracking-tight text-blue-600">
-                  DockBloxx is a game-changing product designed for boaters, by
-                  boaters.
+                  DockBloxx is a game-changing product!
                 </h1>
                 <p className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                   DockBloxx are designed to give you a clean, strong, mounting

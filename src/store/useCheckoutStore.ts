@@ -205,15 +205,6 @@ export const useCheckoutStore = create<CheckoutStore>()(
           return { checkoutData: newTotals };
         }),
 
-      // setCoupon: (coupon) =>
-      //   set((state) => ({
-      //     checkoutData: {
-      //       ...state.checkoutData,
-      //       coupon,
-      //       discountTotal: coupon ? coupon.discount_value : 0,
-      //     },
-      //   })),
-
       // Calculate Totals
       calculateTotals: () =>
         set((state) => {
