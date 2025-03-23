@@ -25,7 +25,8 @@
 export async function fetchHomePageData() {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_WP_PAGES_REST_URL}/12163`,
+      `${process.env.NEXT_PUBLIC_WP_PAGES_REST_URL}?slug=app-home-page`,
+      // `${process.env.NEXT_PUBLIC_WP_PAGES_REST_URL}/12163`,
       {
         next: { revalidate: 600 }, // Enables ISR, regenerates every 10 minutes
       }
@@ -36,7 +37,8 @@ export async function fetchHomePageData() {
     }
 
     const data = await response.json();
-    return data.acf; // Extracting only the ACF fields
+    // console.log("home page data", data[0].acf);
+    return data[0].acf; // Extracting only the ACF fields
   } catch (error) {
     console.error("[fetchHomePageData] Error:", error);
     return null;
