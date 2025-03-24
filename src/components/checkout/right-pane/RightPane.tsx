@@ -59,27 +59,27 @@ const RightPane = () => {
   const [couponMessage, setCouponMessage] = useState("");
   const prevSubtotalRef = useRef(checkoutData.subtotal);
 
-  useEffect(() => {
-    const oldSubtotal = prevSubtotalRef.current;
-    const newSubtotal = checkoutData.subtotal;
+  // useEffect(() => {
+  //   const oldSubtotal = prevSubtotalRef.current;
+  //   const newSubtotal = checkoutData.subtotal;
 
-    console.log("RightPane effect -> old:", oldSubtotal, " new:", newSubtotal);
+  //   console.log("RightPane effect -> old:", oldSubtotal, " new:", newSubtotal);
 
-    // If a coupon is applied & the subtotal changed, show a message
-    if (checkoutData.coupon && newSubtotal !== oldSubtotal) {
-      console.log("Subtotal changed, showing coupon message");
-      setCouponMessage(
-        "Your cart changed, you may need to re-apply the coupon."
-      );
-    } else {
-      // If no coupon or the subtotal didn't change, clear the message
-      console.log("Subtotal not changed or no coupon, clearing message");
-      setCouponMessage("");
-    }
+  //   // If a coupon is applied & the subtotal changed, show a message
+  //   if (checkoutData.coupon && newSubtotal !== oldSubtotal) {
+  //     console.log("Subtotal changed, showing coupon message");
+  //     setCouponMessage(
+  //       "Your cart changed, you may need to re-apply the coupon."
+  //     );
+  //   } else {
+  //     // If no coupon or the subtotal didn't change, clear the message
+  //     console.log("Subtotal not changed or no coupon, clearing message");
+  //     setCouponMessage("");
+  //   }
 
-    // Update the ref
-    prevSubtotalRef.current = newSubtotal;
-  }, [checkoutData.coupon, checkoutData.subtotal]);
+  //   // Update the ref
+  //   prevSubtotalRef.current = newSubtotal;
+  // }, [checkoutData.coupon, checkoutData.subtotal]);
 
   // ---------------------------------------------------------
 

@@ -1,4 +1,3 @@
-// app/dealer-coupon/[dealerSlug]/page.tsx
 import {
   fetchAllDealerSlugs,
   fetchDealerPageData,
