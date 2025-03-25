@@ -4,16 +4,12 @@ import {
 } from "@/services/dealerServices";
 import DealerPageContent from "./DealerPageContent";
 
-export default async function DealerCouponPage({
-  params: { dealerSlug },
-}: {
-  params: { dealerSlug: string };
-}) {
+// Instead of destructuring dealerSlug inline, we accept (props: any)
+export default async function DealerCouponPage(props: any) {
+  const { params } = props;
+  const dealerSlug = params.dealerSlug;
+
   const dealerPageData = await fetchDealerPageData(dealerSlug);
-  console.log(
-    "dealer data [dealer-coupon/dealer-slug/page.tsx]",
-    dealerPageData
-  );
 
   if (!dealerPageData) {
     return <div>Dealer Page Not Found.</div>;

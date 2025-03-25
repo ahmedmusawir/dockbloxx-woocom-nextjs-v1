@@ -1,58 +1,52 @@
 import { CheckoutData } from "@/types/checkout";
 import { calculateCouponDiscount } from "./couponUtils";
-import { CartItem } from "@/types/cart";
 
 /**
  * Recalculates all checkout totals (subtotal, discount, shipping, total).
  * - Keeps the original coupon data intact (if present).
  * - Applies free shipping if coupon.free_shipping is true.
  */
-
 export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   const { cartItems, coupon } = checkoutData;
 
-  // 1) Calculate new subtotal
-  const subtotal = cartItems.reduce((sum: number, item: CartItem) => {
+  // 1. Calculate new subtotal
+  const subtotal = cartItems.reduce((sum, item) => {
     return sum + item.basePrice * item.quantity;
-    // Or item.price * item.quantity (depending on your code)
+    // Or item.price * item.quantity,
+    // depending on your code's usage of "price" vs "basePrice"
   }, 0);
 
-  // 2) Calculate discount
+  // 2. Calculate discount (if a coupon is present)
   let discountTotal = 0;
   if (coupon) {
     discountTotal = calculateCouponDiscount(coupon, cartItems, subtotal);
   }
 
-  // 3) Determine shipping cost & method
+  // 3. Determine shipping cost
+  //    If the coupon includes free shipping, shippingCost=0
+  //    Otherwise, your custom logic based on subtotal
   let shippingCost = 0;
-  let shippingMethod = checkoutData.shippingMethod; // current fallback
-
   if (coupon?.free_shipping) {
-    shippingMethod = "free_shipping";
     shippingCost = 0;
   } else {
     // your custom logic
     if (subtotal < 100) {
-      shippingMethod = "flat_rate";
       shippingCost = 10;
     } else if (subtotal < 250) {
-      shippingMethod = "flat_rate";
       shippingCost = 20;
     } else {
-      shippingMethod = "flat_rate";
       shippingCost = 35;
     }
   }
 
-  // 4) Compute final total
+  // 4. Compute final total
   const total = subtotal + shippingCost - discountTotal;
 
-  // 5) Return the updated CheckoutData object
+  // 5. Return an updated CheckoutData object
   return {
     ...checkoutData,
     subtotal,
     discountTotal,
-    shippingMethod,
     shippingCost,
     total,
   };

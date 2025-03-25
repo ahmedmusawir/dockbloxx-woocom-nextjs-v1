@@ -5,10 +5,9 @@ import { useCartStore } from "@/store/useCartStore";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
 import OrderDetailsDesktop from "./OrderDetailsDesktop";
 import OrderDetailsMobile from "./OrderDetailsMobile";
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog } from "@/components/ui/dialog";
 import { useRouter } from "next/navigation";
 import Spinner from "@/components/common/Spinner";
-import { Coupon } from "@/types/coupon";
 
 const RightPane = () => {
   const {

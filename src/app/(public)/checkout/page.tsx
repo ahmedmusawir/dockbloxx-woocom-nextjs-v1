@@ -1,9 +1,5 @@
 import CheckoutPageContent from "./CheckoutPageContent";
-import {
-  fetchAllCoupons,
-  fetchCouponByCode,
-  fetchShippingOptions,
-} from "@/services/checkoutServices";
+import { fetchShippingOptions } from "@/services/checkoutServices";
 
 /**
  * The Checkout Page - Server Side Rendering (ISR)
@@ -16,15 +12,6 @@ const Checkout = async () => {
 
   const shippingData = await fetchShippingOptions();
 
-  // console.log("Shipping Options Fetched:[/checkout/page.tsx]", shippingData);
-
-  // JUST FOR TESTING ... REMOVE LATER
-  const couponData = await fetchAllCoupons();
-  console.log("Coupons Fetched:", couponData);
-
-  const singleCoupon = await fetchCouponByCode("free8");
-  console.log("Single Coupon Data:", singleCoupon);
-
   return (
     <div>
       {/* Embed Shipping Data */}
@@ -35,15 +22,6 @@ const Checkout = async () => {
           __html: JSON.stringify(shippingData),
         }}
       />
-
-      {/* Embed Coupon Data */}
-      {/* <script
-        id="coupon-data"
-        type="application/json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(couponData),
-        }}
-      /> */}
 
       {/* Main Checkout Page Content */}
       <CheckoutPageContent />

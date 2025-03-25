@@ -1,3 +1,5 @@
+"use client";
+
 import { useCheckoutStore } from "@/store/useCheckoutStore";
 import React, { useState } from "react";
 

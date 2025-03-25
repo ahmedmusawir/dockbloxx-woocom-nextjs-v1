@@ -2,49 +2,56 @@ import Head from "next/head";
 import Page from "@/components/common/Page";
 import Row from "@/components/common/Row";
 import ProductList from "@/components/shop/ProductList";
-
-import { fetchInitialProducts } from "@/services/productServices";
 import NumberedPagination from "@/components/common/NumberedPagination";
 import ShopPageReset from "@/components/shop/ShopPageReset";
 import CategoryFilter from "@/components/shop/filters/CategoryFilter";
-import { getAllCategories } from "@/services/categoryServices";
+import { Category } from "@/types/category";
+import { Product } from "@/types/product";
 
-const ShopPageContent = async () => {
-  const productsPerPage = 12;
-  // Fetching the first 12 products
-  const { products, totalProducts } = await fetchInitialProducts(1, 12);
+interface Props {
+  catSlug: string;
+  categories: Category[];
+  products: Product[];
+  totalProducts: number;
+  totalPages: number;
+}
 
-  // Calculate total pages based on total products
-  const totalPages = Math.ceil(totalProducts / productsPerPage);
-
-  // Fetching all the categories
-  const categories = await getAllCategories();
-
+const SingleCategoryContent = ({
+  catSlug,
+  categories,
+  products,
+  totalProducts,
+  totalPages,
+}: Props) => {
   return (
     <>
       <Head>
-        <title>Next Page ShopPageContent</title>
-        <meta name="description" content="This is the demo page" />
+        <title>{`Shop Category: ${catSlug}`}</title>
+        <meta
+          name="description"
+          content={`Explore products under ${catSlug}`}
+        />
       </Head>
       <Page className={""} FULL={false}>
         <Row className="prose max-w-3xl mx-auto">
-          <h1 className="text-center">The Shop</h1>
+          <h1 className="text-center capitalize">
+            {catSlug.replace(/-/g, " ")}
+          </h1>
         </Row>
         <div className="bg-white">
           <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-8 lg:max-w-7xl lg:px-1">
             <div className="md:flex md:items-center md:justify-between">
               <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-                Trending products
+                Category Products
               </h2>
-              <hr />
-
               <CategoryFilter categories={categories} />
             </div>
+
             <ShopPageReset
               initialProducts={products}
               totalProducts={totalProducts}
             />
-            {/* <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8"> */}
+
             <div className="">
               <ProductList
                 initialProducts={products}
@@ -52,6 +59,7 @@ const ShopPageContent = async () => {
               />
             </div>
           </div>
+
           <NumberedPagination totalPages={totalPages} />
         </div>
       </Page>
@@ -59,4 +67,4 @@ const ShopPageContent = async () => {
   );
 };
 
-export default ShopPageContent;
+export default SingleCategoryContent;

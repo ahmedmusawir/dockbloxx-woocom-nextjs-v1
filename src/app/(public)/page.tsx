@@ -1,6 +1,6 @@
 import HomePageContent from "./HomePageContent";
 
-const Home = () => {
+const Home = async () => {
   return <HomePageContent />;
 };
 

@@ -1,3 +1,5 @@
+"use client";
+
 import { CartItem } from "@/types/cart";
 import React from "react";
 import { useRouter } from "next/navigation";

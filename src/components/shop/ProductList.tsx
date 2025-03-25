@@ -24,7 +24,7 @@ const ProductList = ({ initialProducts, totalProducts }: ProductListProps) => {
   } = useNumberedPaginationStore();
 
   const { cartItems } = useCartStore();
-  console.log("Cart Items from Zustand [ProductList.tsx]", cartItems);
+  // console.log("Cart Items from Zustand [ProductList.tsx]", cartItems);
 
   // Hydrate Zustand store with initial SSR data for page 1
   useEffect(() => {
