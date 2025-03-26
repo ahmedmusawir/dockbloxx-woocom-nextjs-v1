@@ -127,15 +127,6 @@ export const useCheckoutStore = create<CheckoutStore>()(
 
       // Set Shipping Method & Cost
       setShippingMethod: (method, cost) => {
-        // Don't override if there's a free shipping coupon
-        const currentState = get();
-        if (currentState.checkoutData.coupon?.free_shipping) {
-          console.log(
-            "Preventing shipping method change due to free shipping coupon"
-          );
-          return;
-        }
-
         // 1) Update shipping cost in store
         set((state) => ({
           checkoutData: {
@@ -150,22 +141,6 @@ export const useCheckoutStore = create<CheckoutStore>()(
 
         console.log("[setShippingMethod] => ", method, cost);
       },
-
-      // setShippingMethod: (method, cost) => {
-      //   // 1) Update shipping cost in store
-      //   set((state) => ({
-      //     checkoutData: {
-      //       ...state.checkoutData,
-      //       shippingMethod: method,
-      //       shippingCost: cost,
-      //     },
-      //   }));
-
-      //   // 2) Immediately run calculateTotals
-      //   get().calculateTotals();
-
-      //   console.log("[setShippingMethod] => ", method, cost);
-      // },
 
       /**
        * 1) When we setCartItems, we just store them in state,

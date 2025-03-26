@@ -33,7 +33,7 @@ const ShippingMethods = ({
     );
   }
 
-  // Compute the applicable flat rate cost based on subtotal.
+  // // Compute the applicable flat rate cost based on subtotal.
   const computedFlatRate = useMemo(() => {
     if (subtotal < 100) {
       // For orders under $100, use the $10 rate.
@@ -100,6 +100,11 @@ const ShippingMethods = ({
     return "";
   }, [availableMethods, checkoutData.coupon?.free_shipping]);
 
+  console.log(
+    "[ShippingMethods.tsx] computedDefaultSelection =>",
+    computedDefaultSelection
+  );
+
   // Manage the selected method state.
   const [selectedMethod, setSelectedMethod] = useState(
     computedDefaultSelection
@@ -110,6 +115,7 @@ const ShippingMethods = ({
     if (!shippingOptions.find((option) => option.id === selectedMethod)) {
       setSelectedMethod(computedDefaultSelection);
     }
+    // We intentionally do not force-reset if the user has made a manual change.
   }, [computedDefaultSelection, shippingOptions, selectedMethod]);
 
   // Update the checkout store whenever selectedMethod (or shippingOptions) changes.
@@ -123,18 +129,31 @@ const ShippingMethods = ({
     }
   }, [selectedMethod, shippingOptions, setShippingMethod]);
 
+  useEffect(() => {
+    console.log(
+      "[ShippingMethods] existing shippingMethod =>",
+      checkoutData.shippingMethod
+    );
+    console.log(
+      "[ShippingMethods] computedDefaultSelection =>",
+      computedDefaultSelection
+    );
+  }, [checkoutData.shippingMethod, computedDefaultSelection]);
+
+  // Only run when coupon changes
+  useEffect(() => {
+    if (checkoutData.coupon?.free_shipping) {
+      // Force an update of shipping method when coupon changes
+      setShippingMethod("free_shipping", 0);
+    }
+  }, [checkoutData.coupon]);
+
   return (
     <div className="mt-4 mb-10">
       <h1 className="text-2xl text-gray-900">Delivery method</h1>
 
-      {/* If free shipping coupon exists, just show that */}
-      {checkoutData.coupon?.free_shipping ? (
-        <div className="mt-4 p-4 border border-lime-300 rounded-none bg-lime-300">
-          <span className="text-sm font-medium text-gray-900">
-            Free Shipping Applied with Coupon: {checkoutData.coupon.code}
-          </span>
-        </div>
-      ) : availableMethods.length === 0 ? (
+      {/* Show an empty message if no shipping methods are available */}
+      {availableMethods.length === 0 ? (
         <div className="mt-4 p-4 border border-gray-300 rounded-none bg-white text-center text-gray-500">
           Please select a shipping address in order to see shipping quotes
         </div>

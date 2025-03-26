@@ -54,6 +54,34 @@ const RightPane = () => {
     setCoupon(checkoutData.coupon);
   }, []);
 
+  // ------------- MAIN LOGIC FOR SUBTOTAL CHECK -------------
+  const [couponMessage, setCouponMessage] = useState("");
+  const prevSubtotalRef = useRef(checkoutData.subtotal);
+
+  // useEffect(() => {
+  //   const oldSubtotal = prevSubtotalRef.current;
+  //   const newSubtotal = checkoutData.subtotal;
+
+  //   console.log("RightPane effect -> old:", oldSubtotal, " new:", newSubtotal);
+
+  //   // If a coupon is applied & the subtotal changed, show a message
+  //   if (checkoutData.coupon && newSubtotal !== oldSubtotal) {
+  //     console.log("Subtotal changed, showing coupon message");
+  //     setCouponMessage(
+  //       "Your cart changed, you may need to re-apply the coupon."
+  //     );
+  //   } else {
+  //     // If no coupon or the subtotal didn't change, clear the message
+  //     console.log("Subtotal not changed or no coupon, clearing message");
+  //     setCouponMessage("");
+  //   }
+
+  //   // Update the ref
+  //   prevSubtotalRef.current = newSubtotal;
+  // }, [checkoutData.coupon, checkoutData.subtotal]);
+
+  // ---------------------------------------------------------
+
   const shipping = checkoutData.shippingCost || 0;
   const total = checkoutData.total;
 
@@ -68,6 +96,10 @@ const RightPane = () => {
     return <Spinner />;
   }
 
+  if (!isHydrated) {
+    return <Spinner />; // or any loading indicator you prefer
+  }
+
   return (
     <div className="mt-10 lg:mt-0">
       {/* Desktop Order Summary */}
@@ -78,6 +110,7 @@ const RightPane = () => {
           shipping={shipping}
           total={total}
           editInCart={editInCart}
+          couponMessage={couponMessage}
         />
       </div>
 
@@ -89,6 +122,7 @@ const RightPane = () => {
           shipping={shipping}
           total={total}
           editInCart={editInCart}
+          couponMessage={couponMessage}
         />
       </Dialog>
     </div>
