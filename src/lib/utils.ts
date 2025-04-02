@@ -1,3 +1,11 @@
+// This sends proper image urls
+export const getImageUrl = (path: string) => {
+  if (!path.startsWith("/")) {
+    path = "/" + path;
+  }
+  return `${process.env.NEXT_PUBLIC_BACKEND_URL}${path}`;
+};
+
 /**
  * Format a date string into a more readable format.
  *

@@ -1,11 +1,9 @@
 import Page from "@/components/common/Page";
 import Row from "@/components/common/Row";
-import { Button } from "@/components/ui/button";
 import Head from "next/head";
-import Link from "next/link";
 import React from "react";
-import Script from "next/script";
 import Image from "next/image";
+import { getImageUrl } from "@/lib/utils";
 
 const BuildABloxxPageContent = () => {
   return (
@@ -21,13 +19,14 @@ const BuildABloxxPageContent = () => {
       {/* Hero Section with Background Image */}
       <div className="relative h-[300px] w-full">
         <Image
-          src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/header-img.jpg"
+          src={getImageUrl("/wp-content/uploads/header-img.jpg")}
           alt="Custom Services Background"
           fill
           className="object-cover"
           priority
         />
-        <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+        {/* <div className="absolute inset-0 bg-black/40 flex items-center justify-center"> */}
+        <div className="absolute inset-0 flex items-center justify-center">
           <h1 className="text-4xl md:text-5xl text-white font-bold">
             Custom Services
           </h1>
@@ -55,7 +54,7 @@ const BuildABloxxPageContent = () => {
               <div className="mb-4 lg:mb-6">
                 <div className="relative h-[250px] sm:h-[300px]">
                   <Image
-                    src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/gallery-img-1.jpg"
+                    src={getImageUrl("/wp-content/uploads/gallery-img-1.jpg")}
                     alt="Main Gallery Image"
                     fill
                     className="object-cover rounded-lg"
@@ -67,7 +66,7 @@ const BuildABloxxPageContent = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="relative h-[320px]">
                   <Image
-                    src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/gallery-img-7.jpg"
+                    src={getImageUrl("/wp-content/uploads/gallery-img-7.jpg")}
                     alt="Gallery Image 2"
                     fill
                     className="object-cover rounded-lg"
@@ -75,7 +74,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/gallery-img-6.jpg"
+                    src={getImageUrl("/wp-content/uploads/gallery-img-6.jpg")}
                     alt="Gallery Image 3"
                     fill
                     className="object-cover rounded-lg"
@@ -83,7 +82,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/gallery-img-5.jpg"
+                    src={getImageUrl("/wp-content/uploads/gallery-img-5.jpg")}
                     alt="Gallery Image 4"
                     fill
                     className="object-cover rounded-lg"
@@ -91,7 +90,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/gallery-img-4.jpg"
+                    src={getImageUrl("/wp-content/uploads/gallery-img-4.jpg")}
                     alt="Gallery Image 5"
                     fill
                     className="object-cover rounded-lg"
@@ -99,7 +98,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/gallery-img-3.jpg"
+                    src={getImageUrl("/wp-content/uploads/gallery-img-3.jpg")}
                     alt="Gallery Image 6"
                     fill
                     className="object-cover rounded-lg"
@@ -107,7 +106,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/gallery-img-2.jpg"
+                    src={getImageUrl("/wp-content/uploads/gallery-img-2.jpg")}
                     alt="Gallery Image 7"
                     fill
                     className="object-cover rounded-lg"
