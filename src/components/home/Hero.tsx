@@ -56,7 +56,8 @@ const Hero = () => {
         <div className="hidden lg:block bg-gray-50 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <img
             alt=""
-            src="/home-header-bg.jpg"
+            src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/Header-Image-New-1.jpg"
+            // src="/home-header-bg.jpg"
             className="aspect-[3/2] object-cover lg:aspect-auto lg:size-full"
           />
         </div>

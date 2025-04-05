@@ -1,8 +1,7 @@
-// Used to update woocom order status by orderId to either 'cancel' or 'processing'
-
+import { WC_REST_URL } from "@/constants/apiEndpoints";
 import { NextResponse } from "next/server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_WOOCOM_REST_API_URL;
+const BASE_URL = WC_REST_URL;
 const CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
 

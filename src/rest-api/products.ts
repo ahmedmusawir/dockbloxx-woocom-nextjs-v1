@@ -1,4 +1,6 @@
-const BASE_URL = process.env.NEXT_PUBLIC_WOOCOM_REST_API_URL;
+import { WC_REST_URL } from "@/constants/apiEndpoints";
+
+const BASE_URL = WC_REST_URL;
 const CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
 

@@ -1,7 +1,8 @@
+import { WC_REST_URL } from "@/constants/apiEndpoints";
 import { CheckoutData } from "@/types/checkout";
 import { NextResponse } from "next/server";
 
-const BASE_URL = process.env.NEXT_PUBLIC_WOOCOM_REST_API_URL;
+const BASE_URL = WC_REST_URL;
 const CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
 

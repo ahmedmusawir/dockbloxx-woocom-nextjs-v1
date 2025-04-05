@@ -6,7 +6,7 @@
  * images, and rich text content.
  *
  * Environment Variables:
- * - `NEXT_PUBLIC_WP_PAGES_REST_URL`: The base URL for fetching WordPress pages via REST API.
+ * - `WP_REST_PAGES`: The base URL for fetching WordPress pages via REST API.
  *
  * Returns:
  * - `Promise<object | null>`: A promise that resolves to the ACF data object if successful, or `null` if an error occurs.
@@ -22,15 +22,13 @@
  * ```
  */
 
+import { WP_REST_PAGES } from "@/constants/apiEndpoints";
+
 export async function fetchHomePageData() {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_WP_PAGES_REST_URL}?slug=app-home-page`,
-      // `${process.env.NEXT_PUBLIC_WP_PAGES_REST_URL}/12163`,
-      {
-        next: { revalidate: 600 }, // Enables ISR, regenerates every 10 minutes
-      }
-    );
+    const response = await fetch(`${WP_REST_PAGES}?slug=app-home-page`, {
+      next: { revalidate: 600 }, // Enables ISR, regenerates every 10 minutes
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch home page data");

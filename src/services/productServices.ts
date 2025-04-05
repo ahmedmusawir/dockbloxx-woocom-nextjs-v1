@@ -268,6 +268,7 @@ export const fetchProductBySlug = async (
 
 import { WOOCOM_REST_GET_VARIATION_BY_ID } from "@/rest-api/products";
 import { ProductVariation } from "@/types/product";
+import { ACF_OPTIONS, ACF_REST_OPTIONS } from "@/constants/apiEndpoints";
 
 /**
  * Fetch Product Variations by IDs
@@ -447,7 +448,7 @@ export const fetchRelatedProductsById = async (
 export const fetchPoleShapeStyles = async (): Promise<
   Record<string, string>
 > => {
-  const url = process.env.NEXT_PUBLIC_ACF_OPTIONS_REST_URL;
+  const url = ACF_REST_OPTIONS;
   // console.log("acf url [productServices]", url);
   if (!url) {
     throw new Error("ACF Options REST URL is not defined in the environment.");

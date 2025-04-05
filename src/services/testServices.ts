@@ -6,7 +6,7 @@
  * images, and rich text content.
  *
  * Environment Variables:
- * - `NEXT_PUBLIC_WP_PAGES_REST_URL`: The base URL for fetching WordPress pages via REST API.
+ * - `WP_REST_PAGES`: The base URL for fetching WordPress pages via REST API.
  *
  * Returns:
  * - `Promise<object | null>`: A promise that resolves to the ACF data object if successful, or `null` if an error occurs.

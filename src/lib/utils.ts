@@ -1,3 +1,11 @@
+// This sends all the proper api urls
+export const getApiUrl = (path: string) => {
+  const base = process.env.NEXT_PUBLIC_BACKEND_URL;
+  if (!base) throw new Error("NEXT_PUBLIC_BACKEND_URL is missing.");
+  if (!path.startsWith("/")) path = "/" + path;
+  return `${base}${path}`;
+};
+
 // This sends proper image urls
 export const getImageUrl = (path: string) => {
   if (!path.startsWith("/")) {

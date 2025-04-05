@@ -1,4 +1,6 @@
-const BASE_URL = process.env.NEXT_PUBLIC_WOOCOM_REST_API_URL;
+import { ACF_REST_OPTIONS, WC_REST_URL } from "@/constants/apiEndpoints";
+
+const BASE_URL = WC_REST_URL;
 const CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
 const CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
 
@@ -11,8 +13,7 @@ if (typeof window === "undefined") {
   }
 }
 
-export const WOOCOM_REST_GET_SHIPPING_OPTIONS =
-  process.env.NEXT_PUBLIC_ACF_OPTIONS_REST_URL;
+export const WOOCOM_REST_GET_SHIPPING_OPTIONS = ACF_REST_OPTIONS;
 
 export const WOOCOM_REST_GET_ALL_COUPONS = `${BASE_URL}/coupons?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;
 

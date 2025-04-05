@@ -1,9 +1,10 @@
+import { WC_REST_URL } from "@/constants/apiEndpoints";
 import { Category } from "@/types/category";
 import { Product } from "@/types/product";
 
 const NEXT_APP_URL = process.env.NEXT_PUBLIC_APP_URL; // API URL
 
-const WOOCOM_REST_API_URL = process.env.NEXT_PUBLIC_WOOCOM_REST_API_URL;
+const WOOCOM_REST_API_URL = WC_REST_URL;
 const WOOCOM_CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
 const WOOCOM_CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
 

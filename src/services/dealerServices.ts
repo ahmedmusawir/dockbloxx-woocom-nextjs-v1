@@ -1,8 +1,8 @@
+import { DEALER_REST_COUPONS } from "@/constants/apiEndpoints";
+
 export async function fetchAllDealerSlugs() {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DEALER_COUPON_CPT_URL}?_fields=slug`
-    );
+    const response = await fetch(`${DEALER_REST_COUPONS}?_fields=slug`);
 
     if (!response.ok) throw new Error("Failed to fetch dealer slugs");
 
@@ -17,12 +17,9 @@ export async function fetchAllDealerSlugs() {
 
 export async function fetchDealerPageData(dealerSlug: string) {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_DEALER_COUPON_CPT_URL}?slug=${dealerSlug}`,
-      {
-        next: { revalidate: 600 }, // ISR: revalidate every 10 mins
-      }
-    );
+    const response = await fetch(`${DEALER_REST_COUPONS}?slug=${dealerSlug}`, {
+      next: { revalidate: 600 }, // ISR: revalidate every 10 mins
+    });
 
     if (!response.ok)
       throw new Error(`Failed to fetch data for dealer: ${dealerSlug}`);
