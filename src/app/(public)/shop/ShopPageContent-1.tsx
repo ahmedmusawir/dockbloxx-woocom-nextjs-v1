@@ -6,17 +6,19 @@ import ProductList from "@/components/shop/ProductList";
 import { fetchInitialProducts } from "@/services/productServices";
 import NumberedPagination from "@/components/common/NumberedPagination";
 import ShopPageReset from "@/components/shop/ShopPageReset";
+import CategoryFilter from "@/components/shop/filters/CategoryFilter";
+import { getAllCategories } from "@/services/categoryServices";
 
 const ShopPageContent = async () => {
   const productsPerPage = 12;
   // Fetching the first 12 products
   const { products, totalProducts } = await fetchInitialProducts(1, 12);
 
-  console.log("PRODUCTS: [ShopPageContent]", products);
-  // console.log("TOTAL: [ShopPageContent]", totalProducts);
-
   // Calculate total pages based on total products
   const totalPages = Math.ceil(totalProducts / productsPerPage);
+
+  // Fetching all the categories
+  const categories = await getAllCategories();
 
   return (
     <>
@@ -35,13 +37,8 @@ const ShopPageContent = async () => {
                 Trending products
               </h2>
               <hr />
-              <a
-                href="#"
-                className="hidden text-sm font-medium text-indigo-600 hover:text-indigo-500 md:block"
-              >
-                Ask a question...
-                <span aria-hidden="true"> &rarr;</span>
-              </a>
+
+              <CategoryFilter categories={categories} />
             </div>
             <ShopPageReset
               initialProducts={products}

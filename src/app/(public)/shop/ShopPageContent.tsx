@@ -31,7 +31,7 @@ const ShopPageContent = async () => {
           <h1 className="text-center">The Shop</h1>
         </Row>
         <div className="bg-white">
-          <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-8 lg:max-w-7xl lg:px-1">
+          <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-8 md:max-w-7xl lg:max-w-7xl lg:px-1">
             <div className="md:flex md:items-center md:justify-between">
               <h2 className="text-2xl font-bold tracking-tight text-gray-900">
                 Trending products
@@ -44,7 +44,7 @@ const ShopPageContent = async () => {
               initialProducts={products}
               totalProducts={totalProducts}
             />
-            {/* <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8"> */}
+            {/* <div className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-2 md:gap-y-0 lg:gap-x-8"> */}
             <div className="">
               <ProductList
                 initialProducts={products}

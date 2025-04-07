@@ -44,7 +44,8 @@ const ProductList = ({ initialProducts, totalProducts }: ProductListProps) => {
   const dataToDisplay = pageData[currentPage] || initialProducts;
 
   return (
-    <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8">
+    <div className="grid grid-cols-1 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-2 md:gap-y-0 lg:grid-cols-4 lg:gap-x-8">
+      {/* <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 md:grid-cols-4 md:gap-y-0 lg:gap-x-8"> */}
       {loading ? (
         <div className="col-span-full flex justify-center items-center h-[200px]">
           <SpinnerLarge />
