@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -19,12 +19,34 @@ const Navbar = () => {
   const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
   const { getCartDetails } = useCartStore();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  // 1) A ref to the dropdown container
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // 2) Add a global mouse event listener so that the dropdown goes away when clicked on the body
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      // If click is outside the dropdownRef, close the menu
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   useEffect(() => {
     setCartCount(getCartDetails().length);
   }, [getCartDetails]);
 
-  // Keep your NavLink as before
+  // NavLinks with styles
   const NavLink = ({
     href,
     children,
@@ -117,23 +139,53 @@ const Navbar = () => {
             </Link>
           </div>
           {/* Secondary Nav */}
+
           <div className="flex items-center space-x-4 text-xs text-gray-600">
             <Link href="/shop" className="hover:text-blue-600">
               Search Products
             </Link>
             <span className="border-r border-gray-300 h-4" />
-            <Link href="/blog" className="hover:text-blue-600">
-              Community
-            </Link>
+
+            {/* DROPDOWN WRAPPER */}
+            <div className="relative" ref={dropdownRef}>
+              {/* Main Trigger (clickable) */}
+              <span
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                className="hover:text-blue-600 cursor-pointer"
+              >
+                Community
+              </span>
+
+              {/* Dropdown - only visible if isDropdownOpen */}
+              {isDropdownOpen && (
+                <div className="absolute left-0 top-full mt-2 w-40 bg-white border border-gray-200 shadow-md z-10">
+                  <Link
+                    href="/about"
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    Our Story
+                  </Link>
+                  <Link
+                    href="/blog"
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    Blog
+                  </Link>
+                </div>
+              )}
+            </div>
             <span className="border-r border-gray-300 h-4" />
+
             <Link href="/dealer-locator" className="hover:text-blue-600">
               Dealer Locator
             </Link>
             <span className="border-r border-gray-300 h-4" />
+
             <Link href="/dealer-login" className="hover:text-blue-600">
               Dealer Login
             </Link>
             <span className="border-r border-gray-300 h-4" />
+
             <Link href="/contact" className="hover:text-blue-600">
               Help
             </Link>
@@ -148,9 +200,9 @@ const Navbar = () => {
           {/* Main Desktop Nav */}
           <div className="flex space-x-8 text-base font-bold">
             <NavLink href="/shop">SHOP ALL</NavLink>
-            <NavLink href="/accesories">ACCESSORIES</NavLink>
+            <NavLink href="/category/accessories">ACCESSORIES</NavLink>
             <NavLink href="/build-a-bloxx">BUILD A BLOXX</NavLink>
-            <NavLink href="/deals">DEALS</NavLink>
+            <NavLink href="/category/deals">DEALS</NavLink>
             <NavLink href="/gift-cards">GIFT CARDS</NavLink>
             <NavLink href="http://facebook.com">REVIEW</NavLink>
           </div>

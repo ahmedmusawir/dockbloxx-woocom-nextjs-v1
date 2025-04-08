@@ -2,13 +2,12 @@ import Head from "next/head";
 import Page from "@/components/common/Page";
 import Row from "@/components/common/Row";
 import ProductList from "@/components/shop/ProductList";
+
 import { fetchInitialProducts } from "@/services/productServices";
 import NumberedPagination from "@/components/common/NumberedPagination";
 import ShopPageReset from "@/components/shop/ShopPageReset";
 import CategoryFilter from "@/components/shop/filters/CategoryFilter";
 import { getAllCategories } from "@/services/categoryServices";
-import Image from "next/image";
-import { getImageUrl } from "@/lib/utils";
 
 const ShopPageContent = async () => {
   const productsPerPage = 12;
@@ -24,30 +23,13 @@ const ShopPageContent = async () => {
   return (
     <>
       <Head>
-        <title>Build-a-Bloxx - Custom Dock Accessories</title>
-        <meta
-          name="description"
-          content="Custom dock accessories and solutions - Build your perfect dock setup with DockBloxx"
-        />
+        <title>Next Page ShopPageContent</title>
+        <meta name="description" content="This is the demo page" />
       </Head>
-
-      {/* Hero Section with Background Image */}
-      <div className="relative h-[300px] w-full">
-        <Image
-          src={getImageUrl("/wp-content/uploads/header-img.jpg")}
-          alt="Custom Services Background"
-          fill
-          className="object-cover"
-          priority
-        />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-4xl md:text-5xl text-white font-bold">
-            The Shop
-          </h1>
-        </div>
-      </div>
-
       <Page className={""} FULL={false}>
+        <Row className="prose max-w-3xl mx-auto">
+          <h1 className="text-center">The Shop</h1>
+        </Row>
         <div className="bg-white">
           <div className="mx-auto max-w-2xl px-4 py-8 sm:px-6 sm:py-8 md:max-w-7xl lg:max-w-7xl lg:px-1">
             <div className="md:flex md:items-center md:justify-between">

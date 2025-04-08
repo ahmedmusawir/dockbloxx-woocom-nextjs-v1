@@ -1,6 +1,9 @@
 import BlogPostItems from "@/components/blog/BlogPostItems";
 import LoadMoreButton from "@/components/common/LoadMoreButton";
+import { getImageUrl } from "@/lib/utils";
 import { fetchBlogPosts } from "@/services/blogServices";
+import Head from "next/head";
+import Image from "next/image";
 
 const BlogPageContent = async () => {
   const {
@@ -12,16 +15,32 @@ const BlogPageContent = async () => {
   console.log("posts [BlogPageContent.tsx]", initialPosts);
 
   return (
-    <div className="bg-white py-24 sm:py-32">
-      <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-balance text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-            From the blog
-          </h2>
-          <p className="mt-2 text-lg/8 text-gray-600">
-            Learn how to grow your business with our expert advice.
-          </p>
+    <div className="pb-16">
+      <Head>
+        <title>Build-a-Bloxx - Custom Dock Accessories</title>
+        <meta
+          name="description"
+          content="Custom dock accessories and solutions - Build your perfect dock setup with DockBloxx"
+        />
+      </Head>
+
+      {/* Hero Section with Background Image */}
+      <div className="relative h-[300px] w-full">
+        <Image
+          src={getImageUrl("/wp-content/uploads/header-img.jpg")}
+          alt="Dockbloxx Blog Background"
+          fill
+          className="object-cover"
+          priority
+        />
+        <div className="absolute inset-0 flex items-center justify-center">
+          <h1 className="text-4xl md:text-5xl text-white font-bold">
+            Our Blog
+          </h1>
         </div>
+      </div>
+
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Render the posts */}
         <BlogPostItems
           initialPosts={initialPosts}

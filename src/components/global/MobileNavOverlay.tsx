@@ -54,13 +54,13 @@ export default function MobileNavOverlay({ onClose }: MobileNavOverlayProps) {
           <MobileNavItem href="/shop" onClose={onClose}>
             SHOP ALL
           </MobileNavItem>
-          <MobileNavItem href="/accessories" onClose={onClose}>
+          <MobileNavItem href="/category/accessories" onClose={onClose}>
             ACCESSORIES
           </MobileNavItem>
           <MobileNavItem href="/build-a-bloxx" onClose={onClose}>
             BUILD A BLOXX
           </MobileNavItem>
-          <MobileNavItem href="/deals" onClose={onClose}>
+          <MobileNavItem href="/category/deals" onClose={onClose}>
             DEALS
           </MobileNavItem>
           <MobileNavItem href="/gift-cards" onClose={onClose}>
@@ -82,8 +82,11 @@ export default function MobileNavOverlay({ onClose }: MobileNavOverlayProps) {
           <MobileNavItem href="/shop" onClose={onClose}>
             Search Products
           </MobileNavItem>
+          <MobileNavItem href="/about" onClose={onClose}>
+            Our Story
+          </MobileNavItem>
           <MobileNavItem href="/blog" onClose={onClose}>
-            Community
+            Blog
           </MobileNavItem>
           <MobileNavItem href="/dealers" onClose={onClose}>
             Dealer Locator
