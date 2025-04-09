@@ -75,12 +75,9 @@ const CartItems = () => {
     <>
       {cartItems.length === 0 && (
         <>
-          <h2 className="text-center mt-5">Your Cart Is Empty!</h2>
+          <h2 className="text-center mt-16">Your Cart Is Empty!</h2>
           <figure className="flex justify-center">
-            <img
-              src="https://res.cloudinary.com/dyb0qa58h/image/upload/v1725423361/NO-ITEM-FOUND_bwdwum.webp"
-              alt=""
-            />
+            <img src="/images/NO-ITEM-FOUND_DOCKBLOXX.webp" alt="" />
           </figure>
           <div className="flex justify-center">
             <Link href={"/shop"}>

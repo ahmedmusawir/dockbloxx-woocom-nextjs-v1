@@ -37,28 +37,18 @@ const ProductListItem = ({ product }: Props) => {
         </div>
       </Link>
       <section className="">
-        <h3 className="mt-4 mb-2 text-xl text-gray-700">{product.name}</h3>
+        <h3 className="mt-4 text-sm text-gray-700">{product.name}</h3>
         <p className="mt-1 text-sm text-gray-500">
-          {product.categories
-            .filter((cat) => cat.name !== "DockBloxx")
-            .map((cat) => (
-              <span
-                key={cat.name}
-                className="inline-flex items-center rounded-full bg-lime-200 px-2 py-1 text-[10px] font-bold text-gray-600 ring-1 ring-inset ring-gray-500/10 mr-2"
-              >
-                {cat.name}
-              </span>
-            ))}
+          {product.categories.map((cat) => cat.name)}
         </p>
-
-        <p className="text-xl font-bold text-blue-700 float-right mt-10">
+        <p className="mt-1 text-sm font-medium text-gray-900">
           {parse(product.price_html)}
         </p>
 
         <Link href={`/shop/${product.slug}`}>
           <button
             type="button"
-            className="mt-8 rounded-none bg-blue-600 px-4 py-3 text-xs font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 xl:mb-10 w-full"
+            className="mt-8 rounded-full bg-indigo-600 px-4 py-3 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 float-right xl:mb-10"
           >
             SELECT OPTIONS
           </button>

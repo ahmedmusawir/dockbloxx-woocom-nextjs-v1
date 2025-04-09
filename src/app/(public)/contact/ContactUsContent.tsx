@@ -68,7 +68,7 @@ const ContactUsContent = () => {
             {/* Right Column - Form */}
             <div className="w-full lg:w-1/2 bg-gray-50 px-8 py-20 rounded-lg sm:p-20 lg:p-10 xl:p-20">
               {/* Heading */}
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-10">
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-500 mb-10">
                 Get In Touch With DockBloxx
               </h2>
               <p className="text-gray-700 text-xl leading-relaxed mb-24">
@@ -88,7 +88,7 @@ const ContactUsContent = () => {
                   height={50}
                 />
                 <div>
-                  <p className="font-bold text-gray-800 sm:text-2xl text-base">
+                  <p className="font-bold text-gray-500 sm:text-2xl text-base">
                     2349 Centennial Dr.
                   </p>
                   <p className="text-gray-700 text-base">
@@ -105,7 +105,7 @@ const ContactUsContent = () => {
                   width={60}
                   height={60}
                 />
-                <p className="text-gray-700 font-bold text-base sm:text-2xl">
+                <p className="text-gray-500 font-bold text-base sm:text-2xl">
                   404-220-9641
                 </p>
               </div>
@@ -118,7 +118,7 @@ const ContactUsContent = () => {
                   width={70}
                   height={70}
                 />
-                <p className="text-gray-700 font-bold text-base sm:text-2xl">
+                <p className="text-gray-500 font-bold text-base sm:text-2xl">
                   support@dockbloxx.com
                 </p>
               </div>

@@ -94,7 +94,7 @@ const Faq = () => {
     <div className="bg-gray-50">
       <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
         <div className="mx-auto max-w-4xl">
-          <h2 className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-5xl">
+          <h2 className="text-3xl font-extrabold tracking-tight text-gray-500 sm:text-5xl">
             Inquiring Minds Want To Know!
           </h2>
           <dl className="mt-16 divide-y divide-gray-900/10">
@@ -106,7 +106,7 @@ const Faq = () => {
               >
                 <dt>
                   <DisclosureButton className="group flex w-full items-start justify-between text-left text-gray-900">
-                    <span className="text-2xl font-extrabold">
+                    <span className="text-2xl font-extrabold text-gray-500">
                       Q: {faq.question}
                     </span>
                     <span className="ml-6 flex h-7 items-center">
@@ -125,7 +125,6 @@ const Faq = () => {
                   as="dd"
                   className="mt-2 pr-12 prose prose-lg text-gray-600 max-w-none space-y-4"
                 >
-                  {/* <p >{faq.answer}</p> */}
                   <span className="text-xl text-gray-600">
                     <ReactMarkdown>{faq.answer}</ReactMarkdown>
                   </span>

@@ -24,7 +24,7 @@ const CartPageContent = async () => {
       <div className="relative h-[300px] w-full">
         <Image
           src={getImageUrl("/wp-content/uploads/header-img.jpg")}
-          alt="Gift Cards Background"
+          alt="Shopping Cart Background"
           fill
           className="object-cover"
           priority
