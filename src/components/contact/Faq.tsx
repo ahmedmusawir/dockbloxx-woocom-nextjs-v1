@@ -92,7 +92,8 @@ const faqs = [
 const Faq = () => {
   return (
     <div className="bg-gray-50">
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
+      {/* <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40"> */}
+      <div className="mx-auto max-w-7xl px-1 py-24 sm:py-32 lg:px-8 lg:py-40">
         <div className="mx-auto max-w-4xl">
           <h2 className="text-3xl font-extrabold tracking-tight text-gray-500 sm:text-5xl">
             Inquiring Minds Want To Know!
@@ -104,7 +105,7 @@ const Faq = () => {
                 as="div"
                 className="py-6 first:pt-0 last:pb-0"
               >
-                <dt>
+                <dt className="">
                   <DisclosureButton className="group flex w-full items-start justify-between text-left text-gray-900">
                     <span className="text-2xl font-extrabold text-gray-500">
                       Q: {faq.question}
@@ -123,7 +124,7 @@ const Faq = () => {
                 </dt>
                 <DisclosurePanel
                   as="dd"
-                  className="mt-2 pr-12 prose prose-lg text-gray-600 max-w-none space-y-4"
+                  className="mt-2 prose prose-lg text-gray-600 max-w-none space-y-4 bg-gray-200 p-8 rounded-lg"
                 >
                   <span className="text-xl text-gray-600">
                     <ReactMarkdown>{faq.answer}</ReactMarkdown>

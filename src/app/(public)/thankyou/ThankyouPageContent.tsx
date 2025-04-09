@@ -64,7 +64,7 @@ const ThankyouPageContent = () => {
         <div className="h-80 overflow-hidden lg:absolute lg:h-full lg:w-1/2 lg:pr-4 xl:pr-12">
           <img
             alt="TODO"
-            src="https://res.cloudinary.com/dyb0qa58h/image/upload/v1693546210/39483523_wtpocj.webp"
+            src="/home-header-bg.jpg"
             className="size-full object-cover"
           />
         </div>
@@ -175,7 +175,7 @@ const ThankyouPageContent = () => {
                   <p>No order details available.</p>
                 )}
 
-                <div>
+                {/* <div>
                   <dt className="font-medium text-gray-900">
                     Payment Information
                   </dt>
@@ -201,7 +201,7 @@ const ThankyouPageContent = () => {
                       <p>Expires 12 / 21</p>
                     </div>
                   </dd>
-                </div>
+                </div> */}
               </dl>
 
               <div className="mt-16 border-t border-gray-200 py-6 text-right">
