@@ -268,7 +268,7 @@ export const fetchProductBySlug = async (
 
 import { WOOCOM_REST_GET_VARIATION_BY_ID } from "@/rest-api/products";
 import { ProductVariation } from "@/types/product";
-import { ACF_OPTIONS, ACF_REST_OPTIONS } from "@/constants/apiEndpoints";
+import { ACF_REST_OPTIONS } from "@/constants/apiEndpoints";
 
 /**
  * Fetch Product Variations by IDs
