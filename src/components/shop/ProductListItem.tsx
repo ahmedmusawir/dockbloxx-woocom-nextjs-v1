@@ -44,7 +44,7 @@ const ProductListItem = ({ product }: Props) => {
             .map((cat) => (
               <span
                 key={cat.name}
-                className="inline-flex items-center rounded-full bg-lime-200 px-2 py-1 text-[10px] font-bold text-gray-600 ring-1 ring-inset ring-gray-500/10 mr-2"
+                className="mt-1 inline-flex items-center rounded-full bg-lime-200 px-2 py-1 text-[10px] font-bold text-gray-600 ring-1 ring-inset ring-gray-500/10 mr-2"
               >
                 {cat.name}
               </span>

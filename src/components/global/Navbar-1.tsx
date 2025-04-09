@@ -13,15 +13,13 @@ import { getImageUrl } from "@/lib/utils";
 import { useCartStore } from "@/store/useCartStore";
 import { usePathname } from "next/navigation";
 import MobileNavOverlay from "./MobileNavOverlay";
-import Spinner from "../common/Spinner";
 
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const pathname = usePathname();
+  const { getCartDetails } = useCartStore();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  // Access Zustand store
-  const { getCartDetails, isLoading } = useCartStore();
-  const cartItemCount = getCartDetails().length;
 
   // 1) A ref to the dropdown container
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -43,6 +41,10 @@ const Navbar = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    setCartCount(getCartDetails().length);
+  }, [getCartDetails]);
 
   // NavLinks with styles
   const NavLink = ({
@@ -66,14 +68,6 @@ const Navbar = () => {
       </Link>
     );
   };
-
-  if (isLoading) {
-    return (
-      <div>
-        <Spinner />
-      </div>
-    );
-  }
 
   return (
     <nav className="bg-white">
@@ -115,9 +109,11 @@ const Navbar = () => {
             {/* Cart Icon */}
             <Link href="/cart" className="relative p-2">
               <ShoppingBagIcon className="h-7 w-7 text-blue-600 hover:text-blue-800" />
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1 py-0.5 text-xs font-semibold text-white bg-red-500 rounded-full">
-                {cartItemCount}
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1 py-0.5 text-xs font-semibold text-white bg-red-500 rounded-full">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>
@@ -218,10 +214,11 @@ const Navbar = () => {
             </Link> */}
             <Link href="/cart" className="relative p-2">
               <ShoppingBagIcon className="h-7 w-7 text-blue-600 hover:text-blue-800" />
-              {/* {cartCount > 0 && ( */}
-              <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1 py-0.5 text-xs font-semibold text-white bg-red-500 rounded-full">
-                {cartItemCount}
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute top-0 right-0 inline-flex items-center justify-center px-1 py-0.5 text-xs font-semibold text-white bg-red-500 rounded-full">
+                  {cartCount}
+                </span>
+              )}
             </Link>
           </div>
         </div>
