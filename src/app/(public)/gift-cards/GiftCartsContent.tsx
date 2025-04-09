@@ -26,7 +26,7 @@ const GiftCartsContent = () => {
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <h1 className="text-4xl md:text-5xl text-white font-bold">
-            Gift Cards Placeholder
+            Gift Cards
           </h1>
         </div>
       </div>

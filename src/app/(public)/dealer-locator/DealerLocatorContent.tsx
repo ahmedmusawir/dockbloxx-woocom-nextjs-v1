@@ -6,6 +6,54 @@ import Image from "next/image";
 import { getImageUrl } from "@/lib/utils";
 
 const DealerLocatorContent = () => {
+  const dealers = [
+    {
+      name: "OpenAI",
+      address: "123 AI Way, San Francisco, CA 94110",
+      phone: "(415) 555-0101",
+    },
+    {
+      name: "Anthropic",
+      address: "456 Ethics Blvd, Berkeley, CA 94704",
+      phone: "(510) 555-0202",
+    },
+    {
+      name: "Google DeepMind",
+      address: "789 Quantum St, Mountain View, CA 94043",
+      phone: "(650) 555-0303",
+    },
+    {
+      name: "Stability AI",
+      address: "321 Diffusion Ln, London, UK W1T 1JY",
+      phone: "+44 20 7946 0958",
+    },
+    {
+      name: "Meta AI",
+      address: "1 Social Plaza, Menlo Park, CA 94025",
+      phone: "(650) 555-0404",
+    },
+    {
+      name: "Mistral",
+      address: "88 Research Row, Paris, France 75000",
+      phone: "+33 1 44 55 66 77",
+    },
+    {
+      name: "Cohere",
+      address: "987 Vector Dr, Toronto, ON M5H 2N2",
+      phone: "(416) 555-0606",
+    },
+    {
+      name: "Hugging Face",
+      address: "654 Token Blvd, Brooklyn, NY 11201",
+      phone: "(718) 555-0707",
+    },
+    {
+      name: "xAI",
+      address: "42 Neural Net Ave, Austin, TX 73301",
+      phone: "(512) 555-0808",
+    },
+  ];
+
   return (
     <>
       <Head>
@@ -26,7 +74,7 @@ const DealerLocatorContent = () => {
           priority
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-4xl md:text-5xl text-white font-bold">
+          <h1 className="text-3xl md:text-5xl text-white font-bold">
             Find A Dealer Near You
           </h1>
         </div>
@@ -35,110 +83,45 @@ const DealerLocatorContent = () => {
       <Page className="py-12" FULL={false}>
         {/* Centered Heading Section */}
         <Row className="max-w-7xl mx-auto text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Coming Soon</h2>
-          <p className="text-gray-600 max-w-3xl mx-auto">
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">
+            The Dealer List
+          </h2>
+          <p className="text-gray-600 max-w-3xl mx-auto mb-10">
             If you don't see exactly what you are looking for, contact us and we
-            will be happy to help you get what you want!
+            will help you locate the perfect DockBloxx dealer.
           </p>
-        </Row>
 
-        {/* Two Column Layout */}
-        <Row className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
-            {/* Left Column - Image Gallery */}
-            <div className="w-full lg:w-1/2 bg-gray-50 p-3 sm:p-4 lg:p-6 rounded-lg">
-              {/* Main Wide Image */}
-              <div className="mb-4 lg:mb-6">
-                <div className="relative h-[250px] sm:h-[300px]">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
+            {dealers.map((dealer, index) => (
+              <div
+                key={index}
+                className="bg-gray-100 p-6 rounded-lg shadow-sm text-left flex flex-col gap-4"
+              >
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {dealer.name}
+                </h3>
+
+                <div className="flex items-start gap-3 text-gray-700">
                   <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-1.jpg")}
-                    alt="Main Gallery Image"
-                    fill
-                    className="object-cover rounded-lg"
+                    src="/images/Map_Pin_icon.png"
+                    alt="Location Icon"
+                    width={20}
+                    height={20}
                   />
+                  <p>{dealer.address}</p>
+                </div>
+
+                <div className="flex items-start gap-3 text-gray-700">
+                  <Image
+                    src="/images/Phone_Call_Icon.png"
+                    alt="Phone Icon"
+                    width={30}
+                    height={30}
+                  />
+                  <p>{dealer.phone}</p>
                 </div>
               </div>
-
-              {/* Grid of Square Images - Single column on mobile, 2 columns on larger screens */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-7.jpg")}
-                    alt="Gallery Image 2"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-6.jpg")}
-                    alt="Gallery Image 3"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-5.jpg")}
-                    alt="Gallery Image 4"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-4.jpg")}
-                    alt="Gallery Image 5"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-3.jpg")}
-                    alt="Gallery Image 6"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-2.jpg")}
-                    alt="Gallery Image 7"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Form */}
-            <div className="w-full lg:w-1/2 bg-white rounded-lg">
-              <div className="h-[987px]">
-                <iframe
-                  src="https://link.cyberizegroup.com/widget/form/ocqfE7QzKa480G7ywQSN"
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    border: "none",
-                    borderRadius: "3px",
-                  }}
-                  id="inline-ocqfE7QzKa480G7ywQSN"
-                  data-layout={`{'id':'INLINE'}`}
-                  data-trigger-type="alwaysShow"
-                  data-trigger-value=""
-                  data-activation-type="alwaysActivated"
-                  data-activation-value=""
-                  data-deactivation-type="neverDeactivate"
-                  data-deactivation-value=""
-                  data-form-name="Build-a-Bloxx"
-                  data-height="987"
-                  data-layout-iframe-id="inline-ocqfE7QzKa480G7ywQSN"
-                  data-form-id="ocqfE7QzKa480G7ywQSN"
-                  title="Build-a-Bloxx"
-                />
-              </div>
-            </div>
+            ))}
           </div>
         </Row>
       </Page>

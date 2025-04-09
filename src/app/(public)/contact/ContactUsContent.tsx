@@ -4,6 +4,7 @@ import Head from "next/head";
 import React from "react";
 import Image from "next/image";
 import { getImageUrl } from "@/lib/utils";
+import Faq from "@/components/contact/Faq";
 
 const ContactUsContent = () => {
   return (
@@ -33,86 +34,10 @@ const ContactUsContent = () => {
       </div>
 
       <Page className="py-12" FULL={false}>
-        {/* Centered Heading Section */}
-        <Row className="max-w-7xl mx-auto text-center mb-12">
-          <h2 className="text-3xl font-bold text-gray-900 mb-4">Coming Soon</h2>
-          <p className="text-gray-600 max-w-3xl mx-auto">
-            If you don't see exactly what you are looking for, contact us and we
-            will be happy to help you get what you want!
-          </p>
-        </Row>
-
         {/* Two Column Layout */}
         <Row className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
             {/* Left Column - Image Gallery */}
-            <div className="w-full lg:w-1/2 bg-gray-50 p-3 sm:p-4 lg:p-6 rounded-lg">
-              {/* Main Wide Image */}
-              <div className="mb-4 lg:mb-6">
-                <div className="relative h-[250px] sm:h-[300px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-1.jpg")}
-                    alt="Main Gallery Image"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-              </div>
-
-              {/* Grid of Square Images - Single column on mobile, 2 columns on larger screens */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-7.jpg")}
-                    alt="Gallery Image 2"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-6.jpg")}
-                    alt="Gallery Image 3"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-5.jpg")}
-                    alt="Gallery Image 4"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-4.jpg")}
-                    alt="Gallery Image 5"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-3.jpg")}
-                    alt="Gallery Image 6"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-                <div className="relative h-[320px]">
-                  <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-2.jpg")}
-                    alt="Gallery Image 7"
-                    fill
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column - Form */}
             <div className="w-full lg:w-1/2 bg-white rounded-lg">
               <div className="h-[987px]">
                 <iframe
@@ -139,7 +64,114 @@ const ContactUsContent = () => {
                 />
               </div>
             </div>
+
+            {/* Right Column - Form */}
+            <div className="w-full lg:w-1/2 bg-gray-50 px-8 py-20 rounded-lg sm:p-20 lg:p-10 xl:p-20">
+              {/* Heading */}
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-10">
+                Get In Touch With DockBloxx
+              </h2>
+              <p className="text-gray-700 text-xl leading-relaxed mb-24">
+                At DockBloxx, we're committed to providing exceptional customer
+                service. Whether you have questions about our products or need
+                help choosing the perfect size, our customer satisfaction team
+                is here to help. Get in touch with us today and we will assist
+                any way we can.
+              </p>
+
+              {/* Address */}
+              <div className="flex items-start gap-4 mb-8">
+                <Image
+                  src="/images/Map_Pin_icon.png"
+                  alt="Location Icon"
+                  width={50}
+                  height={50}
+                />
+                <div>
+                  <p className="font-bold text-gray-800 sm:text-2xl text-base">
+                    2349 Centennial Dr.
+                  </p>
+                  <p className="text-gray-700 text-base">
+                    Gainesville, GA 30504
+                  </p>
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-center gap-4 mb-8">
+                <Image
+                  src="/images/Phone_Call_Icon.png"
+                  alt="Phone Icon"
+                  width={60}
+                  height={60}
+                />
+                <p className="text-gray-700 font-bold text-base sm:text-2xl">
+                  404-220-9641
+                </p>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-center gap-4 mb-48">
+                <Image
+                  src="/images/Message_icon.png"
+                  alt="Email Icon"
+                  width={70}
+                  height={70}
+                />
+                <p className="text-gray-700 font-bold text-base sm:text-2xl">
+                  support@dockbloxx.com
+                </p>
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex items-center gap-6">
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src="/images/Facebook.png"
+                    alt="Facebook"
+                    width={40}
+                    height={40}
+                  />
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src="/images/Twitter.png"
+                    alt="Twitter"
+                    width={40}
+                    height={40}
+                  />
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src="/images/Linkedin.png"
+                    alt="LinkedIn"
+                    width={40}
+                    height={40}
+                  />
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src="/images/Pinterest.png"
+                    alt="Pinterest"
+                    width={40}
+                    height={40}
+                  />
+                </a>
+                <a href="#" target="_blank" rel="noopener noreferrer">
+                  <Image
+                    src="/images/Youtube.png"
+                    alt="YouTube"
+                    width={40}
+                    height={40}
+                  />
+                </a>
+              </div>
+            </div>
           </div>
+        </Row>
+        <Row className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8 bg-gray-50">
+          {/* THE DOCKBLOXX FAQ */}
+          <Faq />
         </Row>
       </Page>
 
