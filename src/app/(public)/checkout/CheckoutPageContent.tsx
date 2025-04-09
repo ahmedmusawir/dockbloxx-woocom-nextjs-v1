@@ -9,6 +9,9 @@ import Spinner from "@/components/common/Spinner";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
+import Head from "next/head";
+import Image from "next/image";
+import { getImageUrl } from "@/lib/utils";
 
 // Load Stripe using your publishable key (exposed with NEXT_PUBLIC_ prefix)
 const stripePromise = loadStripe(
@@ -73,9 +76,31 @@ const CheckoutPageContent = () => {
   return (
     <Elements stripe={stripePromise} options={{ clientSecret }}>
       <div className="bg-gray-50">
+        <Head>
+          <title>Dockbloxx - Checkout Page</title>
+          <meta
+            name="description"
+            content="Checkout Page: Custom dock accessories and solutions - Build your perfect dock setup with DockBloxx"
+          />
+        </Head>
+
+        {/* Hero Section with Background Image */}
+        <div className="relative h-[300px] w-full">
+          <Image
+            src={getImageUrl("/wp-content/uploads/header-img.jpg")}
+            alt="Gift Cards Background"
+            fill
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <h1 className="text-4xl md:text-5xl text-white font-bold">
+              Checkout
+            </h1>
+          </div>
+        </div>
         <main className="mx-auto max-w-7xl px-4 pb-24 pt-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl lg:max-w-none">
-            <h1>Checkout</h1>
             <section className="lg:grid lg:grid-cols-2 lg:gap-x-12 xl:gap-x-16">
               <LeftPane />
               <RightPane />

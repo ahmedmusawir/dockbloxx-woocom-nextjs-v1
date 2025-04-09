@@ -1,3 +1,4 @@
+import { getImageUrl } from "@/lib/utils";
 import Link from "next/link";
 
 const Hero = () => {
@@ -20,25 +21,25 @@ const Hero = () => {
               <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-xl pb-10">
                 <div className="hidden sm:mb-10 sm:flex">
                   <div className="relative rounded-full px-3 py-1 text-sm/6 text-gray-500 ring-1 ring-gray-900/10 hover:ring-gray-900/20">
-                    Anim aute id magna aliqua ad ad non deserunt sunt.{" "}
-                    <a
-                      href="#"
+                    Checkout our Blog...{" "}
+                    <Link
+                      href="/blog"
                       className="whitespace-nowrap font-semibold text-indigo-600"
                     >
                       <span aria-hidden="true" className="absolute inset-0" />
                       Read more <span aria-hidden="true">&rarr;</span>
-                    </a>
+                    </Link>
                   </div>
                 </div>
-                <h1 className="text-pretty text-6xl font-semibold tracking-tight text-blue-600">
-                  DockBloxx is a game-changing product!
+                <h1 className="text-pretty text-4xl font-extrabold sm:text-5xl tracking-tight text-blue-600">
+                  From Dock Chaos to Dock Confidence - Stay Organized with Ease.
                 </h1>
                 <p className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
                   DockBloxx are designed to give you a clean, strong, mounting
-                  surface for all your boating/docking accessories. Our
-                  Patent-Pending design “Cinches” tight to your dock post giving
-                  you the ability to keep your dock and accessories organized
-                  and clutter free.
+                  surface for all your boating/docking accessories. Our patented
+                  design “Cinches” tight to your dock post giving you the
+                  ability to keep your dock and accessories organized and
+                  clutter free.
                 </p>
                 <div className="mt-10 flex items-center gap-x-6">
                   <Link
@@ -56,8 +57,7 @@ const Hero = () => {
         <div className="hidden lg:block bg-gray-50 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <img
             alt=""
-            src="https://dockbloxx.mystagingwebsite.com/wp-content/uploads/Header-Image-New-1.jpg"
-            // src="/home-header-bg.jpg"
+            src={getImageUrl("/wp-content/uploads/Header.jpg")}
             className="aspect-[3/2] object-cover lg:aspect-auto lg:size-full"
           />
         </div>
