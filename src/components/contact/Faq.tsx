@@ -38,7 +38,7 @@ const faqs = [
     question: "How do I Install DockBloxx?",
     answer: `DockBloxx are designed for **super easy installation!**  
   Each product comes with detailed instructions and all the necessary hardware.  
-  If you need extra help, our [How-To page](https://dockbloxx.com/how-to/) offers helpful guides and videos.  
+  If you need extra help, our [How-To page](https://dockbloxx.com/how-to-dockbloxx/) offers helpful guides and videos.  
   **Click, Watch, Install, Enjoy!**`,
   },
   {
@@ -52,7 +52,7 @@ const faqs = [
     question:
       "Can I Return or Exchange a DockBloxx product if I am not satisfied for any reason?",
     answer: `Yes! At DockBloxx, we stand behind the quality of our products and want our customers to be **fully satisfied**.  
-  **IF, FOR ANY REASON, YOU ARE NOT 100% SATISFIED**, please visit our [returns page](https://dockbloxx.com/returns/) or e-mail [support@dockbloxx.com](mailto:support@dockbloxx.com) —  
+  **IF, FOR ANY REASON, YOU ARE NOT 100% SATISFIED**, please visit our [returns page](https://dockbloxx.com/our-policy) or e-mail [support@dockbloxx.com](mailto:support@dockbloxx.com) —  
   Our customer satisfaction team will dive into action to make sure you receive the resolution you desire.`,
   },
   {

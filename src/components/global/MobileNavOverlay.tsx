@@ -94,8 +94,14 @@ export default function MobileNavOverlay({ onClose }: MobileNavOverlayProps) {
           {/* <MobileNavItem href="/login" onClose={onClose}>
             Login
           </MobileNavItem> */}
+          <MobileNavItem href="/how-to-dockbloxx" onClose={onClose}>
+            How To Videos
+          </MobileNavItem>
           <MobileNavItem href="/contact" onClose={onClose}>
-            Help
+            Contact Us
+          </MobileNavItem>
+          <MobileNavItem href="/our-policy" onClose={onClose}>
+            Our Policy
           </MobileNavItem>
         </nav>
       </div>

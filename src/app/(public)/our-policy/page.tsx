@@ -1,7 +1,7 @@
-import BuildABloxxPageContent from "./BuildABloxxPageContent";
+import OurPolicyContent from "./OurPolicyContent";
 
 const Template = () => {
-  return <BuildABloxxPageContent />;
+  return <OurPolicyContent />;
 };
 
 export default Template;

@@ -3,11 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ShoppingBagIcon,
-  UserCircleIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { ShoppingBagIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { MenuIcon } from "lucide-react";
 import { getImageUrl } from "@/lib/utils";
 import { useCartStore } from "@/store/useCartStore";
@@ -18,23 +14,35 @@ import Spinner from "../common/Spinner";
 const Navbar = () => {
   const [isMenuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   // Access Zustand store
   const { getCartDetails, isLoading } = useCartStore();
   const cartItemCount = getCartDetails().length;
 
-  // 1) A ref to the dropdown container
+  // A ref to the dropdown container for [Community]
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // 2) Add a global mouse event listener so that the dropdown goes away when clicked on the body
+  // A ref to the dropdown container for [Helper]
+  const helpDropdownRef = useRef<HTMLDivElement>(null);
+  const [isHelpDropdownOpen, setIsHelpDropdownOpen] = useState(false);
+
+  // Add a global mouse event listener so that the dropdown goes away when clicked on the body
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
-      // If click is outside the dropdownRef, close the menu
+      // Close Community dropdown
       if (
         dropdownRef.current &&
         !dropdownRef.current.contains(e.target as Node)
       ) {
         setIsDropdownOpen(false);
+      }
+
+      // Close Help dropdown
+      if (
+        helpDropdownRef.current &&
+        !helpDropdownRef.current.contains(e.target as Node)
+      ) {
+        setIsHelpDropdownOpen(false);
       }
     }
 
@@ -44,7 +52,6 @@ const Navbar = () => {
     };
   }, []);
 
-  // NavLinks with styles
   const NavLink = ({
     href,
     children,
@@ -190,9 +197,43 @@ const Navbar = () => {
             </Link>
             <span className="border-r border-gray-300 h-4" />
 
-            <Link href="/contact" className="hover:text-blue-600">
+            {/* <Link href="/contact" className="hover:text-blue-600">
               Help
-            </Link>
+            </Link> */}
+            {/* HELP DROPDOWN WRAPPER */}
+            <div className="relative" ref={helpDropdownRef}>
+              {/* Main Trigger (clickable) */}
+              <span
+                onClick={() => setIsHelpDropdownOpen(!isHelpDropdownOpen)}
+                className="hover:text-blue-600 cursor-pointer"
+              >
+                Help
+              </span>
+
+              {/* Dropdown - only visible if isHelpDropdownOpen */}
+              {isHelpDropdownOpen && (
+                <div className="absolute left-0 top-full mt-2 w-40 bg-white border border-gray-200 shadow-md z-10">
+                  <Link
+                    href="/how-to-dockbloxx"
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    How-to Videos
+                  </Link>
+                  <Link
+                    href="/contact"
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    Contact Us
+                  </Link>
+                  <Link
+                    href="/our-policy"
+                    className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                  >
+                    Our Policy
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

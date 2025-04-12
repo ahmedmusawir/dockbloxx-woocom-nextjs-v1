@@ -41,6 +41,7 @@
     "react-paginate": "^8.2.0",
     "react-select": "^5.10.0",
     "react-select-us-states": "^0.1.2",
+    "remark-gfm": "^4.0.1",
     "stripe": "^17.6.0",
     "swiper": "^11.2.5",
     "tailwind-merge": "^2.5.5",
