@@ -520,3 +520,34 @@ export async function fetchFeaturedProducts() {
 }
 
 // --------------------------- FEATURED PRODUCTS FROM WOOCOM PRODUCTS ENDS ------------------------------------------------------------
+
+// --------------------------- FETCH ALL PRODUCTS FOR HOW TO BLOXX PAGE STARTS ------------------------------------------------------------
+/**
+ * Fetches all products from WooCommerce by paginating through the API.
+ * This function is used in the How-To page to collect all product video IDs
+ * from the image gallery (where type === 'video') during the server-side render.
+ * Uses ISR to keep the data fresh while avoiding runtime fetch delays.
+ */
+
+/**
+ * Fetches all how-to video product data from the custom WP REST API endpoint.
+ * This is used for the video selector on the How-To page and returns only name, slug, and videoId.
+ */
+import { HOW_TO_BLOXX_REST_URL } from "@/constants/apiEndpoints";
+import { VideoOption } from "@/types/videos";
+
+export async function fetchAllVideos(): Promise<VideoOption[]> {
+  const res = await fetch(HOW_TO_BLOXX_REST_URL, {
+    headers: { "Content-Type": "application/json" },
+    next: { revalidate: 60 }, // Enable ISR
+  });
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch how-to product videos");
+  }
+
+  const data: VideoOption[] = await res.json();
+  return data;
+}
+
+// --------------------------- FETCH ALL PRODUCTS FOR HOW TO BLOXX PAGE ENDS ------------------------------------------------------------

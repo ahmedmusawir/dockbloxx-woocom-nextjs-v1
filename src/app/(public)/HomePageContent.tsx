@@ -4,7 +4,7 @@ import SectionFourWaterSportsProducts from "@/components/home/SectionFourWaterSp
 import SectionOne from "@/components/home/SectionOne";
 import SectionThreeWaterSports from "@/components/home/SectionThreeWaterSports";
 import SectionTwoBestSellers from "@/components/home/SectionTwoBestSellers";
-import { fetchCategoryProducts } from "@/services/categoryServices";
+import { fetchCategoryProductsForHomePage } from "@/services/categoryServices";
 import { fetchHomePageData } from "@/services/pageServices";
 import Head from "next/head";
 import React from "react";
@@ -13,8 +13,8 @@ const HomePageContent = async () => {
   const homeData = await fetchHomePageData();
   // console.log("Home Page Data:", homeData);
 
-  const bestSellers = await fetchCategoryProducts("best-sellers");
-  console.log("Best Sellers [SectionTwoBestSellers.tsx]", bestSellers);
+  const bestSellers = await fetchCategoryProductsForHomePage("best-sellers");
+  // console.log("Best Sellers [SectionTwoBestSellers.tsx]", bestSellers);
 
   return (
     <>

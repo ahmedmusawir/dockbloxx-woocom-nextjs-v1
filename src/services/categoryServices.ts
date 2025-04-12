@@ -81,29 +81,78 @@ export async function fetchCategoryProductsPaginated(
  * @param {string} categorySlug - The category slug (e.g., "best-sellers")
  * @returns {Promise<Product[]>} - Returns an array of products.
  */
-
-export async function fetchCategoryProducts(
+export async function fetchCategoryProductsForHomePage(
   categorySlug: string
 ): Promise<Product[]> {
   try {
-    const url = `${NEXT_APP_URL}/api/products-by-category?category=${categorySlug}`;
-    // console.log("[Service] Fetching URL:", url); // Log the actual request
-
-    const response = await fetch(url, {
-      next: { revalidate: 600 }, // <-- ISR caching here
-    });
-
-    const data = await response.json(); // Read response as text first
-
-    // console.log("[Service] Raw Response:", response.json()); // Log raw response
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch products for ${categorySlug}`);
+    if (
+      !WOOCOM_REST_API_URL ||
+      !WOOCOM_CONSUMER_KEY ||
+      !WOOCOM_CONSUMER_SECRET
+    ) {
+      throw new Error("Missing WooCommerce API credentials.");
     }
 
-    return data.products || [];
+    // Step 1: get category data
+    const catUrl = `${WOOCOM_REST_API_URL}/products/categories?slug=${categorySlug}&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}`;
+    const catResponse = await fetch(catUrl, {
+      headers: { "Content-Type": "application/json" },
+      next: { revalidate: 60 }, // enabled ISR
+    });
+
+    if (!catResponse.ok) {
+      throw new Error(`Failed to fetch category: ${categorySlug}`);
+    }
+
+    const categories: Category[] = await catResponse.json();
+    if (!categories.length) {
+      // Category doesn't exist
+      return [];
+    }
+
+    const categoryId = categories[0].id;
+
+    // Step 2: fetch products in that category
+    const productUrl = `${WOOCOM_REST_API_URL}/products?category=${categoryId}&per_page=4&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}`;
+    const prodResponse = await fetch(productUrl, {
+      headers: { "Content-Type": "application/json" },
+      next: { revalidate: 60 }, // enabled ISR
+    });
+
+    if (!prodResponse.ok) {
+      throw new Error(`Failed to fetch products for category: ${categorySlug}`);
+    }
+
+    const products = await prodResponse.json();
+    return products;
   } catch (error) {
-    console.error(`[Service] Error fetching ${categorySlug} products:`, error);
+    console.error("[fetchCategoryProductsForHomePage] Error:", error);
     return [];
   }
 }
+
+// export async function fetchCategoryProducts(
+//   categorySlug: string
+// ): Promise<Product[]> {
+//   try {
+//     const url = `${NEXT_APP_URL}/api/products-by-category?category=${categorySlug}`;
+//     // console.log("[Service] Fetching URL:", url); // Log the actual request
+
+//     const response = await fetch(url, {
+//       next: { revalidate: 600 }, // <-- ISR caching here
+//     });
+
+//     const data = await response.json(); // Read response as text first
+
+//     // console.log("[Service] Raw Response:", response.json()); // Log raw response
+
+//     if (!response.ok) {
+//       throw new Error(`Failed to fetch products for ${categorySlug}`);
+//     }
+
+//     return data.products || [];
+//   } catch (error) {
+//     console.error(`[Service] Error fetching ${categorySlug} products:`, error);
+//     return [];
+//   }
+// }

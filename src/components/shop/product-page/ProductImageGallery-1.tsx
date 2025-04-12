@@ -41,7 +41,7 @@ const ProductImageGallery = ({ product }: Props) => {
                       title="YouTube Video"
                       className="absolute top-0 left-0 w-full h-full"
                       style={{
-                        transform: "scale(1.8)", // Zoom the iframe
+                        transform: "scale(1.9)", // Zoom the iframe
                         transformOrigin: "center center", // Keep it centered
                       }}
                     />

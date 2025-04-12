@@ -1,6 +1,5 @@
 import Head from "next/head";
 import Page from "@/components/common/Page";
-import Row from "@/components/common/Row";
 import ProductList from "@/components/shop/ProductList";
 import { fetchInitialProducts } from "@/services/productServices";
 import NumberedPagination from "@/components/common/NumberedPagination";
