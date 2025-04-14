@@ -4,33 +4,32 @@ import { Product } from "@/types/product";
 import Image from "next/image";
 
 interface Props {
-  bestSellers: Product[];
+  waterSports: Product[];
 }
 
-const SectionOneBestSellersProducts = async ({ bestSellers }: Props) => {
-  console.log("bestseller [SectionOneBestSellersProducts] ", bestSellers);
+const SectionTwoWaterSportsProducts = async ({ waterSports }: Props) => {
+  // console.log("bestseller [SectionTwoWaterSportsProducts] ", waterSports);
+
   return (
     <div className="bg-gray-100 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-8">BEST SELLERS</h2>
+        <h2 className="text-2xl font-bold text-gray-900 mb-8">WATER SPORTS</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {bestSellers.map((product) => (
+          {waterSports.map((product) => (
             <div
               key={product.name}
               className="bg-gray-100 rounded-lg overflow-hidden shadow-sm flex flex-col h-full"
             >
               {/* Image Container with Best Seller Badge */}
               <div className="relative aspect-[4/3] overflow-hidden">
-                <Image
+                <img
                   src={product.images[1].src}
                   alt={product.name}
-                  width="300"
-                  height="300"
                   className="object-cover w-full h-full transition-transform hover:scale-105"
                 />
                 <div className="absolute top-4 left-0 bg-blue-500 text-white px-3 py-1 text-sm font-semibold">
-                  Best Seller
+                  WATER SPORTS
                 </div>
               </div>
 
@@ -69,4 +68,4 @@ const SectionOneBestSellersProducts = async ({ bestSellers }: Props) => {
   );
 };
 
-export default SectionOneBestSellersProducts;
+export default SectionTwoWaterSportsProducts;

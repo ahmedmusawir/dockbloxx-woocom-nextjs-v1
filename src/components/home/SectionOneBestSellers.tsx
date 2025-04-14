@@ -1,6 +1,7 @@
 import { HomeData } from "@/types/page";
 import Link from "next/link";
 import parse from "html-react-parser";
+import Image from "next/image";
 
 interface Props {
   homeData: HomeData;
@@ -15,9 +16,11 @@ const SectionOneBestSellers = ({ homeData }: Props) => {
 
   return (
     <div className="relative bg-white">
-      <img
+      <Image
         alt=""
         src={sectionData?.image}
+        width="500"
+        height="500"
         className="h-56 w-full bg-gray-50 object-cover lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-1/2"
       />
       <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
@@ -29,9 +32,9 @@ const SectionOneBestSellers = ({ homeData }: Props) => {
             <p className="mt-2 text-pretty text-4xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
               {sectionData?.title}
             </p>
-            <p className="mt-4 text-lg/8 text-gray-600">
+            <section className="mt-4 text-lg/8 text-gray-600">
               {parse(sectionData?.content)}
-            </p>
+            </section>
 
             <div className="mt-10 flex items-center gap-x-6">
               <Link
