@@ -39,7 +39,7 @@ const SectionOneBestSellers = ({ homeData }: Props) => {
             <div className="mt-10 flex items-center gap-x-6">
               <Link
                 href={sectionData.button_link}
-                className="mt-10 bg-lime-300 text-blue-600 font-bold py-5 px-20 rounded-none hover:bg-lime-700"
+                className="mt-10 bg-lime-300 text-blue-600 font-bold py-5 px-20 rounded-none hover:bg-lime-400 hover:text-white"
               >
                 {sectionData.button_text}
               </Link>

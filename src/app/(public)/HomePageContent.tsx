@@ -1,17 +1,13 @@
 import Page from "@/components/common/Page";
 import Hero from "@/components/home/Hero";
+import HomeProductList from "@/components/home/HomeProductList";
+import SectionFourSportsman from "@/components/home/SectionFourSportsman";
 import SectionOneBestSellers from "@/components/home/SectionOneBestSellers";
-import SectionOneBestSellersProducts from "@/components/home/SectionOneBestSellersProducts";
-import SectionThreeWaterSports from "@/components/home/SectionTwoWaterSports";
-import SectionThreeWaterSportsProducts from "@/components/home/old";
+import SectionThreeEntertainments from "@/components/home/SectionThreeEntertainments";
+import SectionTwoWaterSports from "@/components/home/SectionTwoWaterSports";
 import { fetchCategoryProductsForHomePage } from "@/services/categoryServices";
 import { fetchHomePageData } from "@/services/pageServices";
 import Head from "next/head";
-import SectionTwoWaterSports from "@/components/home/SectionTwoWaterSports";
-import SectionTwoWaterSportsProducts from "@/components/home/SectionTwoWaterSportsProducts";
-import SectionThreeEntertainments from "@/components/home/SectionThreeEntertainments";
-import HomeProductList from "@/components/home/HomeProductList";
-import SectionFourSportsman from "@/components/home/SectionFourSportsman";
 
 const HomePageContent = async () => {
   const homeData = await fetchHomePageData();
@@ -40,11 +36,11 @@ const HomePageContent = async () => {
   return (
     <>
       <Head>
-        <title>HomePageContent</title>
+        <title>Home Page Content</title>
         <meta name="description" content="This is the home page" />
       </Head>
       <Page className={"border border-gray-300"} FULL={false}>
-        <Hero />
+        <Hero homeData={homeData} />
 
         <SectionOneBestSellers homeData={homeData} />
 

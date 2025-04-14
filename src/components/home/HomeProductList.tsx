@@ -9,7 +9,7 @@ interface Props {
 }
 
 const HomeProductList = async ({ products, sectionTitle }: Props) => {
-  console.log("bestseller [HomeProductList] ", products);
+  // console.log("bestseller [HomeProductList] ", products);
   return (
     <div className="bg-gray-100 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -57,7 +57,7 @@ const HomeProductList = async ({ products, sectionTitle }: Props) => {
                 {/* Button - Always at Bottom */}
                 <Link
                   href={`/shop/${product.slug}`}
-                  className="block w-full bg-lime-300 hover:bg-lime-600 text-blue-500 text-center py-4 font-semibold transition-colors duration-200"
+                  className="block w-full bg-lime-300 hover:bg-lime-400 hover:text-white text-blue-500 text-center py-4 font-semibold transition-colors duration-200"
                 >
                   SELECT OPTION
                 </Link>

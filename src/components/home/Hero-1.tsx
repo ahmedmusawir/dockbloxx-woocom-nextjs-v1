@@ -1,7 +1,6 @@
 import { getImageUrl } from "@/lib/utils";
 import { HomeData } from "@/types/page";
 import Link from "next/link";
-import parse from "html-react-parser";
 
 interface Props {
   homeData: HomeData;
@@ -44,18 +43,21 @@ const Hero = ({ homeData }: Props) => {
                   </div>
                 </div>
                 <h1 className="text-pretty text-4xl font-extrabold sm:text-5xl tracking-tight text-blue-600">
-                  {/* From Dock Chaos to Dock Confidence - Stay Organized with Ease. */}
-                  {sectionData.title}
+                  From Dock Chaos to Dock Confidence - Stay Organized with Ease.
                 </h1>
-                <section className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
-                  {parse(sectionData.content)}
-                </section>
+                <p className="mt-8 text-pretty text-lg font-medium text-gray-500 sm:text-xl/8">
+                  DockBloxx are designed to give you a clean, strong, mounting
+                  surface for all your boating/docking accessories. Our patented
+                  design “Cinches” tight to your dock post giving you the
+                  ability to keep your dock and accessories organized and
+                  clutter free.
+                </p>
                 <div className="mt-10 flex items-center gap-x-6">
                   <Link
-                    href={sectionData.button_link}
-                    className="mt-10 bg-lime-300 text-blue-600 font-bold py-5 px-20 rounded-none hover:bg-lime-400 hover:text-white"
+                    href="/shop"
+                    className="mt-10 bg-lime-300 text-blue-600 font-bold py-5 px-20 rounded-none hover:bg-lime-700"
                   >
-                    {sectionData.button_text}
+                    SHOP NOW
                   </Link>
                 </div>
               </div>
@@ -66,7 +68,7 @@ const Hero = ({ homeData }: Props) => {
         <div className="hidden lg:block bg-gray-50 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <img
             alt=""
-            src={sectionData.image}
+            src={getImageUrl("/wp-content/uploads/Header.jpg")}
             className="aspect-[3/2] object-cover lg:aspect-auto lg:size-full"
           />
         </div>
