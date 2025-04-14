@@ -7,8 +7,8 @@ interface Props {
   bestSellers: Product[];
 }
 
-const SectionTwoBestSellers = async ({ bestSellers }: Props) => {
-  console.log("bestseller [SectionTwoBestSellers] ", bestSellers);
+const SectionOneBestSellersProducts = async ({ bestSellers }: Props) => {
+  console.log("bestseller [SectionOneBestSellersProducts] ", bestSellers);
   return (
     <div className="bg-gray-100 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -67,4 +67,4 @@ const SectionTwoBestSellers = async ({ bestSellers }: Props) => {
   );
 };
 
-export default SectionTwoBestSellers;
+export default SectionOneBestSellersProducts;

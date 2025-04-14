@@ -27,7 +27,7 @@ import { WP_REST_PAGES } from "@/constants/apiEndpoints";
 export async function fetchHomePageData() {
   try {
     const response = await fetch(`${WP_REST_PAGES}?slug=app-home-page`, {
-      next: { revalidate: 600 }, // Enables ISR, regenerates every 10 minutes
+      next: { revalidate: 60 }, // Enables ISR, regenerates every 1 minutes
     });
 
     if (!response.ok) {

@@ -9,11 +9,13 @@
  *   content (HTML string), image URL, and button text.
  */
 export interface HomeData {
-  section_3: {
+  sections: {
+    block_id: string;
     title: string;
     subtitle: string;
     content: string;
     image: string;
     button_text: string;
+    button_link: string;
   }[];
 }

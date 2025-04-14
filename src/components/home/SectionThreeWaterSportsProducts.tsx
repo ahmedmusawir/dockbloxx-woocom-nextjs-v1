@@ -67,7 +67,7 @@ const products = [
   },
 ];
 
-const SectionFourWaterSportsProducts = () => {
+const SectionThreeWaterSportsProducts = () => {
   return (
     <div className="bg-gray-100 py-16 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -132,4 +132,4 @@ const SectionFourWaterSportsProducts = () => {
   );
 };
 
-export default SectionFourWaterSportsProducts;
+export default SectionThreeWaterSportsProducts;

@@ -1,17 +1,16 @@
 import Page from "@/components/common/Page";
 import Hero from "@/components/home/Hero";
-import SectionFourWaterSportsProducts from "@/components/home/SectionFourWaterSportsProducts";
-import SectionOne from "@/components/home/SectionOne";
+import SectionOneBestSellers from "@/components/home/SectionOneBestSellers";
+import SectionOneBestSellersProducts from "@/components/home/SectionOneBestSellersProducts";
 import SectionThreeWaterSports from "@/components/home/SectionThreeWaterSports";
-import SectionTwoBestSellers from "@/components/home/SectionTwoBestSellers";
+import SectionThreeWaterSportsProducts from "@/components/home/SectionThreeWaterSportsProducts";
 import { fetchCategoryProductsForHomePage } from "@/services/categoryServices";
 import { fetchHomePageData } from "@/services/pageServices";
 import Head from "next/head";
-import React from "react";
 
 const HomePageContent = async () => {
   const homeData = await fetchHomePageData();
-  // console.log("Home Page Data:", homeData);
+  console.log("Home Page Content Data:", homeData);
 
   const bestSellers = await fetchCategoryProductsForHomePage("best-sellers");
   // console.log("Best Sellers [SectionTwoBestSellers.tsx]", bestSellers);
@@ -25,13 +24,13 @@ const HomePageContent = async () => {
       <Page className={"border border-gray-300"} FULL={false}>
         <Hero />
 
-        <SectionOne />
+        <SectionOneBestSellers homeData={homeData} />
 
-        <SectionTwoBestSellers bestSellers={bestSellers} />
+        <SectionOneBestSellersProducts bestSellers={bestSellers} />
 
         <SectionThreeWaterSports homeData={homeData} />
 
-        <SectionFourWaterSportsProducts />
+        <SectionThreeWaterSportsProducts />
       </Page>
     </>
   );
