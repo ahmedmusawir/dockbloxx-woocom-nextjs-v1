@@ -115,7 +115,6 @@ function Footer() {
                   className="text-gray-500 hover:text-gray-400"
                 >
                   <span className="sr-only">{item.name}</span>
-                  {/* <item.icon className="h-6 w-6" aria-hidden="true" /> */}
                   <Image
                     src={item.icon}
                     alt="Facebook"
@@ -201,10 +200,17 @@ function Footer() {
             </div>
           </div>
         </div>
-        <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
-          <p className="text-xs leading-5 text-gray-400">
+        <div className="mt-16 border-t border-white/10 pt-1 sm:mt-20 lg:mt-24 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-xs leading-5 text-gray-400 text-center sm:text-left">
             &copy; 2025 Dockbloxx, Inc. All rights reserved.
           </p>
+          <Image
+            src="/all-cards-dockbloxx.png"
+            alt="Accepted Payment Methods"
+            width={160}
+            height={30}
+            className="h-auto w-auto max-h-8"
+          />
         </div>
       </div>
     </footer>
