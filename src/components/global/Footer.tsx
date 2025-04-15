@@ -1,4 +1,11 @@
 import Image from "next/image";
+import { FaInstagram, FaFacebook, FaYoutube } from "react-icons/fa";
+import {
+  AiOutlineInstagram,
+  AiOutlineFacebook,
+  AiOutlineYoutube,
+} from "react-icons/ai";
+import SocialMediaLinks from "./SocialMediaLinks";
 
 const navigation = {
   solutions: [
@@ -25,38 +32,6 @@ const navigation = {
     { name: "Privacy", href: "#" },
     { name: "Terms", href: "#" },
   ],
-  social: [
-    {
-      name: "Facebook",
-      href: "#",
-      icon: "/images/Facebook-1.png",
-    },
-    {
-      name: "LinkedIn",
-      href: "#",
-      icon: "/images/Linkedin-1.png",
-    },
-    {
-      name: "Pinterest",
-      href: "#",
-      icon: "/images/Pinterest-1.png",
-    },
-    {
-      name: "Twitter",
-      href: "#",
-      icon: "/images/Twitter-1.png",
-    },
-    {
-      name: "Youtube",
-      href: "#",
-      icon: "/images/Youtube-1.png",
-    },
-    {
-      name: "RSS",
-      href: "#",
-      icon: "/images/Rss-1.png",
-    },
-  ],
 };
 
 function Footer() {
@@ -75,10 +50,7 @@ function Footer() {
               height={50}
               priority
             />
-            {/* <p className="text-sm leading-6 text-gray-300">
-              Making the world a better place through constructing elegant
-              hierarchies.
-            </p> */}
+
             {/* Address */}
             <div className="flex items-start gap-4 mb-8">
               <Image
@@ -107,23 +79,9 @@ function Footer() {
                 404-220-9641
               </p>
             </div>
-            <div className="flex space-x-6">
-              {navigation.social.map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className="text-gray-500 hover:text-gray-400"
-                >
-                  <span className="sr-only">{item.name}</span>
-                  <Image
-                    src={item.icon}
-                    alt="Facebook"
-                    width={35}
-                    height={35}
-                  />
-                </a>
-              ))}
-            </div>
+
+            {/* Social Media Icons */}
+            <SocialMediaLinks />
           </div>
           <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
             <div className="md:grid md:grid-cols-2 md:gap-8">

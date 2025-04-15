@@ -165,7 +165,7 @@ export const policies = [
   
   #### Return Authorization Form
   
-  *(Placeholder for link or form component)*
+  *http://localhost:3000/refund-form*
       `,
   },
   {

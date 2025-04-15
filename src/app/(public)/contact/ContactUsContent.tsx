@@ -39,16 +39,16 @@ const ContactUsContent = () => {
           <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
             {/* Left Column - Image Gallery */}
             <div className="w-full lg:w-1/2 bg-white rounded-lg">
-              <div className="h-[987px]">
+              <div className="h-[750px]">
                 <iframe
-                  src="https://link.cyberizegroup.com/widget/form/ocqfE7QzKa480G7ywQSN"
+                  src="https://link.cyberizegroup.com/widget/form/knpfOzoJn54MiHtF8iLG"
                   style={{
                     width: "100%",
                     height: "100%",
                     border: "none",
                     borderRadius: "3px",
                   }}
-                  id="inline-ocqfE7QzKa480G7ywQSN"
+                  id="inline-knpfOzoJn54MiHtF8iLG"
                   data-layout={`{'id':'INLINE'}`}
                   data-trigger-type="alwaysShow"
                   data-trigger-value=""
@@ -56,13 +56,20 @@ const ContactUsContent = () => {
                   data-activation-value=""
                   data-deactivation-type="neverDeactivate"
                   data-deactivation-value=""
-                  data-form-name="Build-a-Bloxx"
-                  data-height="987"
-                  data-layout-iframe-id="inline-ocqfE7QzKa480G7ywQSN"
-                  data-form-id="ocqfE7QzKa480G7ywQSN"
-                  title="Build-a-Bloxx"
+                  data-form-name="DockBloxx Contact Form"
+                  data-height="577"
+                  data-layout-iframe-id="inline-knpfOzoJn54MiHtF8iLG"
+                  data-form-id="knpfOzoJn54MiHtF8iLG"
+                  title="DockBloxx Contact Form"
                 />
               </div>
+              {/* Move script to Head */}
+              <Head>
+                <script
+                  src="https://link.cyberizegroup.com/js/form_embed.js"
+                  async
+                />
+              </Head>
             </div>
 
             {/* Right Column - Form */}
@@ -71,7 +78,7 @@ const ContactUsContent = () => {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-500 mb-10">
                 Get In Touch With DockBloxx
               </h2>
-              <p className="text-gray-700 text-xl leading-relaxed mb-24">
+              <p className="text-gray-700 text-xl leading-relaxed mb-16">
                 At DockBloxx, we're committed to providing exceptional customer
                 service. Whether you have questions about our products or need
                 help choosing the perfect size, our customer satisfaction team
@@ -111,7 +118,7 @@ const ContactUsContent = () => {
               </div>
 
               {/* Email */}
-              <div className="flex items-center gap-4 mb-48">
+              <div className="flex items-center gap-4 mb-16">
                 <Image
                   src="/images/Message_icon.png"
                   alt="Email Icon"
@@ -174,11 +181,6 @@ const ContactUsContent = () => {
           <Faq />
         </Row>
       </Page>
-
-      {/* Move script to Head */}
-      <Head>
-        <script src="https://link.cyberizegroup.com/js/form_embed.js" async />
-      </Head>
     </>
   );
 };

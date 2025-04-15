@@ -1,10 +1,12 @@
 import Page from "@/components/common/Page";
 import Hero from "@/components/home/Hero";
 import HomeProductList from "@/components/home/HomeProductList";
+import SectionFiveDockEssentials from "@/components/home/SectionFiveDockEssentials";
 import SectionFourSportsman from "@/components/home/SectionFourSportsman";
 import SectionOneBestSellers from "@/components/home/SectionOneBestSellers";
 import SectionThreeEntertainments from "@/components/home/SectionThreeEntertainments";
 import SectionTwoWaterSports from "@/components/home/SectionTwoWaterSports";
+import SubscribeNow from "@/components/home/SubscribeNow";
 import { fetchCategoryProductsForHomePage } from "@/services/categoryServices";
 import { fetchHomePageData } from "@/services/pageServices";
 import Head from "next/head";
@@ -26,6 +28,7 @@ const HomePageContent = async () => {
   const entertainmentsSectionTitle = "ENTERTAINMENTS";
 
   const sportsman = await fetchCategoryProductsForHomePage("sportsman");
+  console.log(sportsman);
   const sportsmanSectionTitle = "SPORTSMAN";
 
   const dockEssentials = await fetchCategoryProductsForHomePage(
@@ -64,6 +67,20 @@ const HomePageContent = async () => {
         />
 
         <SectionFourSportsman homeData={homeData} />
+
+        <HomeProductList
+          products={sportsman}
+          sectionTitle={sportsmanSectionTitle}
+        />
+
+        <SectionFiveDockEssentials homeData={homeData} />
+
+        <HomeProductList
+          products={dockEssentials}
+          sectionTitle={dockEssentialsSectionTitle}
+        />
+
+        <SubscribeNow />
       </Page>
     </>
   );

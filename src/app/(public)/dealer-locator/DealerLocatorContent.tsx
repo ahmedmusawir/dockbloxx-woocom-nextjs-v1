@@ -4,56 +4,14 @@ import Head from "next/head";
 import React from "react";
 import Image from "next/image";
 import { getImageUrl } from "@/lib/utils";
+import { dealers } from "./data";
+import {
+  MdOutlinePhone,
+  MdOutlineLocationOn,
+  MdOutlineLanguage,
+} from "react-icons/md";
 
 const DealerLocatorContent = () => {
-  const dealers = [
-    {
-      name: "OpenAI",
-      address: "123 AI Way, San Francisco, CA 94110",
-      phone: "(415) 555-0101",
-    },
-    {
-      name: "Anthropic",
-      address: "456 Ethics Blvd, Berkeley, CA 94704",
-      phone: "(510) 555-0202",
-    },
-    {
-      name: "Google DeepMind",
-      address: "789 Quantum St, Mountain View, CA 94043",
-      phone: "(650) 555-0303",
-    },
-    {
-      name: "Stability AI",
-      address: "321 Diffusion Ln, London, UK W1T 1JY",
-      phone: "+44 20 7946 0958",
-    },
-    {
-      name: "Meta AI",
-      address: "1 Social Plaza, Menlo Park, CA 94025",
-      phone: "(650) 555-0404",
-    },
-    {
-      name: "Mistral",
-      address: "88 Research Row, Paris, France 75000",
-      phone: "+33 1 44 55 66 77",
-    },
-    {
-      name: "Cohere",
-      address: "987 Vector Dr, Toronto, ON M5H 2N2",
-      phone: "(416) 555-0606",
-    },
-    {
-      name: "Hugging Face",
-      address: "654 Token Blvd, Brooklyn, NY 11201",
-      phone: "(718) 555-0707",
-    },
-    {
-      name: "xAI",
-      address: "42 Neural Net Ave, Austin, TX 73301",
-      phone: "(512) 555-0808",
-    },
-  ];
-
   return (
     <>
       <Head>
@@ -102,23 +60,36 @@ const DealerLocatorContent = () => {
                 </h3>
 
                 <div className="flex items-start gap-3 text-gray-700">
-                  <Image
+                  {/* <Image
                     src="/images/Map_Pin_icon.png"
                     alt="Location Icon"
                     width={20}
                     height={20}
-                  />
-                  <p>{dealer.address}</p>
+                  /> */}
+                  <MdOutlineLocationOn className="w-10 h-10 text-gray-400" />
+                  <p className="mt-2">{dealer.address}</p>
                 </div>
 
                 <div className="flex items-start gap-3 text-gray-700">
-                  <Image
+                  {/* <Image
                     src="/images/Phone_Call_Icon.png"
                     alt="Phone Icon"
                     width={30}
                     height={30}
-                  />
-                  <p>{dealer.phone}</p>
+                  /> */}
+                  <MdOutlinePhone className="w-10 h-10 text-gray-400" />
+                  <p className="mt-2">{dealer.phone}</p>
+                </div>
+
+                <div className="flex items-start gap-3 text-gray-700">
+                  {/* <Image
+                    src="/images/Phone_Call_Icon.png"
+                    alt="Phone Icon"
+                    width={30}
+                    height={30}
+                  /> */}
+                  <MdOutlineLanguage className="w-10 h-10 text-gray-400" />
+                  <p className="mt-2">{dealer.website}</p>
                 </div>
               </div>
             ))}

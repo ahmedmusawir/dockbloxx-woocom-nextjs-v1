@@ -1,0 +1,92 @@
+export const dealers = [
+  {
+    name: "Dock Solutions of Kentucky",
+    address: "1728 Jaggie Fox Way Lexington KY 40511",
+    phone: "859-695-2580",
+    website: "https://www.kydocks.com",
+  },
+  {
+    name: "Elite Renovations N.C.",
+    address: "2230 Blane Rd New London NC 28127",
+    phone: "980-234-8866",
+    website: "https://www.eliterenovationsllcnc.com",
+  },
+  {
+    name: "Lake Life Solutions TN",
+    address: "11310 Hwy 57 Counce TN 38326",
+    phone: "J - 901-326-5108, K - 901-461-9055",
+    website: "https://lakelifesolutionsllc.com",
+  },
+  {
+    name: "R&J Machine Canada",
+    address: "1601 Eigth Line Lakefield Ontario CA",
+    phone: "705-652-6731 x 223",
+    website: "https://www.rjmachine.ca",
+  },
+  {
+    name: "The Breakers Marina TX",
+    address: "500 Camp David Rd Graham TX 76450",
+    phone: "940-549-6470",
+    website: "https://www.breakerspk.com",
+  },
+  {
+    name: "Xtreme Docks Alabama",
+    address: "364 Killough La. Talladega AL 35160",
+    phone: "205-473-8096",
+    website: "https://www.xtremedocks.com",
+  },
+  {
+    name: "The Dock Box Guy",
+    address: "PO Box 3627 Camdenton MO 65020",
+    phone: "573.836.5304",
+    website: "https://www.thedockboxguy.com",
+  },
+  {
+    name: "Lake Life Outdoor Furniture",
+    address: "3613 Osage Beach Pkwy",
+    phone: "573.693.9271",
+    website: "https://www.lakelifeoutdoorfurniture.com",
+  },
+  {
+    name: "Casey Custom Docks",
+    address: "698 Mile Branch Rd Canton Ga. 30114",
+    phone: "770.924.1810",
+    website: "https://www.caseycustomdocks.com",
+  },
+  {
+    name: "Williams Lakefront Construction",
+    address: "2301 Dayton Pike Sale Creek TN. 37373",
+    phone: "816.809.4577",
+    website: "https://www.williamslakefront.com",
+  },
+  {
+    name: "Southeastern Dock Supply",
+    address: "3764 Browns Bridge Rd Gainesville GA 30504",
+    phone: "678.456.8367",
+    website: "https://www.southeasterndocksupply.com",
+  },
+  {
+    name: "32 Marine Supply",
+    address: "992 IL-32 Sullivan IL. 61951",
+    phone: "217.439.2628",
+    website: "https://www.32marinesupply.com",
+  },
+  {
+    name: "Lake Martin Lifestyle Mgt",
+    address: "8281 Hwy 50 Dadeville AL.",
+    phone: "256.307.7663",
+    website: "https://www.lakemartinlifestylemanagement.com",
+  },
+  {
+    name: "Southern Marine Enterprises",
+    address: "399 Tugalo State Park Rd Laviona GA 30553",
+    phone: "706.691.9806",
+    website: "https://www.southernmarineenterprise.com",
+  },
+  {
+    name: "Docks of Lake Norman",
+    address: "1479 River Hwy. Mooresville NC 28117",
+    phone: "704.519.5390",
+    website: "https://www.docksoflakenorman.com",
+  },
+];

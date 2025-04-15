@@ -50,6 +50,9 @@ export interface Product {
   rating_count: number;
   shipping_class_id: number;
   tax_class: string;
+  acf: {
+    home_product_description: string;
+  };
 }
 
 // Represented product variations for Single Product Details

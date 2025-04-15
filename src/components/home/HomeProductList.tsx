@@ -48,9 +48,9 @@ const HomeProductList = async ({ products, sectionTitle }: Props) => {
                 </div>
 
                 {/* Description - Fixed Height */}
-                <div className="flex-grow mb-6">
-                  <div className="text-gray-600 line-clamp-4 h-24">
-                    {parse(product.short_description)}
+                <div className="flex-grow mb-32">
+                  <div className="text-gray-600 h-24">
+                    {product.acf.home_product_description}
                   </div>
                 </div>
 
