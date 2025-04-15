@@ -165,7 +165,7 @@ export const policies = [
   
   #### Return Authorization Form
   
-  *http://localhost:3000/refund-form*
+  *https://dockbloxx.com/refund-form*
       `,
   },
   {
