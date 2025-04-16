@@ -1,5 +1,4 @@
 import React from "react";
-import { HeartIcon, MinusIcon, PlusIcon } from "@heroicons/react/20/solid";
 
 interface ManageQuantityProps {
   quantity: number;
@@ -17,22 +16,22 @@ const ManageQuantity = ({
       {/* Decrement Button */}
       <button
         onClick={onDecrement}
-        className="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+        className="text-5xl flex h-16 w-16 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
         disabled={quantity <= 1}
         aria-label="Decrease quantity"
       >
-        -{/* <MinusIcon className="text-black" /> */}
+        -
       </button>
 
       {/* Quantity Display */}
-      <span className="px-4 py-2 border rounded-md text-gray-900 bg-white">
+      <span className="px-4 py-4 border-2 border-gray-200 rounded-none text-gray-900 bg-white text-2xl">
         {quantity}
       </span>
 
       {/* Increment Button */}
       <button
         onClick={onIncrement}
-        className="px-3 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300"
+        className="text-4xl flex h-16 w-16 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
         aria-label="Increase quantity"
       >
         +

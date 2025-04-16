@@ -14,7 +14,7 @@ const AddToCartButton = ({
   const { cartItems, setIsCartOpen, setCartItems } = useCartStore();
 
   // Testing
-  console.log("cartItems [AddToCartButton.tsx]", cartItems);
+  // console.log("cartItems [AddToCartButton.tsx]", cartItems);
 
   // Check if the product is already in the cart
   const isProductInCart = cartItems.some((item) => item.id === cartItem.id);
@@ -29,10 +29,10 @@ const AddToCartButton = ({
     <div className="flex w-full">
       {!isProductInCart && (
         <button
-          className="flex flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 w-full"
+          className="flex flex-1 items-center justify-center rounded-none border border-transparent bg-lime-300 px-8 py-6 text-xl text-black font-bold hover:bg-lime-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-gray-50 w-full"
           onClick={handleAddToCart}
         >
-          Add to Cart
+          ADD TO CART
         </button>
       )}
       {isProductInCart && (

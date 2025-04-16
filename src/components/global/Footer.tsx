@@ -6,31 +6,32 @@ import {
   AiOutlineYoutube,
 } from "react-icons/ai";
 import SocialMediaLinks from "./SocialMediaLinks";
+import Link from "next/link";
 
 const navigation = {
-  solutions: [
-    { name: "Marketing", href: "#" },
-    { name: "Analytics", href: "#" },
-    { name: "Commerce", href: "#" },
-    { name: "Insights", href: "#" },
+  products: [
+    { name: "Best Sellers", href: "/category/best-sellers" },
+    { name: "Watersports", href: "/category/water-sports" },
+    { name: "Entertainments", href: "/category/entertainments" },
+    { name: "Sportsman", href: "/category/sportsman" },
+    { name: "Dock Essentials", href: "/category/dock-essentials" },
   ],
-  support: [
-    { name: "Pricing", href: "#" },
-    { name: "Documentation", href: "#" },
-    { name: "Guides", href: "#" },
-    { name: "API Status", href: "#" },
+  contacts: [
+    { name: "Contact Us", href: "/contact" },
+    { name: "Build-a-Bloxx", href: "/build-a-bloxx" },
+    { name: "Warranty Claims", href: "/warranty" },
   ],
-  company: [
-    { name: "About", href: "#" },
-    { name: "Blog", href: "#" },
-    { name: "Jobs", href: "#" },
-    { name: "Press", href: "#" },
-    { name: "Partners", href: "#" },
+  help: [
+    { name: "How-To Videos", href: "/how-to-dockbloxx" },
+    { name: "Shipping & Returns", href: "/refunds" },
+    { name: "Privacy Policy", href: "/privacy" },
+    { name: "Terms & Conditions", href: "/terms" },
   ],
-  legal: [
-    { name: "Claim", href: "#" },
-    { name: "Privacy", href: "#" },
-    { name: "Terms", href: "#" },
+  about: [
+    { name: "About Us", href: "/about" },
+    { name: "Dealers", href: "/dealer-locator" },
+    { name: "Reviews", href: "https://www.facebook.com/DockBloxx/reviews" },
+    { name: "Blog", href: "/blog" },
   ],
 };
 
@@ -45,7 +46,7 @@ function Footer() {
           <div className="space-y-8">
             <Image
               src="/images/logo-white.png"
-              alt="Dockbloxx Company Logo"
+              alt="Dockbloxx Help Logo"
               width={250}
               height={50}
               priority
@@ -87,34 +88,34 @@ function Footer() {
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
                 <h3 className="text-sm font-semibold leading-6 text-white">
-                  Solutions
+                  PRODUCTS
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
-                  {navigation.solutions.map((item) => (
+                  {navigation.products.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-300 hover:text-white"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
                 <h3 className="text-sm font-semibold leading-6 text-white">
-                  Support
+                  CONTACTS
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
-                  {navigation.support.map((item) => (
+                  {navigation.contacts.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-300 hover:text-white"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
@@ -123,27 +124,27 @@ function Footer() {
             <div className="md:grid md:grid-cols-2 md:gap-8">
               <div>
                 <h3 className="text-sm font-semibold leading-6 text-white">
-                  Company
+                  HELP
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
-                  {navigation.company.map((item) => (
+                  {navigation.help.map((item) => (
                     <li key={item.name}>
-                      <a
+                      <Link
                         href={item.href}
                         className="text-sm leading-6 text-gray-300 hover:text-white"
                       >
                         {item.name}
-                      </a>
+                      </Link>
                     </li>
                   ))}
                 </ul>
               </div>
               <div className="mt-10 md:mt-0">
                 <h3 className="text-sm font-semibold leading-6 text-white">
-                  Legal
+                  ABOUT
                 </h3>
                 <ul role="list" className="mt-6 space-y-4">
-                  {navigation.legal.map((item) => (
+                  {navigation.about.map((item) => (
                     <li key={item.name}>
                       <a
                         href={item.href}

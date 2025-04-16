@@ -142,7 +142,7 @@ const CartItems = () => {
                               )
                             }
                             aria-label={`Decrease quantity of ${product.name}`}
-                            className="text-2xl flex h-12 w-12 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-600"
+                            className="text-2xl flex h-12 w-12 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
                           >
                             −
                           </button>

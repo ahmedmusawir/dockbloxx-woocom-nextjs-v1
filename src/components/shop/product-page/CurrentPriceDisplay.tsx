@@ -11,8 +11,8 @@ const CurrentPriceDisplay = ({ basePrice, quantity }: Props) => {
   const totalPrice = basePrice ? basePrice * quantity : 0;
 
   return (
-    <div className="mt-10 p-4 bg-gray-100 rounded-lg shadow-sm">
-      <h3 className="text-xl font-bold text-gray-800">
+    <div className="mt-10 p-6 bg-gray-100 rounded-none shadow-lg border-2">
+      <h3 className="text-2xl font-bold text-gray-800">
         Current Price:{" "}
         {basePrice ? `$${totalPrice.toFixed(2)}` : "Select options"}
       </h3>

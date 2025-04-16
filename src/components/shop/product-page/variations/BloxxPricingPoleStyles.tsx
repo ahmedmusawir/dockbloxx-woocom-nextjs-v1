@@ -15,7 +15,6 @@ interface Props {
 const BloxxPricingPoleStyles = ({
   onSelectionChange,
   selectedPoleStyle,
-  setSelectedPoleStyle,
 }: Props) => {
   const [poleStyles, setPoleStyles] = useState<PoleStyles | null>(null);
 
@@ -34,16 +33,14 @@ const BloxxPricingPoleStyles = ({
 
   return (
     <div className="mt-4">
-      <h3 className="text-sm font-medium text-gray-600">Pole Shape Styles</h3>
+      <h3 className="text-lg font-bold text-gray-600">Pole Shape Styles</h3>
       <div className="grid grid-cols-2 gap-3 mt-2 md:grid-cols-4">
         {Object.entries(poleStyles).map(([key, imageUrl]) => (
           <label
             key={key}
-            className={`flex items-center justify-center w-20 h-20 border-4 rounded-md ${
-              selectedPoleStyle === key
-                ? "border-indigo-500"
-                : "border-gray-300"
-            } hover:border-indigo-500 cursor-pointer`}
+            className={`flex items-center justify-center w-20 h-20 border-4 rounded-none ${
+              selectedPoleStyle === key ? "border-blue-600" : "border-gray-300"
+            } hover:border-blue-600 cursor-pointer`}
           >
             <input
               type="radio"

@@ -455,16 +455,16 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
     <div className="mt-10">
       {/* Pole Shape Options */}
       <div className="mb-4">
-        <h3 className="text-sm text-gray-600">Pole Shape</h3>
+        <h3 className="text-lg text-gray-600">Pole Shape</h3>
         <div className="flex gap-3 mt-2">
           {getValidShapes().map((shape) => (
             <button
               key={shape}
               onClick={() => handleShapeSelection(shape)}
-              className={`px-4 py-2 rounded-md text-sm font-medium shadow-sm ${
+              className={`px-8 py-4 rounded-none text-sm font-medium shadow-sm ${
                 selectedShape === shape
-                  ? "bg-indigo-500 text-white"
-                  : "bg-white text-gray-900 border border-gray-300 hover:bg-gray-100"
+                  ? "bg-blue-600 text-white border-2 border-blue-500"
+                  : "bg-white text-gray-900 border-2 border-blue-500 hover:bg-gray-100"
               }`}
             >
               {shape}
@@ -473,19 +473,31 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
         </div>
       </div>
 
+      {/* Pole Shape Styles */}
+      <div className="mb-5">
+        <BloxxPricingPoleStyles
+          onSelectionChange={handlePoleStyleChange}
+          setSelectedPoleStyle={setSelectedPoleStyle}
+          selectedPoleStyle={selectedPoleStyle}
+        />
+
+        {/* Debugging or additional logic */}
+        <p className="mt-5">Current Selected Pole Style: {selectedPoleStyle}</p>
+      </div>
+
       {/* Version Options */}
       {filteredVersions.length > 0 ? (
         <div className="mb-4">
-          <h3 className="text-sm text-gray-600">Version</h3>
+          <h3 className="text-lg text-gray-600">Version</h3>
           <div className="flex gap-3 mt-2">
             {filteredVersions.map((version) => (
               <button
                 key={version}
                 onClick={() => handleVersionSelection(version)}
-                className={`px-4 py-2 rounded-md text-sm font-medium shadow-sm ${
+                className={`px-8 py-4 rounded-none text-sm font-medium shadow-sm ${
                   selectedVersion === version
-                    ? "bg-indigo-500 text-white"
-                    : "bg-white text-gray-900 border border-gray-300 hover:bg-gray-100"
+                    ? "bg-blue-600 text-white border-2 border-blue-500"
+                    : "bg-white text-gray-900 border-2 border-blue-500 hover:bg-gray-100"
                 }`}
               >
                 {version}
@@ -501,18 +513,17 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
       )}
 
       {/* Pole Size Options */}
-      {/* Pole Size Options */}
       <div className="mb-4">
-        <h3 className="text-sm text-gray-600">Pole Size</h3>
+        <h3 className="text-lg text-gray-600">Pole Size</h3>
         <div className="flex flex-wrap gap-3 mt-2 justify-start">
           {filteredSizes.map((size) => (
             <button
               key={size}
               onClick={() => handleSizeSelection(size)}
-              className={`px-3 py-2 min-w-[50px] rounded-md text-sm font-medium shadow-sm ${
+              className={`px-8 py-4 min-w-[50px] rounded-none text-sm font-medium shadow-sm ${
                 selectedSize === size
-                  ? "bg-indigo-500 text-white"
-                  : "bg-white text-gray-900 border border-gray-300 hover:bg-gray-100"
+                  ? "bg-blue-600 text-white border-2 border-blue-500"
+                  : "bg-white text-gray-900 border-2 border-blue-500 hover:bg-gray-100"
               }`}
             >
               {size}
@@ -528,23 +539,11 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
               placeholder="Enter custom size"
               value={customSize || ""}
               onChange={(e) => handleCustomSizeChange(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-500"
+              className="w-full px-3 py-2 border border-blue-600 rounded-none focus:outline-none focus:ring focus:ring-blue-600"
             />
             {error && <p className="mt-1 text-sm text-red-500">{error}</p>}
           </div>
         )}
-      </div>
-
-      {/* Pole Shape Styles */}
-      <div>
-        <BloxxPricingPoleStyles
-          onSelectionChange={handlePoleStyleChange}
-          setSelectedPoleStyle={setSelectedPoleStyle}
-          selectedPoleStyle={selectedPoleStyle}
-        />
-
-        {/* Debugging or additional logic */}
-        <p className="mt-5">Current Selected Pole Style: {selectedPoleStyle}</p>
       </div>
     </div>
   );

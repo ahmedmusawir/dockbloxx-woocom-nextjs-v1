@@ -7,13 +7,13 @@ interface Props {
 const ProductInfo = ({ product }: Props) => {
   return (
     <>
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+      <h1 className="text-4xl font-bold tracking-tight text-gray-900 mt-5">
         {product.name}
       </h1>
 
       <div className="mt-3">
-        <h2 className="sr-only">Product information</h2>
-        <p className="text-3xl tracking-tight text-gray-900">
+        <h1 className="sr-only">Product information</h1>
+        <p className="text-4xl tracking-tight text-blue-400 font-extrabold">
           {parse(product.price_html)}
         </p>
       </div>

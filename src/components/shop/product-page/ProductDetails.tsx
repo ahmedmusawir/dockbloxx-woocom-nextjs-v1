@@ -127,7 +127,7 @@ const ProductDetails = ({ product }: Props) => {
 
   return (
     <div className="lg:grid lg:grid-cols-[60%_40%] lg:items-start lg:gap-x-8">
-      {/* Image gallery */}
+      {/* Image gallery :: LEFT COLUMN START*/}
       <div>
         {/* Desktop Image Gallery (Hidden on Mobile) */}
         <div className="hidden lg:block">
@@ -139,10 +139,14 @@ const ProductDetails = ({ product }: Props) => {
           <MobileProductSlider product={product} />
         </div>
       </div>
+      {/* LEFT COLUMN ENDS */}
 
+      {/* RIGHT COLUMN STARTS */}
       {/* Product info */}
       <div className="mt-10 px-4 sm:mt-16 sm:px-0 lg:mt-0">
+        {/* Produt Name & Price */}
         <ProductInfo product={product} />
+
         {/* Render the appropriate pricing module */}
         {renderPricingModule(
           productCategory,
@@ -179,7 +183,7 @@ const ProductDetails = ({ product }: Props) => {
         {/* Additional Details w/ Accordion */}
         <AdditionalDetailsAccordion product={product} />
       </div>
-      {/* </div> */}
+      {/* RIGHT COLUMN ENDS */}
     </div>
   );
 };
