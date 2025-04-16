@@ -1,4 +1,5 @@
 import { Product, RelatedProduct } from "@/types/product";
+import { WC_REST_URL } from "@/constants/apiEndpoints";
 
 /**
  * Fetch Paginated Products [FROM CLIENT SIDE]
@@ -370,7 +371,7 @@ export const fetchRelatedProductsById = async (
             headers: {
               "Content-Type": "application/json",
             },
-            next: { revalidate: 300 }, // Cache the response for 60 seconds
+            next: { revalidate: 60 }, // Cache the response for 60 seconds
           }
         );
 
@@ -490,32 +491,45 @@ export const fetchPoleShapeStyles = async (): Promise<
 // --------------------------- FETCH POLE SHAPE STYLES FROM ACF ENDS ------------------------------------------------------------
 
 // --------------------------- FEATURED PRODUCTS FROM WOOCOM PRODUCTS STARTS ------------------------------------------------------------
-/**
- * Fetches the featured products from the Next.js API route.
- * This function is used to retrieve products marked as "featured"
- * in the WooCommerce backend.
- *
- * @returns {Promise<{ products: any[] }>} A promise that resolves to an object containing an array of featured products.
- * If the request fails, an empty array is returned.
- *
- * - Uses `fetch` to call the `/api/featured-products` endpoint.
- * - Throws an error if the API response is not successful.
- * - Logs any errors encountered during the request.
- *
- * This function is designed for use in server-side components (SSR)
- * to ensure featured products are preloaded before rendering.
- */
 
-export async function fetchFeaturedProducts() {
+const WOOCOM_REST_API_URL = WC_REST_URL;
+const WOOCOM_CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
+const WOOCOM_CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
+
+/**
+ * Fetches featured products from WooCommerce.
+ * Used for the homepage featured section (e.g., "Top Picks").
+ *
+ * @returns {Promise<Product[]>} - Returns an array of featured products.
+ */
+export async function fetchFeaturedProducts(): Promise<Product[]> {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/featured-products`
-    );
-    if (!res.ok) throw new Error("Failed to fetch featured products");
-    return await res.json();
+    if (
+      !WOOCOM_REST_API_URL ||
+      !WOOCOM_CONSUMER_KEY ||
+      !WOOCOM_CONSUMER_SECRET
+    ) {
+      throw new Error("Missing WooCommerce API credentials.");
+    }
+
+    // Build the request URL for featured products
+    const url = `${WOOCOM_REST_API_URL}/products?featured=true&per_page=4&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}`;
+
+    // Fetch featured products using ISR (revalidate every 60 sec)
+    const response = await fetch(url, {
+      headers: { "Content-Type": "application/json" },
+      next: { revalidate: 60 },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch featured products");
+    }
+
+    const products = await response.json();
+    return products;
   } catch (error) {
-    console.error("[Service] Error fetching featured products:", error);
-    return { products: [] };
+    console.error("[fetchFeaturedProducts] Error:", error);
+    return [];
   }
 }
 

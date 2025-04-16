@@ -47,7 +47,10 @@ const SingleProductPage = async ({
       singleProduct.id,
       singleProduct.variations
     ),
-    related_products: await fetchRelatedProductsById(singleProduct.related_ids),
+    related_products: await fetchRelatedProductsById(
+      singleProduct.related_ids.slice(0, 4) // Brings only 4 related products
+    ),
+    // related_products: await fetchRelatedProductsById(singleProduct.related_ids), // Brings all related products
   };
 
   // console.log("varions [SingleProduct Page]", productWithVariations.variations);

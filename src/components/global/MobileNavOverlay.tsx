@@ -100,7 +100,7 @@ export default function MobileNavOverlay({ onClose }: MobileNavOverlayProps) {
           <MobileNavItem href="/contact" onClose={onClose}>
             Contact Us
           </MobileNavItem>
-          <MobileNavItem href="/our-policy" onClose={onClose}>
+          <MobileNavItem href="/terms" onClose={onClose}>
             Our Policy
           </MobileNavItem>
         </nav>

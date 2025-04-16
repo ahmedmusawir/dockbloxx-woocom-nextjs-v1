@@ -30,7 +30,7 @@ const HomeProductList = async ({ products, sectionTitle }: Props) => {
                   alt={product.name}
                   className="object-cover w-full h-full transition-transform hover:scale-105"
                 />
-                <div className="absolute top-4 left-0 bg-blue-500 text-white px-3 py-1 text-sm font-semibold">
+                <div className="absolute top-4 left-0 bg-lime-300 text-black px-3 py-1 text-sm font-semibold">
                   {sectionTitle}
                 </div>
               </div>
@@ -57,7 +57,7 @@ const HomeProductList = async ({ products, sectionTitle }: Props) => {
                 {/* Button - Always at Bottom */}
                 <Link
                   href={`/shop/${product.slug}`}
-                  className="block w-full bg-lime-300 hover:bg-lime-400 hover:text-white text-blue-500 text-center py-4 font-semibold transition-colors duration-200"
+                  className="block w-full bg-lime-300 hover:bg-lime-500 hover:text-white text-blue-500 text-center py-4 font-semibold transition-colors duration-200"
                 >
                   SELECT OPTION
                 </Link>

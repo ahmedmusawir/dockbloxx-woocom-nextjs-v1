@@ -7,7 +7,7 @@ import Head from "next/head";
 
 const CartPageContent = async () => {
   const results = await fetchFeaturedProducts();
-  const featuredProducts = results.products;
+  const featuredProducts = results;
 
   console.log("featured products [CartPageContent]", featuredProducts);
   return (
