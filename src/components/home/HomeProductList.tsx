@@ -2,6 +2,7 @@ import Link from "next/link";
 import parse from "html-react-parser";
 import { Product } from "@/types/product";
 import Image from "next/image";
+import { getFeaturedImage } from "@/lib/utils";
 
 interface Props {
   products: Product[];
@@ -24,16 +25,19 @@ const HomeProductList = async ({ products, sectionTitle }: Props) => {
               className="bg-gray-100 rounded-lg overflow-hidden shadow-sm flex flex-col h-full"
             >
               {/* Image Container with Best Seller Badge */}
-              <div className="relative aspect-[4/3] overflow-hidden">
-                <img
-                  src={product.images[1].src}
-                  alt={product.name}
-                  className="object-cover w-full h-full transition-transform hover:scale-105"
-                />
-                <div className="absolute top-4 left-0 bg-lime-300 text-black px-3 py-1 text-sm font-semibold">
-                  {sectionTitle}
+              <Link href={`/shop/${product.slug}`}>
+                <div className="relative aspect-[4/3] overflow-hidden">
+                  <img
+                    // src={product.images[1].src}
+                    src={getFeaturedImage(product.images)}
+                    alt={product.name}
+                    className="object-cover w-full h-full transition-transform hover:scale-105"
+                  />
+                  <div className="absolute top-4 left-0 bg-lime-300 text-black px-3 py-1 text-sm font-semibold">
+                    {sectionTitle}
+                  </div>
                 </div>
-              </div>
+              </Link>
 
               {/* Content Container */}
               <div className="pt-6 flex flex-col flex-grow">

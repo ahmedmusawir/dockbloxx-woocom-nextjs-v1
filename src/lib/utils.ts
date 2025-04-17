@@ -1,3 +1,13 @@
+import { Product, ProductVariation } from "@/types/product";
+
+// returns featured image safely filtering youtube video
+export const getFeaturedImage = (images: Product["images"]) => {
+  if (!images?.length) return "/placeholder.jpg";
+  if (images[0].id === "youtube_video")
+    return images[1]?.src ?? "/placeholder.jpg";
+  return images[0].src ?? "/placeholder.jpg";
+};
+
 // This sends all the proper api urls
 export const getApiUrl = (path: string) => {
   const base = process.env.NEXT_PUBLIC_BACKEND_URL;
@@ -68,7 +78,6 @@ export function formatDateString(dateString: string): string {
   }
 }
 
-import { ProductVariation } from "@/types/product";
 /**
  * Utility function `cn` for managing and merging class names dynamically.
  *

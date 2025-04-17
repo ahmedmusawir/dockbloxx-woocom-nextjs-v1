@@ -393,17 +393,12 @@ export const fetchRelatedProductsById = async (
           slug: product.slug,
           price_html: product.price_html,
           image:
-            product.images[0].type === "video"
-              ? product.images[1].src
-              : product.images[0].src || "", // Use the first image as the featured image
+            product.images[0]?.type === "video"
+              ? product.images[1]?.src
+              : product.images[0]?.src || "", // Use the first image as the featured image
         };
       })
     );
-
-    // console.log(
-    //   "[fetchRelatedProductsById] Related products fetched successfully:",
-    //   relatedProducts
-    // );
 
     return relatedProducts;
   } catch (error) {

@@ -290,10 +290,10 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
     let variationId = null;
 
     const matchedVariation = variations.find((variation) => {
-      console.log(
-        "Variation ID [BloxxPrice.tsx: calculatePrice]",
-        variation.id
-      );
+      // console.log(
+      //   "Variation ID [BloxxPrice.tsx: calculatePrice]",
+      //   variation.id
+      // );
       const shapeMatch = variation.attributes.find(
         (attr) => attr.name === "Pole Shape" && attr.option === selectedShape
       );
@@ -318,10 +318,10 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
 
     if (matchedVariation) {
       variationId = matchedVariation.id; // 2. Extract variation.id and store it
-      console.log(
-        "Extracted Variation ID [BloxxPrice.tsx: calculatePrice]:",
-        variationId
-      ); // Verification log
+      // console.log(
+      //   "Extracted Variation ID [BloxxPrice.tsx: calculatePrice]:",
+      //   variationId
+      // );
     }
 
     // Update cart item with the calculated price

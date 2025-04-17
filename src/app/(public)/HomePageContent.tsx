@@ -23,9 +23,9 @@ const HomePageContent = async () => {
   const waterSportsSectionTitle = "WATER SPORTS";
 
   const entertainments = await fetchCategoryProductsForHomePage(
-    "entertainments"
+    "entertainment"
   );
-  const entertainmentsSectionTitle = "ENTERTAINMENTS";
+  const entertainmentsSectionTitle = "ENTERTAINMENT";
 
   const sportsman = await fetchCategoryProductsForHomePage("sportsman");
   console.log(sportsman);

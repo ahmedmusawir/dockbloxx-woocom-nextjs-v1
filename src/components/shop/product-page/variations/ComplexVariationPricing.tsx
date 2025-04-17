@@ -131,7 +131,7 @@ const ComplexVariationPricing = ({ onPriceChange, setCartItem }: Props) => {
                 <button
                   key={option}
                   onClick={() => handleOptionClick(attributeName, option)}
-                  className={`px-3 py-2 min-w-[50px] rounded-md text-sm font-medium shadow-sm border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-indigo-500 focus:ring-offset-1 ${
+                  className={`px-8 py-4 min-w-[50px] rounded-none text-sm font-medium shadow-sm border border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-indigo-500 focus:ring-offset-1 ${
                     selectedOptions[attributeName] === option
                       ? "bg-indigo-500 text-white"
                       : "bg-white text-gray-900"

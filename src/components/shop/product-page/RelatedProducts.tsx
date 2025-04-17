@@ -13,8 +13,11 @@ const RelatedProducts = ({ relatedProducts }: Props) => {
       aria-labelledby="related-heading"
       className="mt-10 border-t border-gray-200 px-4 py-16 sm:px-0"
     >
-      <h2 id="related-heading" className="text-xl font-bold text-gray-900">
-        Customers also bought
+      <h2
+        id="related-heading"
+        className="text-4xl font-extrabold text-gray-600"
+      >
+        Customers also bought...
       </h2>
 
       <div className="mt-8 grid grid-cols-1 gap-y-12 sm:grid-cols-2 sm:gap-x-6 lg:grid-cols-4 xl:gap-x-8">
@@ -34,7 +37,7 @@ const RelatedProducts = ({ relatedProducts }: Props) => {
                   />
                 </div>
                 <div className="relative mt-4">
-                  <h3 className="text-sm font-medium text-gray-900">
+                  <h3 className="text-2xl font-bold text-gray-900">
                     {product.name}
                   </h3>
                   {/* <p className="mt-1 text-sm text-gray-500">{product.id}</p> */}

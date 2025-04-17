@@ -115,7 +115,7 @@ const SingleVariationPricing = ({
               <button
                 key={option}
                 onClick={() => handleOptionClick(option)}
-                className={`px-4 py-2 rounded-md text-sm font-medium shadow-sm ${
+                className={`px-8 py-4 rounded-none text-sm font-medium shadow-sm ${
                   selectedOption === option
                     ? "bg-indigo-500 text-white"
                     : "bg-white text-gray-900 border border-gray-300 hover:bg-gray-100"

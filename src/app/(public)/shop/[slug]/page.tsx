@@ -13,7 +13,6 @@ import { detectProductCategory } from "@/lib/utils";
 export async function generateStaticParams() {
   try {
     const slugs = await fetchAllProductSlugs();
-    // console.log("Fetched product slugs:", slugs);
     return slugs.map((slug: string) => ({ slug }));
   } catch (error) {
     console.error("Error fetching product slugs:", error);
@@ -30,6 +29,11 @@ const SingleProductPage = async ({
   const { slug } = await params;
 
   const singleProduct = await fetchProductBySlug(slug);
+
+  // console.log(
+  //   "Related Product IDs ... 4 only [shop/[slug]/page.tsx]",
+  //   singleProduct?.related_ids.slice(0, 4)
+  // );
 
   // TESTING ACF POLES STYLES
   // const poleImages = await fetchPoleShapeStyles();
@@ -57,15 +61,15 @@ const SingleProductPage = async ({
 
   const relatedProducts = productWithVariations.related_products;
 
-  console.log("singleProduct [SingleProduct page]", singleProduct);
-  console.log("relatedProduct [SingleProduct page]", relatedProducts);
+  // console.log("singleProduct [SingleProduct page]", singleProduct);
+  // console.log("relatedProduct [SingleProduct page]", relatedProducts);
 
   // Detect the product category
   const customCategory = detectProductCategory(productWithVariations);
-  console.log(
-    "Product Variations [SingleProduct page]",
-    productWithVariations.variations
-  );
+  // console.log(
+  //   "Product Variations [SingleProduct page]",
+  //   productWithVariations.variations
+  // );
   // console.log("custom Category [SingleProduct page]", customCategory);
 
   // Fetch pole styles for Bloxx category

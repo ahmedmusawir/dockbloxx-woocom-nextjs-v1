@@ -5,18 +5,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types/product";
 import parse from "html-react-parser";
+import { getFeaturedImage } from "@/lib/utils";
 
 interface Props {
   product: Product;
 }
 
 const ProductListItem = ({ product }: Props) => {
-  // console.log("featured img [ProductListItem]:", product.images[1]?.src);
-
-  const featuredImage =
-    product.images[0].id === "youtube_video"
-      ? product.images[1]?.src || "/placeholder.jpg"
-      : product.images[0].src || "/placeholder.jpg";
+  const featuredImage = getFeaturedImage(product.images);
 
   return (
     <div key={product.id} className="group relative my-5">
