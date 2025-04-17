@@ -52,6 +52,8 @@ export interface Product {
   tax_class: string;
   acf: {
     home_product_description: string;
+    what_is_included: string[];
+    shipping_returns_warranty: string;
   };
 }
 

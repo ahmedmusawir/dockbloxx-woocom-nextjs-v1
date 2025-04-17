@@ -17,6 +17,8 @@ import { CartItem } from "@/types/cart";
 import ManageQuantity from "./ManageQuantity";
 import { useCartStore } from "@/store/useCartStore";
 import MobileProductSlider from "./mobile/MobileProductSlider";
+import ProductShortDescription from "./ProductShortDescription";
+import StaticLogoBlock from "./StaticLogoBlock";
 
 interface Props {
   product: Product;
@@ -179,6 +181,12 @@ const ProductDetails = ({ product }: Props) => {
             handleAddToCart={handleAddToCart}
           />
         </div>
+
+        {/* Product Short Description */}
+        <ProductShortDescription product={product} />
+
+        {/* Static Logo Block */}
+        <StaticLogoBlock />
 
         {/* Additional Details w/ Accordion */}
         <AdditionalDetailsAccordion product={product} />
