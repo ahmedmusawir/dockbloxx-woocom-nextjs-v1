@@ -1,5 +1,8 @@
 import Page from "@/components/common/Page";
+import SubscribeNow from "@/components/home/SubscribeNow";
+import InstallVideoBlock from "@/components/shop/product-page/InstallVideoBlock";
 import ProductDetails from "@/components/shop/product-page/ProductDetails";
+import ProductFaq from "@/components/shop/product-page/ProductFaq";
 import RelatedProducts from "@/components/shop/product-page/RelatedProducts";
 import { Product, RelatedProduct } from "@/types/product";
 
@@ -22,6 +25,15 @@ const SingleProductContent = ({
 
           {/* Related Products */}
           <RelatedProducts relatedProducts={relatedProducts} />
+
+          {/* How Install Video */}
+          <InstallVideoBlock product={product} />
+
+          {/* Product FAQ */}
+          <ProductFaq />
+
+          {/* Subscribe Now */}
+          <SubscribeNow />
         </div>
       </Page>
       {/* </main> */}

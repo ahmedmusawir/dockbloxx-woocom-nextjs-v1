@@ -5,6 +5,7 @@ import {
   DisclosurePanel,
 } from "@headlessui/react";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
+import parse from "html-react-parser";
 
 interface Props {
   product: Product;
@@ -12,67 +13,88 @@ interface Props {
 
 const AdditionalDetailsAccordion = ({ product }: Props) => {
   const includedParts = product.acf.what_is_included;
-  console.log(
-    "What is Included [AdditionalDeetailsAccordion.tsx]",
-    includedParts
-  );
 
-  const demoProduct = {
-    name: "Zip Tote Basket",
-    price: "$140",
-    rating: 4,
+  const shippingReturnsWarranty = product.acf.shipping_returns_warranty;
 
-    description: `
-    <p>The Zip Tote Basket is the perfect midpoint between shopping tote and comfy backpack. With convertible straps, you can hand carry, should sling, or backpack this convenient and spacious bag. The zip top and durable canvas construction keeps your goods protected for all-day use.</p>
-  `,
+  type AccordionItem =
+    | {
+        name: string;
+        type: "included";
+        items: { image: string; item_name: string }[];
+      }
+    | {
+        name: string;
+        type: "html";
+        items: string;
+      };
+
+  const accordion: { details: AccordionItem[] } = {
     details: [
       {
         name: "What's included",
-        items: product.variations,
+        type: "included",
+        items: includedParts,
       },
       {
         name: "Shipping, Returns & Warranty",
-        items: product.related_ids,
+        type: "html",
+        items: shippingReturnsWarranty,
       },
     ],
   };
+
   return (
     <section aria-labelledby="details-heading" className="mt-12">
       <h2 id="details-heading" className="sr-only">
         Additional details
       </h2>
 
-      <div className="divide-y divide-gray-200 border-t">
-        {demoProduct.details.map((detail) => (
-          <Disclosure key={detail.name} as="div">
+      <div className="divide-y-4 divide-gray-200 border-t-4">
+        {accordion.details.map((detail) => (
+          <Disclosure key={detail.type} as="div">
             <h3>
               <DisclosureButton className="group relative flex w-full items-center justify-between py-6 text-left">
-                <span className="text-sm font-medium text-gray-900 group-data-[open]:text-indigo-600">
+                <span className="text-2xl font-extrabold text-gray-900 group-data-[open]:text-indigo-600">
                   {detail.name}
                 </span>
-                <span className="ml-6 flex items-center">
+                <span className="ml-6 flex items-center font-extrabold">
                   <PlusIcon
                     aria-hidden="true"
-                    className="block size-6 text-gray-400 group-hover:text-gray-500 group-data-[open]:hidden"
+                    className="block size-12 font-extrabold text-gray-400 group-hover:text-gray-500 group-data-[open]:hidden"
                   />
                   <MinusIcon
                     aria-hidden="true"
-                    className="hidden size-6 text-indigo-400 group-hover:text-indigo-500 group-data-[open]:block"
+                    className="hidden size-12 font-extrabold text-indigo-400 group-hover:text-indigo-500 group-data-[open]:block"
                   />
                 </span>
               </DisclosureButton>
             </h3>
             <DisclosurePanel className="pb-6">
-              <ul
-                role="list"
-                className="list-disc space-y-1 pl-5 text-sm/6 text-gray-700 marker:text-gray-300"
-              >
-                {detail.items.map((item) => (
-                  <li key={item} className="pl-2">
-                    {item}
-                  </li>
-                ))}
-              </ul>
+              {detail.type === "included" && (
+                <ul className="space-y-4">
+                  {detail.items.map((item, index) => (
+                    <li
+                      key={index}
+                      className="flex items-center gap-4 bg-gray-100"
+                    >
+                      <img
+                        src={item.image}
+                        alt={item.item_name}
+                        className="w-14 h-14 object-cover rounded"
+                      />
+                      <p className="text-sm font-medium text-gray-800">
+                        {item.item_name}
+                      </p>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              {detail.type === "html" && (
+                <div className="text-sm text-gray-700 leading-6 space-y-2">
+                  {parse(detail.items)}
+                </div>
+              )}
             </DisclosurePanel>
           </Disclosure>
         ))}

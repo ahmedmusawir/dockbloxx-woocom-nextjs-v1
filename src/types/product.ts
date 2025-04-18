@@ -12,6 +12,18 @@ export interface ProductCategory {
   slug: string;
 }
 
+type IncludedItem = {
+  image: string;
+  item_name: string;
+};
+
+type ProductACF = {
+  home_product_description: string;
+  what_is_included: IncludedItem[];
+  shipping_returns_warranty: string;
+  youtube: string;
+};
+
 // Represents a single product returned from the WooCommerce REST API
 export interface Product {
   id: number;
@@ -50,11 +62,7 @@ export interface Product {
   rating_count: number;
   shipping_class_id: number;
   tax_class: string;
-  acf: {
-    home_product_description: string;
-    what_is_included: string[];
-    shipping_returns_warranty: string;
-  };
+  acf: ProductACF;
 }
 
 // Represented product variations for Single Product Details

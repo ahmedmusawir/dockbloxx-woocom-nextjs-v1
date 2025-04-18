@@ -11,11 +11,11 @@ const RelatedProducts = ({ relatedProducts }: Props) => {
   return (
     <section
       aria-labelledby="related-heading"
-      className="mt-10 border-t border-gray-200 px-4 py-16 sm:px-0"
+      className="mt-10 border-t border-gray-200 px-4 pt-16 sm:px-0"
     >
       <h2
         id="related-heading"
-        className="text-4xl font-extrabold text-gray-600"
+        className="text-4xl font-extrabold text-gray-600 text-center"
       >
         Customers also bought...
       </h2>
@@ -58,7 +58,7 @@ const RelatedProducts = ({ relatedProducts }: Props) => {
               <Link href={`/shop/${product.slug}`}>
                 <button
                   type="button"
-                  className="mt-8 rounded-none bg-blue-600 px-4 py-3 text-xs font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 xl:mb-10 w-full"
+                  className="mt-8 rounded-none bg-lime-300 px-4 py-4 text-lg font-semibold text-black shadow-lg hover:bg-lime-500 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 xl:mb-10 w-full"
                 >
                   SELECT OPTIONS
                 </button>
