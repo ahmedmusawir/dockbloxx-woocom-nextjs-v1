@@ -30,6 +30,8 @@ const SingleProductPage = async ({
 
   const singleProduct = await fetchProductBySlug(slug);
 
+  console.log("Single Product only [shop/[slug]/page.tsx]", singleProduct);
+
   // console.log(
   //   "Related Product IDs ... 4 only [shop/[slug]/page.tsx]",
   //   singleProduct?.related_ids.slice(0, 4)

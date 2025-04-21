@@ -248,7 +248,7 @@ const Navbar = () => {
             <NavLink href="/category/accessories">ACCESSORIES</NavLink>
             <NavLink href="/build-a-bloxx">BUILD A BLOXX</NavLink>
             <NavLink href="/category/deals">DEALS</NavLink>
-            <NavLink href="/gift-cards">GIFT CARDS</NavLink>
+            {/* <NavLink href="/shop/gift-card">GIFT CARDS</NavLink> */}
             <NavLink href="http://facebook.com">REVIEW</NavLink>
           </div>
 

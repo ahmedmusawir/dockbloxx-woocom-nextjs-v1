@@ -63,9 +63,9 @@ export default function MobileNavOverlay({ onClose }: MobileNavOverlayProps) {
           <MobileNavItem href="/category/deals" onClose={onClose}>
             DEALS
           </MobileNavItem>
-          <MobileNavItem href="/gift-cards" onClose={onClose}>
+          {/* <MobileNavItem href="/shop/gift-card" onClose={onClose}>
             GIFT CARDS
-          </MobileNavItem>
+          </MobileNavItem> */}
           <MobileNavItem
             href="http://facebook.com"
             onClose={onClose}

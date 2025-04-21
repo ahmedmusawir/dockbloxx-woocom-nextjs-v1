@@ -29,6 +29,7 @@
     "graphql-tag": "^2.12.6",
     "heroicons": "^2.2.0",
     "html-react-parser": "^5.2.2",
+    "jsdom": "^26.1.0",
     "localforage": "^1.10.0",
     "lodash": "^4.17.21",
     "lucide-react": "^0.461.0",
@@ -51,6 +52,7 @@
     "zustand": "^5.0.1"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
     "@types/lodash": "^4.17.15",
     "@types/node": "^20",
     "@types/react": "^18",

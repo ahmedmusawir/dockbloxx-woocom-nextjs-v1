@@ -6,15 +6,16 @@ import {
 } from "@headlessui/react";
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import parse from "html-react-parser";
+import { divide } from "lodash";
 
 interface Props {
   product: Product;
 }
 
 const AdditionalDetailsAccordion = ({ product }: Props) => {
-  const includedParts = product.acf.what_is_included;
+  const includedParts = product.acf.what_is_included || [];
 
-  const shippingReturnsWarranty = product.acf.shipping_returns_warranty;
+  const shippingReturnsWarranty = product.acf.shipping_returns_warranty || "";
 
   type AccordionItem =
     | {
@@ -72,7 +73,7 @@ const AdditionalDetailsAccordion = ({ product }: Props) => {
             <DisclosurePanel className="pb-6">
               {detail.type === "included" && (
                 <ul className="space-y-4">
-                  {detail.items.map((item, index) => (
+                  {detail?.items?.map((item, index) => (
                     <li
                       key={index}
                       className="flex items-center gap-4 bg-gray-100"

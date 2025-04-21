@@ -41,6 +41,16 @@ export async function getAllCategories(): Promise<Category[]> {
  * @param {number} perPage - Products per page
  * @returns {Promise<{ products: Product[]; totalProducts: number }>} - Product list and total count
  */
+
+/**
+ * Fetches paginated products directly from WooCommerce for a specific category slug.
+ *
+ * @param {string} categorySlug - The WooCommerce category slug
+ * @param {number} page - Page number
+ * @param {number} perPage - Products per page
+ * @returns {Promise<{ products: Product[]; totalProducts: number }>} - Product list and total count
+ */
+
 export async function fetchCategoryProductsPaginated(
   categorySlug: string,
   page: number,
@@ -50,7 +60,7 @@ export async function fetchCategoryProductsPaginated(
     const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/products-by-category?category=${categorySlug}&page=${page}&perPage=${perPage}`;
 
     const response = await fetch(url, {
-      next: { revalidate: 600 },
+      next: { revalidate: 60 },
     });
 
     if (!response.ok) {

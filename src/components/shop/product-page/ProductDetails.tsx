@@ -25,8 +25,11 @@ interface Props {
 }
 
 const ProductDetails = ({ product }: Props) => {
+  // console.log(
+  //   "product [/components/shop/product-page/ProductDetails]",
+  //   product
+  // );
   const [basePrice, setBasePrice] = useState<number | null>(null);
-  // const [quantity, setQuantity] = useState<number>(1); // Default to 1
   const [productCategory, setProductCategory] = useState<{
     type: string;
   } | null>(null);

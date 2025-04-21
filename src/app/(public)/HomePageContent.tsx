@@ -9,6 +9,7 @@ import SectionTwoWaterSports from "@/components/home/SectionTwoWaterSports";
 import SubscribeNow from "@/components/home/SubscribeNow";
 import { fetchCategoryProductsForHomePage } from "@/services/categoryServices";
 import { fetchHomePageData } from "@/services/pageServices";
+import parse from "html-react-parser";
 import Head from "next/head";
 
 const HomePageContent = async () => {
@@ -38,10 +39,7 @@ const HomePageContent = async () => {
 
   return (
     <>
-      <Head>
-        <title>Home Page Content</title>
-        <meta name="description" content="This is the home page" />
-      </Head>
+      <Head>REMOVE LATER</Head>
       <Page className={"border border-gray-300"} FULL={false}>
         <Hero homeData={homeData} />
 

@@ -27,7 +27,8 @@ const SingleProductContent = ({
           <RelatedProducts relatedProducts={relatedProducts} />
 
           {/* How Install Video */}
-          <InstallVideoBlock product={product} />
+          {/* <InstallVideoBlock product={product} /> */}
+          {product.acf.youtube && <InstallVideoBlock product={product} />}
 
           {/* Product FAQ */}
           <ProductFaq />

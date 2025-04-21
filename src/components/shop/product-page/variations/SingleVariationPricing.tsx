@@ -108,7 +108,7 @@ const SingleVariationPricing = ({
       {/* Options */}
       <div className="mb-4">
         <h3 className="text-sm text-gray-600">Options</h3>
-        <div className="flex gap-3 mt-2">
+        <div className="flex flex-wrap gap-3 mt-2 justify-start">
           {variations.map((variation) => {
             const option = variation.attributes[0]?.option || "N/A";
             return (
