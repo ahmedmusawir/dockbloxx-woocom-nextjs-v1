@@ -28,22 +28,11 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
-  const yoast = await fetchProductSEOBySlug(slug);
+  const yoast = await fetchProductSEOBySlug(params.slug);
   return yoast ? mapYoastToMetadata(yoast) : {};
 }
-
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: { slug: string };
-// }) {
-//   const { slug } = await params;
-//   const yoast = await fetchProductSEOBySlug(slug);
-//   return yoast ? mapYoastToMetadata(yoast) : {};
-// }
 
 // Single product page component
 const SingleProductPage = async ({

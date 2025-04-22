@@ -12,13 +12,17 @@ import { fixUrl } from "@/lib/seoUtils";
 
 /**
  * Dynamically generates SEO metadata for each category page using its slug.
+ *
+ * @param params - Route params containing catSlug
+ * @returns Metadata object mapped from Yoast SEO JSON
  */
 export async function generateMetadata({
   params,
 }: {
-  params: { catSlug: string };
+  params: Promise<{ catSlug: string }>;
 }) {
-  const yoast = await fetchYoastCategorySEOJson(params.catSlug);
+  const { catSlug } = await params;
+  const yoast = await fetchYoastCategorySEOJson(catSlug);
   return mapYoastToMetadata(yoast);
 }
 
@@ -30,10 +34,16 @@ export async function generateStaticParams() {
     .map((cat) => ({ catSlug: cat.slug }));
 }
 
-// No manual param typing, destructure inside the function body
-const Page = async (props: any) => {
-  const { params, searchParams } = props;
-  const catSlug = params.catSlug;
+// Category Page Component
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ catSlug: string }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const { catSlug } = await params;
+  const search = await searchParams;
 
   // ... for SEO handling
   const yoast = await fetchYoastCategorySEOJson(catSlug);
@@ -43,7 +53,7 @@ const Page = async (props: any) => {
     schema = fixUrl(schema);
   }
 
-  const pageNumber = parseInt(searchParams?.page || "1", 10);
+  const pageNumber = parseInt((search.page as string) || "1", 10);
   const productsPerPage = 12;
 
   const categories = await getAllCategories();

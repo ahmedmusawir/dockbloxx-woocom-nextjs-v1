@@ -1,11 +1,13 @@
+import {
+  WP_REST_PAGES,
+  WP_REST_PRODUCT_CATS,
+  WP_REST_POSTS,
+} from "@/constants/apiEndpoints";
+
 /**
  * Utility to fetch Yoast SEO meta from WordPress REST API by page slug.
  * Compatible with Next.js 15 App Router via generateMetadata().
  */
-
-// lib/seoUtils.ts
-
-import { WP_REST_PAGES, WP_REST_PRODUCT_CATS } from "@/constants/apiEndpoints";
 
 /**
  * Fetch Yoast SEO JSON (yoast_head_json) for a given page slug.
@@ -30,6 +32,84 @@ export async function fetchYoastSEOJson(slug: string) {
   }
 }
 
+// --------------------------------------------
+// services/seoService.ts
+// --------------------------------------------
+
+import { WC_REST_URL } from "@/constants/apiEndpoints";
+
+// WooCommerce REST API credentials and endpoint
+const WOOCOM_REST_API_URL = WC_REST_URL;
+const WOOCOM_CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
+const WOOCOM_CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
+
+/**
+ * Fetch Yoast SEO JSON for a single product by its slug.
+ *
+ * This function hits the WooCommerce REST API with basic authentication
+ * and retrieves only the `yoast_head_json` field for the product.
+ * It returns the schema or null if not found.
+ *
+ * @param slug - The WooCommerce product slug
+ * @returns Parsed Yoast SEO JSON or null
+ */
+export async function fetchProductSEOBySlug(slug: string) {
+  try {
+    const response = await fetch(
+      `${WOOCOM_REST_API_URL}/products?slug=${slug}&_fields=yoast_head_json`,
+      {
+        headers: {
+          Authorization:
+            "Basic " +
+            Buffer.from(
+              `${WOOCOM_CONSUMER_KEY}:${WOOCOM_CONSUMER_SECRET}`
+            ).toString("base64"),
+        },
+        // Enable Incremental Static Regeneration — 60 seconds
+        next: { revalidate: 60 },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch SEO for product slug: ${slug}`);
+    }
+
+    const [product] = await response.json();
+    return product?.yoast_head_json ?? null;
+  } catch (error) {
+    console.error("[fetchProductSEOBySlug] Error:", error);
+    return null;
+  }
+}
+
+/**
+ * Fetches the Yoast SEO JSON data for a single blog post
+ * using the WordPress REST API and post slug.
+ *
+ * @param slug - The slug of the WordPress blog post
+ * @returns Parsed Yoast SEO JSON or null if not found
+ */
+export async function fetchPostSEOBySlug(slug: string) {
+  try {
+    const response = await fetch(
+      `${WP_REST_POSTS}?slug=${slug}&_fields=yoast_head_json`,
+      {
+        next: { revalidate: 60 }, // ISR: Revalidate every 60 seconds
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Yoast SEO for blog post: ${slug}`);
+    }
+
+    const [post] = await response.json();
+    return post?.yoast_head_json ?? null;
+  } catch (error) {
+    console.error("[YoastSEO BlogPost] Error:", error);
+    return null;
+  }
+}
+
 /**
  * Fetches Yoast SEO data (yoast_head_json) for a given WooCommerce product category.
  * Uses the category slug to query the WordPress REST API.
@@ -43,7 +123,7 @@ export async function fetchYoastCategorySEOJson(slug: string) {
   try {
     const url = `${WP_REST_PRODUCT_CATS}?slug=${slug}&per_page=1&_fields=yoast_head_json`;
     const res = await fetch(url, {
-      next: { revalidate: 3600 }, // 1‑hour ISR cache
+      next: { revalidate: 60 }, // 1‑hour ISR cache
     });
 
     if (!res.ok) {

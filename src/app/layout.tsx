@@ -43,8 +43,8 @@ export default async function RootLayout({
   const headerJS = stripScriptWrapper(header);
   const bodyJS = stripScriptWrapper(body);
 
-  console.log("TRACKING SCRIPTS HEADER: [/app/layout.tsx]", headerJS);
-  console.log("TRACKING SCRIPTS BODY: [/app/layout.tsx]", bodyJS);
+  // console.log("TRACKING SCRIPTS HEADER: [/app/layout.tsx]", headerJS);
+  // console.log("TRACKING SCRIPTS BODY: [/app/layout.tsx]", bodyJS);
 
   return (
     <html lang="en">

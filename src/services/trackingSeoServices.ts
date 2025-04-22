@@ -23,7 +23,7 @@ export async function fetchTrackingScripts() {
 
     const json = await res.json();
 
-    console.log("[TRACKING SCRIPTS SERVICE]", json.acf);
+    // console.log("[TRACKING SCRIPTS SERVICE]", json.acf);
 
     return {
       header: json.acf.tracking_scripts_header ?? null,
