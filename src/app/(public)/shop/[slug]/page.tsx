@@ -35,16 +35,6 @@ export async function generateMetadata({
   return yoast ? mapYoastToMetadata(yoast) : {};
 }
 
-// export async function generateMetadata({
-//   params,
-// }: {
-//   params: { slug: string };
-// }) {
-//   const { slug } = await params;
-//   const yoast = await fetchProductSEOBySlug(slug);
-//   return yoast ? mapYoastToMetadata(yoast) : {};
-// }
-
 // Single product page component
 const SingleProductPage = async ({
   params,
