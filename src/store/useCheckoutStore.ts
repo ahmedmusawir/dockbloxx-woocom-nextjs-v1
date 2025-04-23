@@ -151,22 +151,6 @@ export const useCheckoutStore = create<CheckoutStore>()(
         console.log("[setShippingMethod] => ", method, cost);
       },
 
-      // setShippingMethod: (method, cost) => {
-      //   // 1) Update shipping cost in store
-      //   set((state) => ({
-      //     checkoutData: {
-      //       ...state.checkoutData,
-      //       shippingMethod: method,
-      //       shippingCost: cost,
-      //     },
-      //   }));
-
-      //   // 2) Immediately run calculateTotals
-      //   get().calculateTotals();
-
-      //   console.log("[setShippingMethod] => ", method, cost);
-      // },
-
       /**
        * 1) When we setCartItems, we just store them in state,
        *    then re-run updateCheckoutTotals immediately.
@@ -198,23 +182,29 @@ export const useCheckoutStore = create<CheckoutStore>()(
 
       // Calculate Totals
       calculateTotals: () =>
-        set((state) => {
-          const subtotal = state.checkoutData.cartItems.reduce(
-            (sum, item) => sum + item.price * item.quantity, // Fix: Multiply price by quantity
-            0
-          );
+        set((state) => ({
+          // funnel every re-calculation through our single source of truth
+          checkoutData: updateCheckoutTotals(state.checkoutData),
+        })),
 
-          const discount = state.checkoutData.discountTotal || 0;
-          const shippingCost = state.checkoutData.shippingCost || 0;
-          const taxTotal = 0; // Future implementation
-          const total = subtotal + shippingCost - discount;
+      // calculateTotals: () =>
+      //   set((state) => {
+      //     const subtotal = state.checkoutData.cartItems.reduce(
+      //       (sum, item) => sum + item.price * item.quantity, // Fix: Multiply price by quantity
+      //       0
+      //     );
 
-          console.log("calculateTotals: total [useCheckoutStore.ts]", total);
+      //     const discount = state.checkoutData.discountTotal || 0;
+      //     const shippingCost = state.checkoutData.shippingCost || 0;
+      //     const taxTotal = 0; // Future implementation
+      //     const total = subtotal + shippingCost - discount;
 
-          return {
-            checkoutData: { ...state.checkoutData, subtotal, taxTotal, total },
-          };
-        }),
+      //     console.log("calculateTotals: total [useCheckoutStore.ts]", total);
+
+      //     return {
+      //       checkoutData: { ...state.checkoutData, subtotal, taxTotal, total },
+      //     };
+      //   }),
 
       // Apply Coupon Zustand Function
 
