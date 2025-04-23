@@ -41,6 +41,7 @@ export interface Product {
   short_description: string;
   sku: string;
   categories: ProductCategory[];
+  isDeal: boolean;
   images: Array<{
     id: number | string;
     src: string;

@@ -6,7 +6,6 @@ import Image from "next/image";
 import { Product } from "@/types/product";
 import parse from "html-react-parser";
 import { getFeaturedImage } from "@/lib/utils";
-import { PriceDisplay } from "./PriceDisplay";
 
 interface Props {
   product: Product;
@@ -57,10 +56,8 @@ const ProductListItem = ({ product }: Props) => {
             ))}
         </p>
 
-        {/* <p className="text-xl font-bold text-blue-700 float-right mt-10"> */}
-        <p className="float-right mt-10">
-          {/* {parse(product.price_html)} */}
-          <PriceDisplay product={product} variant="list" />
+        <p className="text-xl font-bold text-blue-700 float-right mt-10">
+          {parse(product.price_html)}
         </p>
 
         <Link href={`/shop/${product.slug}`}>

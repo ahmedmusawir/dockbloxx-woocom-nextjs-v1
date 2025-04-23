@@ -76,14 +76,14 @@ const AdditionalDetailsAccordion = ({ product }: Props) => {
                   {detail?.items?.map((item, index) => (
                     <li
                       key={index}
-                      className="flex items-center gap-4 bg-gray-100"
+                      className="flex items-center gap-4 bg-gray-0"
                     >
                       <img
                         src={item.image}
                         alt={item.item_name}
-                        className="w-14 h-14 object-cover rounded"
+                        className="w-32 h-32 object-cover rounded"
                       />
-                      <p className="text-sm font-medium text-gray-800">
+                      <p className="text-xl font-bold text-gray-800">
                         {item.item_name}
                       </p>
                     </li>

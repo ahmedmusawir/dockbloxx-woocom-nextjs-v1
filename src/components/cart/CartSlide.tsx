@@ -113,7 +113,7 @@ const CartSlide = () => {
                               <div>
                                 <div className="flex justify-between text-base font-medium text-gray-900">
                                   <h3>{cartItem.name}</h3>
-                                  <p className="ml-4">{cartItem.price}</p>
+                                  <p className="ml-4">${cartItem.price}</p>
                                 </div>
                                 <p className="mt-1 text-sm text-gray-500">
                                   {cartItem.categories.map((c) => c.name)}

@@ -33,6 +33,16 @@ export async function getAllCategories(): Promise<Category[]> {
 }
 
 /**
+ * Fetches paginated products for a specific category slug.
+ * Used in category-based shop pages.
+ *
+ * @param {string} categorySlug - The WooCommerce category slug
+ * @param {number} page - Page number
+ * @param {number} perPage - Products per page
+ * @returns {Promise<{ products: Product[]; totalProducts: number }>} - Product list and total count
+ */
+
+/**
  * Fetches paginated products directly from WooCommerce for a specific category slug.
  *
  * @param {string} categorySlug - The WooCommerce category slug
@@ -48,24 +58,19 @@ export async function fetchCategoryProductsPaginated(
 ): Promise<{ products: Product[]; totalProducts: number }> {
   try {
     const url = `${process.env.NEXT_PUBLIC_APP_URL}/api/products-by-category?category=${categorySlug}&page=${page}&perPage=${perPage}`;
-    const response = await fetch(url, { next: { revalidate: 60 } });
+
+    const response = await fetch(url, {
+      next: { revalidate: 60 },
+    });
+
     if (!response.ok) {
       throw new Error(`Failed to fetch products for ${categorySlug}`);
     }
 
     const data = await response.json();
-
-    // map in the isDeal flag here
-    const products: Product[] = (data.products || []).map((p: any) => ({
-      ...p,
-      isDeal: Array.isArray(p.categories)
-        ? p.categories.some((cat: any) => cat.slug === "deals")
-        : false,
-    }));
-
     return {
-      products,
-      totalProducts: data.total || products.length,
+      products: data.products || [],
+      totalProducts: data.total || data.products?.length || 0,
     };
   } catch (error) {
     console.error(

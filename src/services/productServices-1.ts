@@ -101,13 +101,7 @@ export const fetchInitialProducts = async (
     }
 
     // Parse the response JSON
-    const rawProducts = (await response.json()) as any[];
-
-    // inject our deal flag based on the “deals” slug
-    const products: Product[] = rawProducts.map((p) => ({
-      ...p,
-      isDeal: p.categories.some((cat: Category) => cat.slug === "deals"),
-    }));
+    const products = await response.json();
 
     // Extract the total product count from response headers
     const totalProducts = parseInt(
@@ -116,7 +110,6 @@ export const fetchInitialProducts = async (
     );
 
     // console.log("[fetchInitialProducts] Total products:", totalProducts);
-    console.log("[fetchInitialProducts] isDeal products:", products);
 
     return { products, totalProducts };
   } catch (error) {
@@ -551,7 +544,6 @@ export async function fetchFeaturedProducts(): Promise<Product[]> {
  */
 import { HOW_TO_BLOXX_REST_URL } from "@/constants/apiEndpoints";
 import { VideoOption } from "@/types/videos";
-import { Category } from "@/types/category";
 
 export async function fetchAllVideos(): Promise<VideoOption[]> {
   const res = await fetch(HOW_TO_BLOXX_REST_URL, {

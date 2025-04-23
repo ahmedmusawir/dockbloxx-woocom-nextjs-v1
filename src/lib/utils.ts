@@ -1,5 +1,16 @@
 import { Product, ProductVariation } from "@/types/product";
 
+// Handles Sale Prices Cleaning up price_html data
+export function cleanPriceHtml(html: string): string {
+  return (
+    html
+      // remove screen-reader text spans
+      .replace(/<span[^>]*screen-reader-text[^>]*>.*?<\/span>/g, "")
+      // drop aria-hidden attributes
+      .replace(/\s*aria-hidden="true"/g, "")
+  );
+}
+
 // returns featured image safely filtering youtube video
 export const getFeaturedImage = (images: Product["images"]) => {
   if (!images?.length) return "/placeholder.jpg";
