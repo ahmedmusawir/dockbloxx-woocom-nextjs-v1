@@ -4,7 +4,6 @@ import React, { useEffect } from "react";
 import ApplyCoupon from "./ApplyCoupon";
 import CheckoutCartItems from "./CheckoutCartItems";
 import { CheckoutData } from "@/types/checkout";
-import { useCheckoutStore } from "@/store/useCheckoutStore";
 
 interface OrderDetailsProps {
   checkoutData: CheckoutData;

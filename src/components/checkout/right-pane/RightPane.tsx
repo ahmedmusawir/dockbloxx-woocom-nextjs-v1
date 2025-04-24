@@ -27,7 +27,7 @@ const RightPane = () => {
   } = useCheckoutStore();
   const router = useRouter();
 
-  console.log("shipping cost [RightPane.tsx]", checkoutData.shippingCost);
+  // console.log("shipping cost [RightPane.tsx]", checkoutData.shippingCost);
 
   // Hide any side-cart on mount
   useEffect(() => {
@@ -57,7 +57,7 @@ const RightPane = () => {
   const shipping = checkoutData.shippingCost || 0;
   const total = checkoutData.total;
 
-  console.log("shipping [RightPane.tsx]", shipping);
+  // console.log("shipping [RightPane.tsx]", shipping);
 
   // Redirect to shop if cart is empty
   const editInCart = () => {

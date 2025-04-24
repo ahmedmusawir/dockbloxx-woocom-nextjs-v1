@@ -89,53 +89,45 @@ const ProductDetails = ({ product }: Props) => {
 
   // Add this function inside the ProductDetails component
   const handleAddToCart = () => {
-    const { setCartItems, setIsCartOpen } = useCartStore.getState();
+    const { setCartItems, setIsCartOpen } = useCartStore.getState(); // Access Zustand store here
 
-    /* -------------------- 1 · Pole-size validation -------------------- */
     const poleSizeVariation = cartItem.variations?.find(
       (variation) => variation.name === "Pole Size"
     );
 
+    console.log("Pole Size [ProductDetails]", poleSizeVariation);
+
+    // Validate pole size
     if (poleSizeVariation?.value === "Other") {
-      const hasCustomSize = cartItem.customFields?.length ?? 0;
-      if (hasCustomSize === 0) {
+      const customSizeField = cartItem.customFields?.length;
+
+      console.log("Custom Size Filed: [ProductDetails]", customSizeField);
+
+      if (customSizeField === 0) {
         alert("Please enter a custom pole size before adding to cart!");
-        return; // abort if custom size missing
+        return; // Prevent adding to cart if custom size is missing
       }
     }
 
-    /* -------------------- 2 · Normalise pricing ----------------------- */
-    // Force `price` to be the unit price; add basePrice for clarity
-    const unitPrice =
-      typeof cartItem.basePrice === "number"
-        ? cartItem.basePrice
-        : cartItem.price / Math.max(cartItem.quantity || 1, 1);
-
-    const itemToStore: CartItem = {
-      ...cartItem,
-      price: unitPrice, // unit cost ONLY
-      basePrice: unitPrice, // explicit copy (optional but helpful)
-    };
-
-    /* -------------------- 3 · Push into Zustand ----------------------- */
+    // Update Zustand store
     setCartItems((prevItems: CartItem[]) => {
-      const existing = prevItems.find((i) => i.id === itemToStore.id);
-
-      if (existing) {
-        // increment quantity
-        return prevItems.map((i) =>
-          i.id === itemToStore.id
-            ? { ...i, quantity: i.quantity + itemToStore.quantity }
-            : i
+      const existingItem = prevItems.find((item) => item.id === cartItem.id);
+      if (existingItem) {
+        // Update quantity if item already exists
+        return prevItems.map((item) =>
+          item.id === cartItem.id
+            ? { ...item, quantity: item.quantity + cartItem.quantity }
+            : item
         );
       }
-      // add brand-new item
-      return [...prevItems, itemToStore];
+      // Add new item to the cart
+      return [...prevItems, cartItem];
     });
 
-    /* -------------------- 4 · Open mini-cart & debug ------------------ */
-    setIsCartOpen(true);
-    console.log("[AddToCart] stored item:", itemToStore);
+    setIsCartOpen(true); // Open the side cart
+
+    // If validation passes, proceed
+    console.log("Generated Cart Item: [ProductDetails.tsx]", cartItem);
   };
 
   return (

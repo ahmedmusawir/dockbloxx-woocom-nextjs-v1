@@ -19,22 +19,11 @@ const ShippingMethods = ({
   subtotal,
   availableMethods,
 }: ShippingMethodsProps) => {
+  console.log("flat_rates:", shippingData.flat_rates);
+  console.log("subtotal:", subtotal);
+
   const { flat_rates } = shippingData;
   const { setShippingMethod, checkoutData } = useCheckoutStore();
-
-  console.log("[ShippingMethods] postcode:", checkoutData.shipping.postcode);
-
-  // If there's no shipping address yet, force shippingCost = 0
-  if (!checkoutData.shipping.postcode) {
-    // Ensure store knows shipping is zero
-    setShippingMethod("flat_rate", 0);
-
-    return (
-      <div className="mt-4 p-4 border border-gray-300 rounded-none bg-white text-center text-gray-500">
-        Please enter your shipping address to see shipping costs.
-      </div>
-    );
-  }
 
   // Check if coupon has free_shipping, if so, forcibly add "Free Shipping" to the array
   if (

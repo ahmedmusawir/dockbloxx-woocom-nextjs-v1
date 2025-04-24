@@ -41,21 +41,9 @@ const OrderDetailsMobile = ({
       <DialogContent className="max-w-lg mx-auto p-6 bg-white rounded-lg shadow-lg max-h-[80vh] overflow-y-auto">
         <DialogTitle className="sr-only">Order Summary</DialogTitle>
 
-        <div className="flex justify-between">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Order Summary
-          </h2>
-          <div className="ml-4 flow-root shrink-0 float-end mt-12">
-            <button
-              type="button"
-              className="-mt-5 flex items-center justify-center bg-white px-5 py-2.5 text-gray-400 hover:text-gray-500 border-2"
-              onClick={editInCart}
-            >
-              <span className="sr-only">Remove</span>
-              Edit Cart
-            </button>
-          </div>
-        </div>
+        <h2 className="text-xl font-semibold text-gray-900 mb-4">
+          Order Summary
+        </h2>
 
         <CheckoutCartItems cartData={checkoutData.cartItems} />
         <dl className="space-y-4 border-t border-gray-200 pt-4">

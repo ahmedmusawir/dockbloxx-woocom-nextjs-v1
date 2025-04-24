@@ -22,20 +22,6 @@ const ShippingMethods = ({
   const { flat_rates } = shippingData;
   const { setShippingMethod, checkoutData } = useCheckoutStore();
 
-  console.log("[ShippingMethods] postcode:", checkoutData.shipping.postcode);
-
-  // If there's no shipping address yet, force shippingCost = 0
-  if (!checkoutData.shipping.postcode) {
-    // Ensure store knows shipping is zero
-    setShippingMethod("flat_rate", 0);
-
-    return (
-      <div className="mt-4 p-4 border border-gray-300 rounded-none bg-white text-center text-gray-500">
-        Please enter your shipping address to see shipping costs.
-      </div>
-    );
-  }
-
   // Check if coupon has free_shipping, if so, forcibly add "Free Shipping" to the array
   if (
     checkoutData.coupon?.free_shipping &&
@@ -49,10 +35,16 @@ const ShippingMethods = ({
 
   // Compute the applicable flat rate cost based on subtotal.
   const computedFlatRate = useMemo(() => {
-    const sortedRates = [...flat_rates].sort(
-      (a, b) => b.subtotal_threshold - a.subtotal_threshold
-    );
-    return sortedRates.find((rate) => subtotal >= rate.subtotal_threshold);
+    if (subtotal < 100) {
+      // For orders under $100, use the $10 rate.
+      return flat_rates.find((rate) => rate.subtotal_threshold === 100);
+    } else if (subtotal < 250) {
+      // For orders from $100 up to $249, use the $20 rate.
+      return flat_rates.find((rate) => rate.subtotal_threshold === 250);
+    } else {
+      // For orders of $250 and above, use the $35 rate.
+      return flat_rates.find((rate) => rate.subtotal_threshold === 300);
+    }
   }, [flat_rates, subtotal]);
 
   // Build and memoize the shipping options list.

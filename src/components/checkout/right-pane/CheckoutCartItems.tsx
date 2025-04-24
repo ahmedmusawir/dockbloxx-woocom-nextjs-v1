@@ -36,9 +36,13 @@ const CheckoutCartItems = ({ cartData }: Props) => {
                     <h4 className="text-lg font-bold text-gray-700 hover:text-gray-800">
                       {product.name}
                     </h4>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.categories.map((cat) => cat.name)}
+                    <p className="mt-1 text-xs text-gray-500 font-bold">
+                      {product.categories.map((c) => c.name).join(" · ")}
                     </p>
+
+                    {/* <p className="mt-1 text-sm text-gray-500">
+                      {product.categories.map((cat) => cat.name)}
+                    </p> */}
                   </div>
                 </div>
                 <div className="flex flex-1 items-end justify-between pt-2">

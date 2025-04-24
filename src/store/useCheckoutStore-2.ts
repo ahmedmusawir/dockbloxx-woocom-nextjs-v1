@@ -187,6 +187,25 @@ export const useCheckoutStore = create<CheckoutStore>()(
           checkoutData: updateCheckoutTotals(state.checkoutData),
         })),
 
+      // calculateTotals: () =>
+      //   set((state) => {
+      //     const subtotal = state.checkoutData.cartItems.reduce(
+      //       (sum, item) => sum + item.price * item.quantity, // Fix: Multiply price by quantity
+      //       0
+      //     );
+
+      //     const discount = state.checkoutData.discountTotal || 0;
+      //     const shippingCost = state.checkoutData.shippingCost || 0;
+      //     const taxTotal = 0; // Future implementation
+      //     const total = subtotal + shippingCost - discount;
+
+      //     console.log("calculateTotals: total [useCheckoutStore.ts]", total);
+
+      //     return {
+      //       checkoutData: { ...state.checkoutData, subtotal, taxTotal, total },
+      //     };
+      //   }),
+
       // Apply Coupon Zustand Function
 
       /**

@@ -45,18 +45,8 @@ export const useCartStore = create<CartStore>()(
 
       addOrUpdateCartItem: (newItem) => {
         set((state) => {
-          // 🛡️ Always normalize the incoming payload so `price` is unit-price
-          const unitPriceItem = {
-            ...newItem,
-            price:
-              typeof newItem.basePrice === "number"
-                ? newItem.basePrice // preferred path
-                : newItem.price / Math.max(newItem.quantity || 1, 1), // fallback
-          };
-
           const existingItemIndex = state.cartItems.findIndex(
-            // (item) => item.id === newItem.id
-            (item) => item.id === unitPriceItem.id
+            (item) => item.id === newItem.id
           );
 
           if (existingItemIndex !== -1) {
@@ -64,11 +54,8 @@ export const useCartStore = create<CartStore>()(
             const updatedCartItems = [...state.cartItems];
             updatedCartItems[existingItemIndex] = {
               ...updatedCartItems[existingItemIndex],
-              // quantity:
-              //   updatedCartItems[existingItemIndex].quantity + newItem.quantity,
               quantity:
-                updatedCartItems[existingItemIndex].quantity +
-                unitPriceItem.quantity,
+                updatedCartItems[existingItemIndex].quantity + newItem.quantity,
               variations:
                 newItem.variations ||
                 updatedCartItems[existingItemIndex].variations,
@@ -81,7 +68,7 @@ export const useCartStore = create<CartStore>()(
           }
 
           // Add new item
-          return { cartItems: [...state.cartItems, unitPriceItem] };
+          return { cartItems: [...state.cartItems, newItem] };
         });
       },
 
