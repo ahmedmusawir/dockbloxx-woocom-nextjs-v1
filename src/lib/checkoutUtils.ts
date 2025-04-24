@@ -39,6 +39,7 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   }
 
   // 3) Determine shipping cost & method
+  // 3) Determine shipping cost & method
   let shippingCost = 0;
   let shippingMethod = checkoutData.shippingMethod; // current fallback
 
@@ -46,22 +47,50 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
     shippingMethod = "free_shipping";
     shippingCost = 0;
   } else if (checkoutData.shippingMethod === "free_shipping") {
-    // If it was already free shipping, keep it that way
     shippingMethod = "free_shipping";
     shippingCost = 0;
   } else {
-    // your custom logic
+    // ─── tiered flat-rate logic ─────────────────────────
     if (subtotal < 100) {
       shippingMethod = "flat_rate";
       shippingCost = 10;
     } else if (subtotal < 250) {
       shippingMethod = "flat_rate";
       shippingCost = 20;
+    } else if (subtotal < 300) {
+      // keep using $20 for 250-299
+      shippingMethod = "flat_rate";
+      shippingCost = 20;
     } else {
+      // ≥ 300 gets $35
       shippingMethod = "flat_rate";
       shippingCost = 35;
     }
   }
+
+  // let shippingCost = 0;
+  // let shippingMethod = checkoutData.shippingMethod; // current fallback
+
+  // if (coupon?.free_shipping) {
+  //   shippingMethod = "free_shipping";
+  //   shippingCost = 0;
+  // } else if (checkoutData.shippingMethod === "free_shipping") {
+  //   // If it was already free shipping, keep it that way
+  //   shippingMethod = "free_shipping";
+  //   shippingCost = 0;
+  // } else {
+  //   // your custom logic
+  //   if (subtotal < 100) {
+  //     shippingMethod = "flat_rate";
+  //     shippingCost = 10;
+  //   } else if (subtotal < 250) {
+  //     shippingMethod = "flat_rate";
+  //     shippingCost = 20;
+  //   } else {
+  //     shippingMethod = "flat_rate";
+  //     shippingCost = 35;
+  //   }
+  // }
 
   // 4) Compute final total
   const total = subtotal + shippingCost - discountTotal;
