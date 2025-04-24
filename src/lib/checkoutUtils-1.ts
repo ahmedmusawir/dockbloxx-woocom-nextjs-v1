@@ -9,9 +9,7 @@ import { CartItem } from "@/types/cart";
  */
 
 export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
-  const { cartItems, coupon, shipping } = checkoutData;
-  // Grab the initial method into its own variable
-  const initialShippingMethod = checkoutData.shippingMethod;
+  const { cartItems, coupon } = checkoutData;
 
   // 1) Calculate new subtotal
   const subtotal = cartItems.reduce((sum: number, item: CartItem) => {
@@ -23,19 +21,6 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   let discountTotal = 0;
   if (coupon) {
     discountTotal = calculateCouponDiscount(coupon, cartItems, subtotal);
-  }
-
-  // 2.5) If no shipping address yet, force zero
-  const hasAddress = Boolean(shipping.address_1 || shipping.postcode);
-  if (!hasAddress) {
-    return {
-      ...checkoutData,
-      subtotal,
-      discountTotal,
-      shippingMethod: initialShippingMethod,
-      shippingCost: 0, // override cost to zero
-      total: subtotal - discountTotal,
-    };
   }
 
   // 3) Determine shipping cost & method
