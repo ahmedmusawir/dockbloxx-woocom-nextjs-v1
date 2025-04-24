@@ -79,12 +79,12 @@ const AdditionalDetailsAccordion = ({ product }: Props) => {
                       className="flex items-center gap-4 bg-gray-0"
                     >
                       <img
-                        src={item.image}
-                        alt={item.item_name}
+                        src={item?.image}
+                        alt={item?.item_name}
                         className="w-32 h-32 object-cover rounded"
                       />
                       <p className="text-xl font-bold text-gray-800">
-                        {item.item_name}
+                        {item?.item_name}
                       </p>
                     </li>
                   ))}
