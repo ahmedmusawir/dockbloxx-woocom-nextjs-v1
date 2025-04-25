@@ -25,7 +25,6 @@ const BuildABloxxPageContent = () => {
           className="object-cover"
           priority
         />
-        {/* <div className="absolute inset-0 bg-black/40 flex items-center justify-center"> */}
         <div className="absolute inset-0 flex items-center justify-center">
           <h1 className="text-4xl md:text-5xl text-white font-bold">
             Custom Services
@@ -51,7 +50,7 @@ const BuildABloxxPageContent = () => {
             {/* Left Column - Image Gallery */}
             <div className="w-full lg:w-1/2 bg-gray-50 p-3 sm:p-4 lg:p-6 rounded-lg">
               {/* Main Wide Image */}
-              <div className="mb-4 lg:mb-6">
+              {/* <div className="mb-4 lg:mb-6">
                 <div className="relative h-[250px] sm:h-[300px]">
                   <Image
                     src={getImageUrl("/wp-content/uploads/gallery-img-1.jpg")}
@@ -60,13 +59,13 @@ const BuildABloxxPageContent = () => {
                     className="object-cover rounded-lg"
                   />
                 </div>
-              </div>
+              </div> */}
 
               {/* Grid of Square Images - Single column on mobile, 2 columns on larger screens */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="relative h-[320px]">
                   <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-7.jpg")}
+                    src={getImageUrl("/wp-content/uploads/IMG_1743-scaled.jpg")}
                     alt="Gallery Image 2"
                     fill
                     className="object-cover rounded-lg"
@@ -74,7 +73,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-6.jpg")}
+                    src={getImageUrl("/wp-content/uploads/IMG_3786-scaled.jpg")}
                     alt="Gallery Image 3"
                     fill
                     className="object-cover rounded-lg"
@@ -82,7 +81,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-5.jpg")}
+                    src={getImageUrl("/wp-content/uploads/IMG_7864-scaled.jpg")}
                     alt="Gallery Image 4"
                     fill
                     className="object-cover rounded-lg"
@@ -90,7 +89,7 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-4.jpg")}
+                    src={getImageUrl("/wp-content/uploads/IMG_7860-scaled.jpg")}
                     alt="Gallery Image 5"
                     fill
                     className="object-cover rounded-lg"
@@ -98,7 +97,9 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-3.jpg")}
+                    src={getImageUrl(
+                      "/wp-content/uploads/IMG_7874-1-scaled.jpg"
+                    )}
                     alt="Gallery Image 6"
                     fill
                     className="object-cover rounded-lg"
@@ -106,7 +107,25 @@ const BuildABloxxPageContent = () => {
                 </div>
                 <div className="relative h-[320px]">
                   <Image
-                    src={getImageUrl("/wp-content/uploads/gallery-img-2.jpg")}
+                    src={getImageUrl("/wp-content/uploads/IMG_7870-scaled.jpg")}
+                    alt="Gallery Image 7"
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+                <div className="relative h-[320px]">
+                  <Image
+                    src={getImageUrl("/wp-content/uploads/IMG_7866-scaled.jpg")}
+                    alt="Gallery Image 7"
+                    fill
+                    className="object-cover rounded-lg"
+                  />
+                </div>
+                <div className="relative h-[320px]">
+                  <Image
+                    src={getImageUrl(
+                      "/wp-content/uploads/IMG_7876-1-scaled.jpg"
+                    )}
                     alt="Gallery Image 7"
                     fill
                     className="object-cover rounded-lg"

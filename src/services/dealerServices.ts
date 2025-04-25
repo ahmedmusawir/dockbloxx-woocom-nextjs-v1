@@ -18,7 +18,7 @@ export async function fetchAllDealerSlugs() {
 export async function fetchDealerPageData(dealerSlug: string) {
   try {
     const response = await fetch(`${DEALER_REST_COUPONS}?slug=${dealerSlug}`, {
-      next: { revalidate: 600 }, // ISR: revalidate every 10 mins
+      next: { revalidate: 60 }, // ISR: revalidate every 1 min
     });
 
     if (!response.ok)

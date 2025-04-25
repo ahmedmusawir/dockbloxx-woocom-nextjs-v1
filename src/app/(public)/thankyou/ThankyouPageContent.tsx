@@ -83,10 +83,10 @@ const ThankyouPageContent = () => {
                 tight and we’ll send you confirmation very soon!
               </p>
 
-              <dl className="mt-16 text-sm font-medium">
+              {/* <dl className="mt-16 text-sm font-medium">
                 <dt className="text-gray-900">Tracking number</dt>
                 <dd className="mt-2 text-indigo-600">51547878755545848512</dd>
-              </dl>
+              </dl> */}
 
               {latestOrder ? (
                 <div className="mt-6 divide-y divide-gray-200 border-t border-gray-200">

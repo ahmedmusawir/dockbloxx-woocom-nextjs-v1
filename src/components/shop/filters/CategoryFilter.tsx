@@ -34,18 +34,9 @@ const CategoryFilter = ({ categories }: Props) => {
         </MenuButton>
       </div>
 
-      <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none">
-        {/* <div className="py-1">
-          <MenuItem>
-            <Link
-              href="/category/dockbloxx"
-              className="block px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100"
-            >
-              All Dockbloxx
-            </Link>
-          </MenuItem>
-        </div> */}
+      {/* <MenuItems className="absolute right-0 z-10 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 transition focus:outline-none"> */}
 
+      <MenuItems className="absolute z-10 mt-2 w-56 origin-top divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none  left-1/2 -translate-x-1/2 sm:left-auto sm:right-0 sm:translate-x-0">
         <div className="py-1">{filteredCategories.map(renderCategoryLink)}</div>
 
         <div className="py-1">

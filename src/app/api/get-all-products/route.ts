@@ -39,7 +39,7 @@ export async function GET(request: Request) {
       headers: {
         "Content-Type": "application/json",
       },
-      next: { revalidate: 300 }, // Cache the response for 60 seconds
+      next: { revalidate: 60 }, // Cache the response for 60 seconds
     });
 
     if (!response.ok) {

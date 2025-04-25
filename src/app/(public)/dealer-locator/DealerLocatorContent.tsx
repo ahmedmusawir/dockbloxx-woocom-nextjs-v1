@@ -60,36 +60,24 @@ const DealerLocatorContent = () => {
                 </h3>
 
                 <div className="flex items-start gap-3 text-gray-700">
-                  {/* <Image
-                    src="/images/Map_Pin_icon.png"
-                    alt="Location Icon"
-                    width={20}
-                    height={20}
-                  /> */}
                   <MdOutlineLocationOn className="w-10 h-10 text-gray-400" />
                   <p className="mt-2">{dealer.address}</p>
                 </div>
 
                 <div className="flex items-start gap-3 text-gray-700">
-                  {/* <Image
-                    src="/images/Phone_Call_Icon.png"
-                    alt="Phone Icon"
-                    width={30}
-                    height={30}
-                  /> */}
                   <MdOutlinePhone className="w-10 h-10 text-gray-400" />
                   <p className="mt-2">{dealer.phone}</p>
                 </div>
 
                 <div className="flex items-start gap-3 text-gray-700">
-                  {/* <Image
-                    src="/images/Phone_Call_Icon.png"
-                    alt="Phone Icon"
-                    width={30}
-                    height={30}
-                  /> */}
                   <MdOutlineLanguage className="w-10 h-10 text-gray-400" />
-                  <p className="mt-2">{dealer.website}</p>
+                  <a
+                    href={dealer.website}
+                    target="_blank"
+                    className="mt-2 border-b-2 border-blue-500"
+                  >
+                    Click to go to site
+                  </a>
                 </div>
               </div>
             ))}

@@ -23,7 +23,7 @@ export async function GET() {
     const response = await fetch(url, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
-      next: { revalidate: 300 }, // Cache the response for 5 minutes
+      next: { revalidate: 60 }, // Cache the response for 5 minutes
     });
 
     if (!response.ok) {

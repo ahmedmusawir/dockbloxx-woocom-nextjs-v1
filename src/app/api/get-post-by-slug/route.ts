@@ -77,7 +77,7 @@ export async function GET(request: Request) {
         variables: { slug },
       }),
       next: {
-        revalidate: 300, // Revalidate the cached data every 60 seconds
+        revalidate: 60, // Revalidate the cached data every 60 seconds
       },
     });
 

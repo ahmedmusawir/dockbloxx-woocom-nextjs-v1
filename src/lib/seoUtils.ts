@@ -17,7 +17,7 @@ export async function fetchYoastSEOJson(slug: string) {
   try {
     const url = `${WP_REST_PAGES}?slug=${slug}&per_page=1&_fields=yoast_head_json`;
     const res = await fetch(url, {
-      next: { revalidate: 3600 }, // 1‑hour ISR cache
+      next: { revalidate: 60 }, // 1 minit
     });
 
     if (!res.ok) {
@@ -159,28 +159,3 @@ export function fixUrl(url: string): string {
   });
   return fixedUrl;
 }
-
-// export async function fetchYoastSEOHead(slug: string) {
-//   try {
-//     const url = `${WP_BASE_URL}?slug=${slug}&_fields=yoast_head`;
-//     const response = await fetch(url, {
-//       // Server-only fetch config
-//       cache: "force-cache", // static unless revalidated
-//       next: { revalidate: 3600 }, // optional revalidation
-//     });
-
-//     if (!response.ok) {
-//       throw new Error(
-//         `Yoast fetch failed for slug "${slug}": ${response.status}`
-//       );
-//     }
-
-//     const data = await response.json();
-//     const seo = data?.[0]?.yoast_head || null;
-
-//     return seo;
-//   } catch (error) {
-//     console.error("[YoastSEO] Error:", error);
-//     return null;
-//   }
-// }
