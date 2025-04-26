@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "dbp.dockbloxx.com",
+        pathname: "/**", // Allows all paths from Cloudinary
+      },
+      {
+        protocol: "https",
         hostname: "res.cloudinary.com",
         pathname: "/**", // Allows all paths from Cloudinary
       },
