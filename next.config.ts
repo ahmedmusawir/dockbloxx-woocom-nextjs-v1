@@ -6,6 +6,16 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "prod.proxy.cyberizedev.com",
+        pathname: "/**", // Allows all paths from Cloudinary
+      },
+      {
+        protocol: "https",
+        hostname: "dev.proxy.cyberizedev.com",
+        pathname: "/**", // Allows all paths from Cloudinary
+      },
+      {
+        protocol: "https",
         hostname: "dbp.dockbloxx.com",
         pathname: "/**", // Allows all paths from Cloudinary
       },
