@@ -25,10 +25,6 @@ interface Props {
 }
 
 const ProductDetails = ({ product }: Props) => {
-  // console.log(
-  //   "product [/components/shop/product-page/ProductDetails]",
-  //   product
-  // );
   const [basePrice, setBasePrice] = useState<number | null>(null);
   const [productCategory, setProductCategory] = useState<{
     type: string;

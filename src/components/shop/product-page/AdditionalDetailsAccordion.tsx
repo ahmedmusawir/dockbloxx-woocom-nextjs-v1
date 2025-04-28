@@ -7,6 +7,7 @@ import {
 import { MinusIcon, PlusIcon } from "@heroicons/react/24/outline";
 import parse from "html-react-parser";
 import { divide } from "lodash";
+import Image from "next/image";
 
 interface Props {
   product: Product;
@@ -78,11 +79,14 @@ const AdditionalDetailsAccordion = ({ product }: Props) => {
                       key={index}
                       className="flex items-center gap-4 bg-gray-0"
                     >
-                      <img
-                        src={item?.image}
-                        alt={item?.item_name}
-                        className="w-32 h-32 object-cover rounded"
+                      <Image
+                        src={item?.image || "/placeholder.jpg"}
+                        alt={item?.item_name || "Placeholder Image"}
+                        width={128}
+                        height={128}
+                        className="object-cover rounded"
                       />
+
                       <p className="text-xl font-bold text-gray-800">
                         {item?.item_name}
                       </p>
@@ -92,8 +96,14 @@ const AdditionalDetailsAccordion = ({ product }: Props) => {
               )}
 
               {detail.type === "html" && (
-                <div className="text-sm text-gray-700 leading-6 space-y-2">
-                  {parse(detail.items)}
+                // <div className="text-sm text-gray-700 leading-6 space-y-2">
+                //   {parse(detail.items)}
+                // </div>
+                <div className="prose">
+                  <div className="[&a]:text-blue-600 [&a]:underline [&a:hover]:text-blue-800">
+                    {/* parsed HTML or dangerouslySetInnerHTML */}
+                    {parse(detail.items)}
+                  </div>
                 </div>
               )}
             </DisclosurePanel>
