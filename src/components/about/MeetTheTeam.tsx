@@ -57,7 +57,7 @@ const teamMembers: TeamMember[] = [
   {
     name: "Dixie",
     role: "Pawject Manager",
-    image: getImageUrl("/wp-content/uploads/the_dog.png"),
+    image: getImageUrl("/wp-content/uploads/Dog_1.png"),
   },
 ];
 

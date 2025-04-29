@@ -17,10 +17,10 @@ const InstallVideoBlock = ({ product }: Props) => {
         How To Install
       </h2>
 
-      <div className="mt-8">
-        <div className="max-w-xl mx-auto w-full h-[250px] sm:h-[360px]">
+      <div className="mt-8 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-6xl aspect-video ">
           <iframe
-            className="w-full h-full rounded-lg shadow-lg"
+            className="w-full h-[600px] rounded-none shadow-lg"
             src={`https://www.youtube.com/embed/${product.acf.youtube}`}
             title="DockBloxx Video"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"

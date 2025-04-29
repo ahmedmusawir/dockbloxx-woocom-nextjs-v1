@@ -91,7 +91,8 @@ const Navbar = () => {
           {/* Logo */}
           <Link href="/">
             <Image
-              src={getImageUrl("/wp-content/uploads/Logo@2x.png")}
+              src="/site-logo.png"
+              // src={getImageUrl("/wp-content/uploads/Logo@2x.png")}
               alt="DockBloxx"
               width={280}
               height={80}
@@ -141,7 +142,8 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link href="/">
               <Image
-                src={getImageUrl("/wp-content/uploads/Logo@2x.png")}
+                src="/site-logo.png"
+                // src={getImageUrl("/wp-content/uploads/Logo@2x.png")}
                 alt="DockBloxx"
                 width={280}
                 height={80}
