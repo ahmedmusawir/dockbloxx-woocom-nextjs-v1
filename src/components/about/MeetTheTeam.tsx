@@ -54,6 +54,11 @@ const teamMembers: TeamMember[] = [
       "/wp-content/uploads/Screen-Shot-2025-01-08-at-3.26.34-AM@2x.png"
     ),
   },
+  {
+    name: "Dixie",
+    role: "Pawject Manager",
+    image: getImageUrl("/wp-content/uploads/Dog_1.png"),
+  },
 ];
 
 const MeetTheTeam = () => {
@@ -88,8 +93,8 @@ const MeetTheTeam = () => {
             ))}
           </div>
 
-          {/* Bottom Row - 3 members */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+          {/* Bottom Row - 4 members */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
             {teamMembers.slice(4).map((member, index) => (
               <div key={index} className="flex flex-col items-center">
                 <div className="w-full max-w-[280px] aspect-square mb-4 overflow-hidden">

@@ -10,6 +10,13 @@ const ProductDescription = ({ product }: Props) => {
     <div className="mt-6">
       <h3 className="sr-only">Description</h3>
 
+      <h2
+        id="related-heading"
+        className="text-4xl font-extrabold text-gray-600 text-center my-12"
+      >
+        Product Description
+      </h2>
+
       <div
         dangerouslySetInnerHTML={{
           __html: product.description || "",
