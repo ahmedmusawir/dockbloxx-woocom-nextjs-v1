@@ -22,13 +22,14 @@ const HomeProductList = async ({ products, sectionTitle }: Props) => {
           {products.map((product) => (
             <div
               key={product.name}
-              className="bg-gray-100 rounded-lg overflow-hidden shadow-sm flex flex-col h-full"
+              className="bg-gray-100 rounded-none overflow-hidden shadow-sm flex flex-col h-full"
+              // className="bg-gray-100 rounded-lg overflow-hidden shadow-sm flex flex-col h-full"
             >
               {/* Image Container with Best Seller Badge */}
               <Link href={`/shop/${product.slug}`}>
-                <div className="relative aspect-[4/3] overflow-hidden">
+                {/* <div className="relative aspect-[4/3] overflow-hidden"> */}
+                <div className="relative aspect-[4/4]">
                   <img
-                    // src={product.images[1].src}
                     src={getFeaturedImage(product.images)}
                     alt={product.name}
                     className="object-cover w-full h-full transition-transform hover:scale-105"

@@ -7,9 +7,9 @@ interface Props {
   homeData: HomeData;
 }
 
-const SectionTwoWaterSports = ({ homeData }: Props) => {
+const SectionFiveDockEssentials = ({ homeData }: Props) => {
   const sectionData = homeData.sections.find(
-    (section) => section.block_id === "BLOCK_2_WATER_SPORTS"
+    (section) => section.block_id === "BLOCK_5_DOCK_ESSENTIALS"
   );
 
   if (!sectionData) return null;
@@ -39,13 +39,13 @@ const SectionTwoWaterSports = ({ homeData }: Props) => {
               </Link>
             </div>
           </div>
-          <div className="flex items-center justify-center lg:order-first relative md:-mx-6 lg:mx-0">
+          <div className="flex items-start justify-end lg:order-first relative md:-mx-6 lg:mx-0">
             <Image
-              alt="Dock Essentials Product List"
+              alt="Entertainments Product List"
               src={sectionData?.image || "/placeholder.jpg"} // fallback in case it's undefined
               width={2432}
               height={1442}
-              className="w-full max-w-full sm:w-[48rem] sm:max-w-none  rounded-lg shadow-xl ring-1 ring-gray-400/10 object-cover lg:absolute lg:-inset-y-16
+              className="w-[48rem] max-w-none rounded-xl shadow-xl ring-1 ring-gray-400/10 sm:w-[57rem] object-cover lg:absolute lg:-inset-y-16
               lg:right-0"
             />
           </div>
@@ -55,4 +55,4 @@ const SectionTwoWaterSports = ({ homeData }: Props) => {
   );
 };
 
-export default SectionTwoWaterSports;
+export default SectionFiveDockEssentials;

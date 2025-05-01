@@ -536,7 +536,7 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
           <div className="mt-3">
             <input
               type="text"
-              placeholder="Enter custom size"
+              placeholder="Please enter pole circumference size"
               value={customSize || ""}
               onChange={(e) => handleCustomSizeChange(e.target.value)}
               className="w-full px-3 py-2 border border-blue-600 rounded-none focus:outline-none focus:ring focus:ring-blue-600"

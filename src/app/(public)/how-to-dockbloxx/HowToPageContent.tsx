@@ -8,12 +8,12 @@ import VideoSelector from "@/components/how-to/VideoSelector";
 
 const HowToPageContent = async () => {
   const videoOptions = await fetchAllVideos(); // uses ISR
-  console.log("[HowToPageContent] Video Options:", videoOptions);
+  // console.log("[HowToPageContent] Video Options:", videoOptions);
 
   return (
     <>
       <Head>
-        <title>How to Dockbloxx</title>
+        <title>How to Install Dockbloxx</title>
         <meta
           name="description"
           content="Custom dock accessories and solutions - Build your perfect dock setup with DockBloxx"
@@ -30,8 +30,8 @@ const HowToPageContent = async () => {
           priority
         />
         <div className="absolute inset-0 flex items-center justify-center">
-          <h1 className="text-4xl md:text-5xl text-white font-bold">
-            How To Dockbloxx
+          <h1 className="text-4xl text-center md:text-5xl text-white font-bold">
+            How To Install Dockbloxx
           </h1>
         </div>
       </div>
@@ -44,8 +44,7 @@ const HowToPageContent = async () => {
             <div className="w-full lg:w-1/2 bg-gray-50 p-3 sm:p-4 lg:p-20 rounded-lg">
               {/* Main Wide Image */}
               <h1 className="text-5xl font-bold text-blue-600 mb-4">
-                Master Your <span className="text-blue-800">Dockbloxx</span>{" "}
-                Installation
+                Master Your Dockbloxx Installation
               </h1>
               <p className="text-gray-600 text-lg max-w-3xl mx-auto">
                 Ready to get the most out of your DockBloxx accessories? Our

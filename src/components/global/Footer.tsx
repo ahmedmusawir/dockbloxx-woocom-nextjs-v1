@@ -12,7 +12,7 @@ const navigation = {
   products: [
     { name: "Best Sellers", href: "/category/best-sellers" },
     { name: "Watersports", href: "/category/water-sports" },
-    { name: "Entertainments", href: "/category/entertainments" },
+    { name: "Entertainment", href: "/category/entertainment" },
     { name: "Sportsman", href: "/category/sportsman" },
     { name: "Dock Essentials", href: "/category/dock-essentials" },
   ],

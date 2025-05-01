@@ -11,7 +11,7 @@ import Script from "next/script";
  * inject the returned metadata into <head>.
  */
 export async function generateMetadata() {
-  const yoast = await fetchYoastSEOJson("home"); // WP slug for homepage
+  const yoast = await fetchYoastSEOJson("app-home-page"); // WP slug for homepage
   return mapYoastToMetadata(yoast);
 }
 

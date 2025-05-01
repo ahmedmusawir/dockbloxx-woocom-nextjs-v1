@@ -21,9 +21,7 @@ const SectionOneBestSellers = ({ homeData }: Props) => {
         src={sectionData?.image}
         width="500"
         height="500"
-        // className="h-56 w-full bg-gray-50 object-cover lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-1/2"
-        // className="h-64 sm:h-72 md:h-96 w-full bg-gray-50 object-cover lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-1/2"
-        className="h-64 sm:h-72 md:h-[32rem] w-full bg-gray-50 object-cover lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-1/2"
+        className="h-56 w-full bg-gray-50 object-cover lg:absolute lg:inset-y-0 lg:left-0 lg:h-full lg:w-1/2"
       />
       <div className="mx-auto grid max-w-7xl lg:grid-cols-2">
         <div className="px-6 pb-16 pt-16 sm:pb-16 sm:pt-20 lg:col-start-2 lg:px-8 lg:pt-20">

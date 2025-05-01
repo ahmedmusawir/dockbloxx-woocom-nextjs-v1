@@ -15,10 +15,11 @@ const SectionTwoWaterSports = ({ homeData }: Props) => {
   if (!sectionData) return null;
 
   return (
+    // <div className="overflow-hidden bg-white py-24 sm:py-32">
     <div className="overflow-hidden bg-white py-24 sm:py-32 lg:py-48">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="mx-auto grid max-w-2xl grid-cols-1 gap-x-8 gap-y-16 sm:gap-y-20 lg:mx-0 lg:max-w-none lg:grid-cols-2">
-          <div className="lg:ml-auto lg:pl-4 lg:pt-4 lg:-mt-16">
+          <div className="lg:pr-8 lg:pt-4">
             <div className="lg:max-w-lg">
               <h2 className="text-base/7 font-semibold text-indigo-600">
                 {sectionData?.subtitle}
@@ -39,14 +40,15 @@ const SectionTwoWaterSports = ({ homeData }: Props) => {
               </Link>
             </div>
           </div>
+
           <div className="flex items-center justify-center lg:order-first relative md:-mx-6 lg:mx-0">
             <Image
-              alt="Dock Essentials Product List"
+              alt="Water Sports Products"
               src={sectionData?.image || "/placeholder.jpg"} // fallback in case it's undefined
               width={2432}
               height={1442}
               className="w-full max-w-full sm:w-[48rem] sm:max-w-none  rounded-lg shadow-xl ring-1 ring-gray-400/10 object-cover lg:absolute lg:-inset-y-16
-              lg:right-0"
+                        lg:right-0"
             />
           </div>
         </div>

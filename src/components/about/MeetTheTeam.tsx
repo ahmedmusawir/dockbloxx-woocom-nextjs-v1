@@ -43,9 +43,9 @@ const teamMembers: TeamMember[] = [
     ),
   },
   {
-    name: "Jason Hildreth",
+    name: "Anthony",
     role: "Director of Sales",
-    image: getImageUrl("/wp-content/uploads/Image-134@2x.png"),
+    image: getImageUrl("/wp-content/uploads/Anthory_1.png"),
   },
   {
     name: "Andrew Bourke",
@@ -65,13 +65,13 @@ const MeetTheTeam = () => {
   return (
     <section className="py-16 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center text-gray-900 mb-4">
+        <h2 className="text-4xl font-bold text-center text-gray-900 mb-10">
           Meet the Team
         </h2>
-        <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
+        {/* <p className="text-center text-gray-600 mb-16 max-w-2xl mx-auto">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
           eiusmod tempor incididunt ut labore et dolore magna aliqua.
-        </p>
+        </p> */}
 
         <div className="bg-white shadow-lg rounded-lg p-8">
           {/* Top Row - 4 members */}

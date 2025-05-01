@@ -19,6 +19,8 @@ type Props = {
 const VideoSelector = ({ videoOptions }: Props) => {
   const [selected, setSelected] = useState<VideoOption>(videoOptions[0]);
 
+  // console.log("[VideoSelector.tsx]: videoOptions", videoOptions);
+
   return (
     <>
       <Listbox value={selected} onChange={setSelected}>
