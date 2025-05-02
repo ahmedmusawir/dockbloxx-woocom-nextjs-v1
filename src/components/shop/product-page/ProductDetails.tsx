@@ -134,6 +134,8 @@ const ProductDetails = ({ product }: Props) => {
     console.log("[AddToCart] stored item:", itemToStore);
   };
 
+  // console.log("[ProductDetails] cartItem", cartItem);
+
   return (
     <div className="lg:grid lg:grid-cols-[60%_40%] lg:items-start lg:gap-x-8">
       {/* Image gallery :: LEFT COLUMN START*/}

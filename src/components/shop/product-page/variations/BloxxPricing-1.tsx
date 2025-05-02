@@ -479,7 +479,6 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
           onSelectionChange={handlePoleStyleChange}
           setSelectedPoleStyle={setSelectedPoleStyle}
           selectedPoleStyle={selectedPoleStyle}
-          selectedShape={selectedShape}
         />
 
         {/* Debugging or additional logic */}
