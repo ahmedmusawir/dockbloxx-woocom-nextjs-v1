@@ -75,12 +75,12 @@ const ShippingInfo = () => {
     if (!checkoutData.shippingMethod) {
       if (methods.includes("Free Shipping")) {
         setShippingMethod("free_shipping", 0);
+      } else if (methods.includes("Local Pickup")) {
+        setShippingMethod("local_pickup", 0);
       } else if (methods.some((m) => m.includes("Flat Rate"))) {
         const flatRateStr = methods.find((m) => m.includes("Flat Rate")) || "";
         const cost = Number(flatRateStr.split("$")[1]) || 0;
         setShippingMethod("flat_rate", cost);
-      } else if (methods.includes("Local Pickup")) {
-        setShippingMethod("local_pickup", 0);
       }
     }
   }, [

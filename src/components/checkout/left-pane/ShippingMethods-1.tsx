@@ -52,8 +52,7 @@ const ShippingMethods = ({
     const fullShippingOptions = [
       {
         id: "flat_rate",
-        label: `Flat Rate`,
-        // label: `Flat Rate - $${computedFlatRate?.shipping_cost ?? 10}`,
+        label: `Flat Rate - $${computedFlatRate?.shipping_cost ?? 10}`,
         cost: computedFlatRate?.shipping_cost ?? 10,
       },
       {
@@ -93,12 +92,11 @@ const ShippingMethods = ({
     // Otherwise, fallback to the normal logic
     if (availableMethods.includes("Free Shipping")) {
       return "free_shipping";
-    } else if (availableMethods.some((m) => m.includes("Flat Rate"))) {
-      return "flat_rate";
     } else if (availableMethods.includes("Local Pickup")) {
       return "local_pickup";
+    } else if (availableMethods.some((m) => m.includes("Flat Rate"))) {
+      return "flat_rate";
     }
-
     return "";
   }, [availableMethods, checkoutData.coupon?.free_shipping]);
 
@@ -127,7 +125,7 @@ const ShippingMethods = ({
 
   return (
     <div className="mt-4 mb-10">
-      <h1 className="text-2xl text-gray-900 mb-5">Shipping method</h1>
+      <h1 className="text-2xl text-gray-900">Delivery method</h1>
 
       {/* If free shipping coupon exists, just show that */}
       {checkoutData.coupon?.free_shipping ? (

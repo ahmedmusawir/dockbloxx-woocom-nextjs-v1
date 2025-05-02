@@ -49,11 +49,16 @@ const ShippingMethods = ({
 
   // Build and memoize the shipping options list.
   const shippingOptions = useMemo(() => {
+    // If Local Pickup is in the list, flatten the label to "Flat Rate"
+    const hideFlatPrice = availableMethods.includes("Local Pickup");
+
     const fullShippingOptions = [
       {
         id: "flat_rate",
-        label: `Flat Rate`,
         // label: `Flat Rate - $${computedFlatRate?.shipping_cost ?? 10}`,
+        label: hideFlatPrice ? "Flat Rate" : `Flat Rate`,
+        // : `Flat Rate - $${computedFlatRate?.shipping_cost ?? 10}`,
+
         cost: computedFlatRate?.shipping_cost ?? 10,
       },
       {
@@ -127,7 +132,7 @@ const ShippingMethods = ({
 
   return (
     <div className="mt-4 mb-10">
-      <h1 className="text-2xl text-gray-900 mb-5">Shipping method</h1>
+      <h1 className="text-2xl text-gray-900">Delivery method</h1>
 
       {/* If free shipping coupon exists, just show that */}
       {checkoutData.coupon?.free_shipping ? (
