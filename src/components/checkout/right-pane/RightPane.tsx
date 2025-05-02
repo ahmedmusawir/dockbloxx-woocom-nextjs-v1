@@ -68,6 +68,8 @@ const RightPane = () => {
     return <Spinner />;
   }
 
+  console.log("[Right Pane] Checkout Data", checkoutData);
+
   return (
     <div className="mt-10 lg:mt-0">
       {/* Desktop Order Summary */}

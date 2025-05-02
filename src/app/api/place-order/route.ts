@@ -54,6 +54,8 @@ export async function POST(req: Request) {
           method_title:
             checkoutData.shippingMethod === "free_shipping"
               ? "Free Shipping"
+              : checkoutData.shippingMethod === "local_pickup"
+              ? "Local Pickup"
               : "Flat Rate",
           total: checkoutData.shippingCost.toFixed(2),
         },

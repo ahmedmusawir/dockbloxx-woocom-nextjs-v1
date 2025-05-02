@@ -46,6 +46,10 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   if (coupon?.free_shipping) {
     shippingMethod = "free_shipping";
     shippingCost = 0;
+  } else if (checkoutData.shippingMethod === "local_pickup") {
+    // honors Local Pickup selection
+    shippingMethod = "local_pickup";
+    shippingCost = 0;
   } else if (checkoutData.shippingMethod === "free_shipping") {
     shippingMethod = "free_shipping";
     shippingCost = 0;
