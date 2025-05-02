@@ -72,30 +72,6 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
     }
   }
 
-  // let shippingCost = 0;
-  // let shippingMethod = checkoutData.shippingMethod; // current fallback
-
-  // if (coupon?.free_shipping) {
-  //   shippingMethod = "free_shipping";
-  //   shippingCost = 0;
-  // } else if (checkoutData.shippingMethod === "free_shipping") {
-  //   // If it was already free shipping, keep it that way
-  //   shippingMethod = "free_shipping";
-  //   shippingCost = 0;
-  // } else {
-  //   // your custom logic
-  //   if (subtotal < 100) {
-  //     shippingMethod = "flat_rate";
-  //     shippingCost = 10;
-  //   } else if (subtotal < 250) {
-  //     shippingMethod = "flat_rate";
-  //     shippingCost = 20;
-  //   } else {
-  //     shippingMethod = "flat_rate";
-  //     shippingCost = 35;
-  //   }
-  // }
-
   // 4) Compute final total
   const total = subtotal + shippingCost - discountTotal;
 

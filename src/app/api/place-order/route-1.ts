@@ -17,10 +17,10 @@ export async function POST(req: Request) {
   try {
     const checkoutData: CheckoutData = await req.json();
 
-    // console.log(
-    //   "DEBUG: Transformed Checkout cartItems [place-order/route.ts]",
-    //   checkoutData.cartItems
-    // );
+    console.log(
+      "DEBUG: Transformed Checkout cartItems [place-order/route.ts]",
+      checkoutData.cartItems
+    );
 
     // Transform order structure to match WooCommerce API
     // In your POST handler, update the orderData transformation:
@@ -29,34 +29,25 @@ export async function POST(req: Request) {
       payment_method_title: "Online Payment",
       billing: checkoutData.billing,
       shipping: checkoutData.shipping,
-      line_items: checkoutData.cartItems.map((item: any) => {
-        // Flatten each custom field into its own meta entry
-        const customMeta = (item.customFields || []).map(
-          (f: { name: string; value: string }) => ({
-            key: f.name,
-            value: f.value,
-          })
-        );
-
-        return {
-          product_id: item.id,
-          quantity: item.quantity,
-          variation_id: item.variation_id || 0,
-
-          meta_data: [
-            {
-              key: "variations",
-              value: item.variations || [],
-            },
-            {
-              key: "metadata",
-              value: item.metadata || {},
-            },
-            ...customMeta, // ← exploded fields now visible in Woo admin
-          ],
-        };
-      }),
-
+      line_items: checkoutData.cartItems.map((item: any) => ({
+        product_id: item.id,
+        quantity: item.quantity,
+        variation_id: item.variation_id || 0, // Use item.variation_id if available, otherwise 0
+        meta_data: [
+          {
+            key: "variations",
+            value: item.variations || [],
+          },
+          {
+            key: "customFields",
+            value: item.customFields || [],
+          },
+          {
+            key: "metadata",
+            value: item.metadata || {},
+          },
+        ],
+      })),
       shipping_lines: [
         {
           method_id: checkoutData.shippingMethod,
