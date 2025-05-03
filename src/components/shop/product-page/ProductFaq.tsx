@@ -17,7 +17,7 @@ const faqs = [
   {
     question: "What if I order the wrong size?",
     answer: `**A:** Shhh…It happens! If you order the wrong size, no problem!  
-  Simply visit our returns page at [https://dockbloxx.com/returns/](https://dockbloxx.com/refunds/)  
+  Simply visit our returns page at [https://dockbloxx.com/returns/](https://dockbloxx.com/returns/)  
   We will advance-ship you the correct product and provide you a return label for the incorrect product(s).  
   
   We only ask that you pay for the actual freight cost of our replacement shipment so you can shop DockBloxx worry-free — and we don’t lose our swim shorts!`,
@@ -56,7 +56,7 @@ const faqs = [
     answer: `**A:** Yes!  
   
   At DockBloxx, we stand behind the quality of our products and want our customers to be fully satisfied.  
-  **IF, FOR ANY REASON, YOU ARE NOT 100% SATISFIED** with your DockBloxx purchase, please visit our [returns page](https://dockbloxx.com/refunds/) or simply e-mail [support@DockBloxx.com](mailto:support@DockBloxx.com),  
+  **IF, FOR ANY REASON, YOU ARE NOT 100% SATISFIED** with your DockBloxx purchase, please visit our [returns page](https://dockbloxx.com/returns/) or simply e-mail [support@DockBloxx.com](mailto:support@DockBloxx.com),  
   and a member of our customer satisfaction team will dive into action to make sure you receive the resolution you desire.`,
   },
   {

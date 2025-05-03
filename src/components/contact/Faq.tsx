@@ -83,8 +83,7 @@ const faqs = [
   },
   {
     question: "How do I become a DockBloxx Authorized Reseller?",
-    answer: `If you’re interested in becoming a DockBloxx Authorized Reseller,  
-  visit our website and fill out the application form.  
+    answer: `Please Fill out the [application form](/dealer-login).  
   Our team will review your application and contact you with more information about partnership opportunities.`,
   },
 ];

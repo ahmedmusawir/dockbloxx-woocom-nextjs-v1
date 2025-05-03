@@ -9,7 +9,7 @@ export const dealers = [
     name: "Elite Renovations N.C.",
     address: "2230 Blane Rd New London NC 28127",
     phone: "980-234-8866",
-    website: "https://www.eliterenovationsllcnc.com",
+    website: "https://www.eliterenovationsnc.com/",
   },
   {
     name: "Lake Life Solutions TN",
@@ -63,7 +63,7 @@ export const dealers = [
     name: "Southeastern Dock Supply",
     address: "3764 Browns Bridge Rd Gainesville GA 30504",
     phone: "678.456.8367",
-    website: "https://www.southeasterndocksupply.com",
+    website: "https://southeasterndocksupply.com",
   },
   {
     name: "32 Marine Supply",

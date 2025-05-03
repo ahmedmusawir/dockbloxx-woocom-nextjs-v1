@@ -35,7 +35,7 @@ const DealerLoginContent = () => {
           <div className="flex flex-col">
             {/* Single Column - Form */}
             <div className="w-full bg-white rounded-lg">
-              <div className="h-[987px]">
+              <div className="h-[3000px]">
                 <iframe
                   src="https://link.cyberizegroup.com/widget/form/AScMqJGA4wyMn23PoXX3"
                   style={{

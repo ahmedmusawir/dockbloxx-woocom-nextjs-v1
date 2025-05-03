@@ -78,7 +78,7 @@ const RefundsPolicyContent = () => {
                     </li>
                     <li>
                       <Link
-                        href="/refunds"
+                        href="/returns"
                         className={`block px-3 py-2 rounded transition-colors duration-200 ${
                           termsData.id === "refund"
                             ? "font-semibold text-blue-700 border-b-4 border-blue-600 pb-1"

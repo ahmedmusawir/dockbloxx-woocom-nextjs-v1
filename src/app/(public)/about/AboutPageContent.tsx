@@ -41,12 +41,23 @@ const AboutPageContent = () => {
                   boaters.
                 </h1>
                 <p className="text-base sm:text-lg md:text-xl text-white leading-snug sm:leading-normal">
+                  Born from a love of the water and a need for smarter dock
+                  solutions, DockBloxx delivers innovative, no-drill dock
+                  accessories that keep your waterfront life organized and
+                  hassle-free. Built for boaters, by boaters, every DockBloxx
+                  product is designed to install easily, hold strong, and adapt
+                  to whatever your dock life brings. Whether you’re securing
+                  gear, entertaining guests, or just kicking back, DockBloxx
+                  adds true value and helps you make the most of your time on
+                  the dock.
+                </p>
+                {/* <p className="text-base sm:text-lg md:text-xl text-white leading-snug sm:leading-normal">
                   DockBloxx are designed to give you a clean, strong, mounting
                   surface for all your boating/docking accessories. Our
                   Patent-Pending design "Cinches" tight to your dock post giving
                   you the ability to keep your dock and accessories organized
                   and clutter free.
-                </p>
+                </p> */}
                 <p className="text-lg sm:text-xl md:text-2xl font-semibold text-white">
                   No more unsightly Zip Ties, Bungees, or Hose Clamps!
                 </p>

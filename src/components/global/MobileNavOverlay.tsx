@@ -67,7 +67,7 @@ export default function MobileNavOverlay({ onClose }: MobileNavOverlayProps) {
             GIFT CARDS
           </MobileNavItem> */}
           <MobileNavItem
-            href="http://facebook.com"
+            href="https://www.facebook.com/DockBloxx/reviews"
             onClose={onClose}
             isExternal
           >

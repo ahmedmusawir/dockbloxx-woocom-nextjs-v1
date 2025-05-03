@@ -251,7 +251,9 @@ const Navbar = () => {
             <NavLink href="/build-a-bloxx">BUILD A BLOXX</NavLink>
             <NavLink href="/category/deals">DEALS</NavLink>
             {/* <NavLink href="/shop/gift-card">GIFT CARDS</NavLink> */}
-            <NavLink href="http://facebook.com">REVIEW</NavLink>
+            <NavLink href="https://www.facebook.com/DockBloxx/reviews">
+              REVIEW
+            </NavLink>
           </div>
 
           {/* Icons */}
