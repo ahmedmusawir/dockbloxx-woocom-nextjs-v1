@@ -37,14 +37,13 @@ const BloxxPricingPoleStyles = ({
     <div className="mt-4">
       <h3 className="text-lg font-bold text-gray-600">Pole Shape Styles</h3>
       <div className="grid grid-cols-2 gap-3 mt-2 md:grid-cols-4">
-        {/* {Object.entries(poleStyles).map(([key, imageUrl]) => ( */}
         {Object.entries(poleStyles)
           .filter(([key]) => {
             // Only shows styles relevant to the selected pole shape
             if (!selectedShape) return false;
             const visibleStylesMap: { [key: string]: string[] } = {
               square: ["square", "square_octagon"],
-              round: ["round", "round_octagon"],
+              round: ["round"],
               octagon: ["round_octagon"],
             };
             return visibleStylesMap[selectedShape.toLowerCase()]?.includes(key);

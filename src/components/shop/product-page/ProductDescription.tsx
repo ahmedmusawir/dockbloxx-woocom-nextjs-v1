@@ -21,7 +21,8 @@ const ProductDescription = ({ product }: Props) => {
         dangerouslySetInnerHTML={{
           __html: product.description || "",
         }}
-        className="space-y-6 text-base text-gray-700"
+        // className="space-y-6 text-xl px-10 sm:px-1 text-gray-700 lg:px-1 lg:max-w-[70%] prose"
+        className="prose prose-lg text-gray-700 mx-auto px-5 lg:px-6 max-w-prose"
       />
     </div>
   );
