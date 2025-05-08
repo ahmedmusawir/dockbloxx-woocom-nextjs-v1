@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
 import { validateCoupon } from "@/lib/couponUtils";
 import { fetchCouponByCode } from "@/services/checkoutServices";
+import { useCouponTracking } from "@/hooks/useCouponTracking";
 
 const ApplyCoupon = () => {
   const { checkoutData, applyCoupon, removeCoupon } = useCheckoutStore();
   const [couponCode, setCouponCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { trackApplyCoupon } = useCouponTracking();
 
   // Handle applying coupon
   const handleApply = async () => {
@@ -39,6 +41,7 @@ const ApplyCoupon = () => {
       }
 
       applyCoupon(coupon);
+      trackApplyCoupon(coupon); // GTM track
       setCouponCode(""); // Clear input field
     } catch (error) {
       setError("Something went wrong. Please try again.");
