@@ -1,9 +1,6 @@
-"use client";
-
 import React from "react";
 import { useCartStore } from "@/store/useCartStore";
 import { CartItem } from "@/types/cart";
-import { useProductTracking } from "@/hooks/useProductTracking";
 
 interface AddToCartButtonProps {
   cartItem: CartItem; // Pass the entire CartItem
@@ -16,7 +13,8 @@ const AddToCartButton = ({
 }: AddToCartButtonProps) => {
   const { cartItems, setIsCartOpen, setCartItems } = useCartStore();
 
-  const { trackAddToCart } = useProductTracking();
+  // Testing
+  // console.log("cartItems [AddToCartButton.tsx]", cartItems);
 
   // Check if the product is already in the cart
   const isProductInCart = cartItems.some((item) => item.id === cartItem.id);
@@ -27,27 +25,12 @@ const AddToCartButton = ({
     setIsCartOpen(true);
   };
 
-  // Handle click w/ add to cart and GTM Tracking
-  const handleClick = () => {
-    handleAddToCart();
-    trackAddToCart(
-      {
-        id: cartItem.id,
-        name: cartItem.name,
-        category: cartItem.categories[0].name || "Uncategorized",
-        brand: "Dockbloxx",
-        price: Number(cartItem.basePrice),
-      },
-      cartItem.quantity || 1
-    );
-  };
-
   return (
     <div className="flex w-full">
       {!isProductInCart && (
         <button
           className="flex flex-1 items-center justify-center rounded-none border border-transparent bg-lime-300 px-8 py-6 text-xl text-black font-bold hover:bg-lime-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-lime-500 focus:ring-offset-2 focus:ring-offset-gray-50 w-full"
-          onClick={handleClick}
+          onClick={handleAddToCart}
         >
           ADD TO CART
         </button>

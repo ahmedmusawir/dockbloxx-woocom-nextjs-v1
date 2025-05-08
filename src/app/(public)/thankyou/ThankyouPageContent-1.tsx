@@ -4,21 +4,14 @@ import Spinner from "@/components/common/Spinner";
 import { regCustomer } from "@/services/customerService";
 import { useCartStore } from "@/store/useCartStore";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
-import { useCheckoutTracking } from "@/hooks/useCheckoutTracking";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useSignupTracking } from "@/hooks/useSignupTracking";
 
 const ThankyouPageContent = () => {
   const { isLoading, clearCart } = useCartStore();
   const { removeCoupon, checkoutData, enableRegistration } = useCheckoutStore();
   const [latestOrder, setLatestOrder] = useState<any>(null);
   const isCustomerRegistered = useRef(false);
-
-  const hasTrackedPurchase = useRef(false);
-  const { trackPurchase } = useCheckoutTracking();
-
-  const { trackSignup } = useSignupTracking();
 
   useEffect(() => {
     // Clear the cart and coupon AFTER the order is finalized
@@ -31,14 +24,7 @@ const ThankyouPageContent = () => {
     // Retrieve the latest order from localStorage
     const storedOrder = localStorage.getItem("latestOrder");
     if (storedOrder) {
-      const parsed = JSON.parse(storedOrder);
-      setLatestOrder(parsed);
-
-      // Track GTM purchase only once
-      if (!hasTrackedPurchase.current) {
-        hasTrackedPurchase.current = true;
-        trackPurchase(parsed);
-      }
+      setLatestOrder(JSON.parse(storedOrder));
     }
 
     // Register customer only once
@@ -57,13 +43,6 @@ const ThankyouPageContent = () => {
       }).then((res) => {
         if (res) {
           console.log("Customer registered successfully:", res);
-          // GTM Signup Tracking
-          trackSignup({
-            id: res.id?.toString() || checkoutData.billing.email,
-            email: checkoutData.billing.email,
-            plan: "checkout_signup",
-            source: "order_checkout",
-          });
         } else {
           console.error("Customer registration failed");
         }
