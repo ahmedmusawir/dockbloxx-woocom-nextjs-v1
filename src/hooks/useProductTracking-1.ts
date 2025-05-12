@@ -16,15 +16,13 @@ export const useProductTracking = () => {
     trackEvent({
       event: "view_item",
       ecommerce: {
-        currency: "USD",
-        value: Number(product.price) || 0,
         items: [
           {
             item_id: product.id,
             item_name: product.name,
             item_category: product.categories?.[0]?.name || "Uncategorized",
             item_brand: "Dockbloxx",
-            price: Number(product.price) || 0,
+            price: Number(product.price),
             quantity: 1,
           },
         ],
@@ -45,8 +43,6 @@ export const useProductTracking = () => {
     trackEvent({
       event: "add_to_cart",
       ecommerce: {
-        currency: "USD",
-        value: Number(item.price) * quantity || 0,
         items: [
           {
             item_id: item.id,
