@@ -22,7 +22,7 @@ const navigation = {
     { name: "Warranty Claims", href: "/warranty" },
   ],
   help: [
-    { name: "How-To Videos", href: "/how-to-dockbloxx" },
+    { name: "How-To Videos", href: "/how-to" },
     { name: "Shipping & Returns", href: "/returns" },
     { name: "Privacy Policy", href: "/privacy" },
     { name: "Terms & Conditions", href: "/terms" },

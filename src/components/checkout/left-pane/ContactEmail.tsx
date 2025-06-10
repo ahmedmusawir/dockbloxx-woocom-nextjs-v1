@@ -29,8 +29,8 @@ const ContactEmail = () => {
 
   const handleSaveEmail = () => {
     if (
-      !checkoutData.billing.email.trim() ||
-      !checkoutData.billing.email.includes("@")
+      !(checkoutData.billing.email ?? "").trim() ||
+      !(checkoutData.billing.email ?? "").includes("@")
     ) {
       setError("Please enter a valid email address.");
       return;

@@ -2,13 +2,17 @@
 
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/20/solid";
 import { useNumberedPaginationStore } from "@/store/useNumberedPaginationStore";
+import { useRouter, useSearchParams } from "next/navigation";
 
 interface NumberedPaginationProps {
   totalPages: number;
 }
 
 const NumberedPagination = ({ totalPages }: NumberedPaginationProps) => {
-  const { currentPage, fetchPage } = useNumberedPaginationStore();
+  const { currentPage, fetchPage, setCurrentPage } =
+    useNumberedPaginationStore();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -17,7 +21,16 @@ const NumberedPagination = ({ totalPages }: NumberedPaginationProps) => {
   const handlePageClick = (page: number) => {
     if (page > 0 && page <= totalPages) {
       scrollToTop();
-      fetchPage(page); // Trigger page fetch
+      // Update query param → triggers a server render of the desired page
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("page", page.toString());
+      router.push(`?${params.toString()}`, { scroll: false });
+
+      // Optimistically update local state so pagination UI highlights immediately
+      setCurrentPage(page);
+
+      // Warm cache if we don't already have it
+      fetchPage(page);
     }
   };
 

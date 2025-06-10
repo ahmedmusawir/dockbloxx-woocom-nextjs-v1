@@ -13,13 +13,13 @@ const OrderValidation = () => {
 
     // Define a simple validation check
     const isValid =
-      billing.email.trim() !== "" &&
-      shipping.first_name.trim() !== "" &&
-      shipping.last_name.trim() !== "" &&
-      shipping.address_1.trim() !== "" &&
-      shipping.city.trim() !== "" &&
-      shipping.postcode.trim() !== "" &&
-      shipping.country.trim() !== "" &&
+      (billing.email ?? "").trim() !== "" &&
+      (shipping.first_name ?? "").trim() !== "" &&
+      (shipping.last_name ?? "").trim() !== "" &&
+      (shipping.address_1 ?? "").trim() !== "" &&
+      (shipping.city ?? "").trim() !== "" &&
+      (shipping.postcode ?? "").trim() !== "" &&
+      (shipping.country ?? "").trim() !== "" &&
       // And that there is at least one cart item
       cartItems.length > 0;
 

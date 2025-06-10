@@ -1,15 +1,13 @@
 import CartItems from "@/components/cart/cart-page/CartItems";
-import FeaturedProducts from "@/components/cart/cart-page/FeaturedProducts";
 import { fetchFeaturedProducts } from "@/services/productServices";
 import Image from "next/image";
 import { getImageUrl } from "@/lib/utils";
 import Head from "next/head";
+import FeaturedProducts from "@/components/common/FeaturedProducts";
 
 const CartPageContent = async () => {
-  const results = await fetchFeaturedProducts();
-  const featuredProducts = results;
+  const featuredProducts = await fetchFeaturedProducts();
 
-  console.log("featured products [CartPageContent]", featuredProducts);
   return (
     <div className="bg-white">
       <Head>

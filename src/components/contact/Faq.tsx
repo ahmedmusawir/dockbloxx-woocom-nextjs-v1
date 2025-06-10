@@ -38,7 +38,7 @@ const faqs = [
     question: "How do I Install DockBloxx?",
     answer: `DockBloxx are designed for **super easy installation!**  
   Each product comes with detailed instructions and all the necessary hardware.  
-  If you need extra help, our [How-To page](https://dockbloxx.com/how-to-dockbloxx/) offers helpful guides and videos.  
+  If you need extra help, our [How-To page](https://dockbloxx.com/how-to/) offers helpful guides and videos.  
   **Click, Watch, Install, Enjoy!**`,
   },
   {

@@ -13,6 +13,8 @@ import { Product } from "@/types/product";
 
 export const useProductTracking = () => {
   const trackViewItem = (product: Product) => {
+    if (process.env.NODE_ENV !== "production") return;
+
     trackEvent({
       event: "view_item",
       ecommerce: {
@@ -42,6 +44,8 @@ export const useProductTracking = () => {
     },
     quantity: number = 1
   ) => {
+    if (process.env.NODE_ENV !== "production") return;
+
     trackEvent({
       event: "add_to_cart",
       ecommerce: {

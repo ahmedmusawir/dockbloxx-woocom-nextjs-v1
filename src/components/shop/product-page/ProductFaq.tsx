@@ -34,13 +34,13 @@ const faqs = [
   
   **Pro Tip:** Please send us pictures of the measurement to ensure the perfect fit!
   
-  For more info on how to measure, visit [https://dockbloxx.com/how-to-dockbloxx/](https://dockbloxx.com/how-to-dockbloxx/)`,
+  For more info on how to measure, visit [https://dockbloxx.com/how-to/](https://dockbloxx.com/how-to/)`,
   },
   {
     question: "How do I Install DockBloxx?",
     answer: `**A:** DockBloxx are designed for super easy installation!  
   Each product comes with detailed instructions and all the necessary hardware.  
-  If you need additional assistance, our [How-To page](https://dockbloxx.com/how-to-dockbloxx/) offers helpful installation guides and videos.  
+  If you need additional assistance, our [How-To page](https://dockbloxx.com/how-to/) offers helpful installation guides and videos.  
   **Click, Watch, Install, Enjoy!**`,
   },
   {

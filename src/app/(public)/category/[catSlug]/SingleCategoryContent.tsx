@@ -2,7 +2,6 @@ import Head from "next/head";
 import Page from "@/components/common/Page";
 import ProductList from "@/components/shop/ProductList";
 import NumberedPagination from "@/components/common/NumberedPagination";
-import ShopPageReset from "@/components/shop/ShopPageReset";
 import CategoryFilter from "@/components/shop/filters/CategoryFilter";
 import { Category } from "@/types/category";
 import { Product } from "@/types/product";
@@ -15,6 +14,7 @@ interface Props {
   products: Product[];
   totalProducts: number;
   totalPages: number;
+  searchParams?: { page?: string };
 }
 
 const SingleCategoryContent = ({
@@ -23,7 +23,11 @@ const SingleCategoryContent = ({
   products,
   totalProducts,
   totalPages,
+  searchParams,
 }: Props) => {
+  // Category pages start at ?page=1 (for future pagination)
+  const pageFromQuery = Number(searchParams?.page ?? "1");
+
   return (
     <>
       <Head>
@@ -61,15 +65,12 @@ const SingleCategoryContent = ({
               <CategoryFilter categories={categories} />
             </div>
 
-            <ShopPageReset
-              initialProducts={products}
-              totalProducts={totalProducts}
-            />
-
             <div className="">
               <ProductList
                 initialProducts={products}
                 totalProducts={totalProducts}
+                initialPage={pageFromQuery}
+                cacheKey={catSlug} // namespace = category slug
               />
             </div>
           </div>

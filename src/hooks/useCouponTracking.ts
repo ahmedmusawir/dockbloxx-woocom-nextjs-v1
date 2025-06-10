@@ -6,6 +6,8 @@ export const useCouponTracking = () => {
   const { checkoutData } = useCheckoutStore();
 
   const trackApplyCoupon = (coupon: Coupon) => {
+    if (process.env.NODE_ENV !== "production") return;
+
     trackEvent({
       event: "apply_coupon",
       coupon_code: coupon.code,

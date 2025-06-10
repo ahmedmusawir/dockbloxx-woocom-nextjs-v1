@@ -1,25 +1,29 @@
+"use client";
+
+import Head from "next/head";
+import Link from "next/link";
+import Image from "next/image";
 import Page from "@/components/common/Page";
 import Row from "@/components/common/Row";
-import Head from "next/head";
-import Image from "next/image";
 import { getImageUrl } from "@/lib/utils";
+import { policies } from "./content";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { policies } from "./content";
-import Link from "next/link";
 
-const TermsPolicyContent = () => {
-  const termsData = policies.find((policy) => policy.id === "terms");
+const WarrantyRegistrationContent = () => {
+  const termsData = policies.find(
+    (policy) => policy.id === "warranty-registration"
+  );
 
   if (!termsData) return null;
 
   return (
     <>
       <Head>
-        <title>Terms - DockBloxx</title>
+        <title>Warranty Policy - DockBloxx</title>
         <meta
           name="description"
-          content="Review the terms and conditions for using DockBloxx."
+          content="Understand the warranty registration for DockBloxx products."
         />
       </Head>
 
@@ -27,7 +31,7 @@ const TermsPolicyContent = () => {
       <div className="relative h-[300px] w-full">
         <Image
           src={getImageUrl("/wp-content/uploads/header-img.jpg")}
-          alt="Policy Hero Background"
+          alt="Policy Header Image"
           fill
           className="object-cover"
           priority
@@ -42,10 +46,11 @@ const TermsPolicyContent = () => {
       <Page className="lg:py-16" FULL={false}>
         <Row className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+            {/* Static Sidebar Navigation */}
             <div className="w-full lg:w-1/4">
               <div className="sticky top-24 bg-gray-50 p-4 sm:p-6 rounded-lg shadow">
                 <h2 className="text-2xl font-extrabold mb-6 uppercase text-blue-600">
-                  {termsData?.title || "Terms"}
+                  POLICIES
                 </h2>
                 <nav>
                   <ul className="space-y-3">
@@ -114,11 +119,36 @@ const TermsPolicyContent = () => {
               </div>
             </div>
 
+            {/* Right Column - Content */}
             <div className="w-full lg:w-3/4 bg-white p-4 sm:p-6 lg:p-8 rounded-lg shadow">
               <div className="prose prose-lg max-w-none text-gray-700 break-words">
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {termsData?.content || "Terms content not available."}
-                </ReactMarkdown>
+                <div className="w-full h-[1300px] overflow-hidden">
+                  <iframe
+                    src="https://link.cyberizegroup.com/widget/form/kvdPqAcOMXwQVlVUX6Yc"
+                    className="w-full h-full border-none rounded"
+                    id="inline-kvdPqAcOMXwQVlVUX6Yc"
+                    data-layout="{'id':'INLINE'}"
+                    data-trigger-type="alwaysShow"
+                    data-trigger-value=""
+                    data-activation-type="alwaysActivated"
+                    data-activation-value=""
+                    data-deactivation-type="neverDeactivate"
+                    data-deactivation-value=""
+                    data-form-name="Warranty Registration"
+                    data-height="1300"
+                    data-layout-iframe-id="inline-kvdPqAcOMXwQVlVUX6Yc"
+                    data-form-id="kvdPqAcOMXwQVlVUX6Yc"
+                    title="Warranty Registration"
+                  ></iframe>
+                </div>
+
+                {/* Move script to Head */}
+                <Head>
+                  <script
+                    src="https://link.cyberizegroup.com/js/form_embed.js"
+                    async
+                  />
+                </Head>
               </div>
             </div>
           </div>
@@ -128,4 +158,4 @@ const TermsPolicyContent = () => {
   );
 };
 
-export default TermsPolicyContent;
+export default WarrantyRegistrationContent;

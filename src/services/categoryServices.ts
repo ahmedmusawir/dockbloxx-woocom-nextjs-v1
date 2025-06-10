@@ -2,8 +2,6 @@ import { WC_REST_URL } from "@/constants/apiEndpoints";
 import { Category } from "@/types/category";
 import { Product } from "@/types/product";
 
-const NEXT_APP_URL = process.env.NEXT_PUBLIC_APP_URL; // API URL
-
 const WOOCOM_REST_API_URL = WC_REST_URL;
 const WOOCOM_CONSUMER_KEY = process.env.WOOCOM_CONSUMER_KEY;
 const WOOCOM_CONSUMER_SECRET = process.env.WOOCOM_CONSUMER_SECRET;
@@ -34,7 +32,7 @@ export async function getAllCategories(): Promise<Category[]> {
 
 /**
  * Fetches paginated products directly from WooCommerce for a specific category slug.
- *
+ * FOR CLIENT SIDE PAGINATION ITEM
  * @param {string} categorySlug - The WooCommerce category slug
  * @param {number} page - Page number
  * @param {number} perPage - Products per page
@@ -117,8 +115,11 @@ export async function fetchCategoryProductsForHomePage(
 
     const categoryId = categories[0].id;
 
-    // Step 2: fetch products in that category
-    const productUrl = `${WOOCOM_REST_API_URL}/products?category=${categoryId}&per_page=4&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}`;
+    // Step 2: fetch products in that category BY MENU ORDER
+    const productUrl = `${WOOCOM_REST_API_URL}/products?category=${categoryId}&per_page=4&orderby=menu_order&order=asc&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}`;
+
+    // const productUrl = `${WOOCOM_REST_API_URL}/products?category=${categoryId}&per_page=4&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}`;
+
     const prodResponse = await fetch(productUrl, {
       headers: { "Content-Type": "application/json" },
       next: { revalidate: 60 }, // enabled ISR

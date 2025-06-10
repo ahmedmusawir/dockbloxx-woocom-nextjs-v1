@@ -4,7 +4,6 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Product } from "@/types/product";
-import parse from "html-react-parser";
 import { getFeaturedImage } from "@/lib/utils";
 import { PriceDisplay } from "./PriceDisplay";
 
@@ -22,7 +21,7 @@ const ProductListItem = ({ product }: Props) => {
     <div key={product.id} className="group relative my-5">
       <Link href={`/shop/${product.slug}`}>
         {/* Image + On‐Sale badge */}
-        <div className="h-56 w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 lg:h-72 xl:h-80 relative">
+        <div className="aspect-square w-full overflow-hidden rounded-md bg-gray-200 group-hover:opacity-75 relative">
           {product.isDeal && (
             <span className="absolute top-0 left-0 bg-red-600 text-white text-xs font-bold uppercase px-6 py-3">
               On Sale

@@ -17,7 +17,7 @@ const ApplyCoupon = () => {
   const handleApply = async () => {
     setError(""); // Reset error message
 
-    if (!couponCode.trim()) {
+    if (!(couponCode ?? "").trim()) {
       setError("Please enter a coupon code.");
       return;
     }

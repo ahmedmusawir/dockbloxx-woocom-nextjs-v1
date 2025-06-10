@@ -154,7 +154,7 @@ const Navbar = () => {
           {/* Secondary Nav */}
 
           <div className="flex items-center space-x-4 text-xs text-gray-600">
-            <Link href="/shop" className="hover:text-blue-600">
+            <Link href="/search" className="hover:text-blue-600">
               Search Products
             </Link>
             <span className="border-r border-gray-300 h-4" />
@@ -216,7 +216,7 @@ const Navbar = () => {
               {isHelpDropdownOpen && (
                 <div className="absolute left-0 top-full mt-2 w-40 bg-white border border-gray-200 shadow-md z-10">
                   <Link
-                    href="/how-to-dockbloxx"
+                    href="/how-to"
                     className="block px-4 py-2 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   >
                     How-to Videos

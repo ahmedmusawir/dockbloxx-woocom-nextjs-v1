@@ -36,11 +36,11 @@ const AboutPageContent = () => {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               {/* Left Column - Text Content */}
               <div className="lg:col-span-8 text-white space-y-4 sm:space-y-6">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight text-white">
+                <h1 className="text-2xl md:text-4xl font-bold leading-tight text-white">
                   DockBloxx is a game-changing product designed for boaters, by
                   boaters.
                 </h1>
-                <p className="text-base sm:text-lg md:text-xl text-white leading-snug sm:leading-normal">
+                <p className="text-sm md:text-base text-white leading-snug sm:leading-normal">
                   Born from a love of the water and a need for smarter dock
                   solutions, DockBloxx delivers innovative, no-drill dock
                   accessories that keep your waterfront life organized and

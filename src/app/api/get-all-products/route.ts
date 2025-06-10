@@ -28,8 +28,11 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Build the WooCommerce REST API URL
-    const url = `${WOOCOM_REST_API_URL}/products?per_page=${perPage}&page=${page}&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}&orderby=date&order=asc&status=publish`;
+    // Build the WooCommerce REST API URL. Order by Menu Order
+    const url = `${WOOCOM_REST_API_URL}/products?per_page=${perPage}&page=${page}&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}&orderby=menu_order&order=asc&status=publish`;
+
+    // Order by date
+    // const url = `${WOOCOM_REST_API_URL}/products?per_page=${perPage}&page=${page}&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}&orderby=date&order=asc&status=publish`;
 
     console.log("[API Route] Final WooCommerce API URL:", url);
 
@@ -60,7 +63,8 @@ export async function GET(request: Request) {
       10
     );
 
-    console.log("[API Route] Total Products:", totalProducts);
+    // console.log("[API Route] Total Products:", totalProducts);
+    console.log("[API Route] Products:", data);
 
     // Return the products and totalProducts
     return NextResponse.json(

@@ -9,32 +9,63 @@ import SpinnerLarge from "../common/SpinnerLarge";
 interface ProductListProps {
   initialProducts: Product[]; // Server-side rendered initial products
   totalProducts: number; // Total number of products (from SSR)
+  initialPage: number; // Page that was SSR‑rendered
+  cacheKey: string; // Namespace for the cache (e.g. \"shop\", \"accessories\")
 }
 
-const ProductList = ({ initialProducts, totalProducts }: ProductListProps) => {
+// const ProductList = ({ initialProducts, totalProducts }: ProductListProps) => {
+const ProductList = ({
+  initialProducts,
+  totalProducts,
+  initialPage,
+  cacheKey,
+}: ProductListProps) => {
   const {
     currentPage,
     pageData,
     fetchPage,
     setPageData,
     setTotalProducts,
+    setCurrentPage,
+    cacheKey: storeKey,
+    setCacheKey,
+    resetPagination,
     loading,
   } = useNumberedPaginationStore();
 
   // const { cartItems } = useCartStore();
   // console.log("Cart Items from Zustand [ProductList.tsx]", cartItems);
 
-  // Hydrate Zustand store with initial SSR data for page 1
+  // 1) If we’ve navigated to a different namespace, wipe & seed cache
   useEffect(() => {
-    if (!pageData[1]) {
-      setPageData(1, initialProducts); // Cache Page 1 data
-      setTotalProducts(totalProducts); // Set total products count
+    if (storeKey !== cacheKey) {
+      resetPagination(initialProducts, totalProducts, cacheKey);
+      // setCacheKey(cacheKey);
+      return;
     }
-  }, [initialProducts, totalProducts, setPageData, setTotalProducts, pageData]);
+
+    // 2) Normal hydration for this namespace
+    if (!pageData[initialPage]) {
+      setPageData(initialPage, initialProducts);
+      setTotalProducts(totalProducts);
+      setCurrentPage(initialPage);
+    }
+  }, [
+    cacheKey,
+    initialPage,
+    initialProducts,
+    totalProducts,
+    setCurrentPage,
+    setPageData,
+    setTotalProducts,
+    setCacheKey,
+    storeKey,
+    pageData,
+  ]);
 
   // Fetch products for the current page (if not already cached)
   useEffect(() => {
-    if (currentPage !== 1 && !pageData[currentPage]) {
+    if (!pageData[currentPage]) {
       fetchPage(currentPage);
     }
   }, [currentPage, pageData, fetchPage]);

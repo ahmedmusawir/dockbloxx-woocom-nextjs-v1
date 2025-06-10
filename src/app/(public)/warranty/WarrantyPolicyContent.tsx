@@ -100,6 +100,18 @@ const WarrantyPolicyContent = () => {
                         Warranty Policy
                       </Link>
                     </li>
+                    <li>
+                      <Link
+                        href="/warranty-registration"
+                        className={`block px-3 py-2 rounded transition-colors duration-200 ${
+                          termsData.id === "warranty-registration"
+                            ? "font-semibold text-blue-700 border-b-4 border-blue-600 pb-1"
+                            : "text-gray-600 hover:bg-gray-200"
+                        }`}
+                      >
+                        Warranty Registration
+                      </Link>
+                    </li>
                   </ul>
                 </nav>
               </div>

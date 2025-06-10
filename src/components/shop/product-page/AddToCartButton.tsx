@@ -42,6 +42,8 @@ const AddToCartButton = ({
     );
   };
 
+  console.log("CartItem [AddToCartButton]", cartItem);
+
   return (
     <div className="flex w-full">
       {!isProductInCart && (

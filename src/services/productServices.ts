@@ -27,8 +27,6 @@ export const fetchPaginatedProducts = async (
 ): Promise<{ products: Product[]; totalProducts: number }> => {
   const url = `${BASE_URL}/api/get-all-products?page=${page}&perPage=${perPage}`;
 
-  // console.log("Fetching products from API route:", url);
-
   const response = await fetch(url, {
     method: "GET",
     headers: {
@@ -42,12 +40,16 @@ export const fetchPaginatedProducts = async (
 
   const data = await response.json();
 
-  // console.log("[productServices] - data", data);
+  // Inject isDeal flag manually (same as other services)
+  const products: Product[] = data.products.map((p: any) => ({
+    ...p,
+    isDeal: p.categories?.some((cat: any) => cat.slug === "deals") || false,
+  }));
 
-  // Destructure products and totalProducts from the API response
-  const { products, totalProducts } = data;
-
-  return { products, totalProducts };
+  return {
+    products,
+    totalProducts: data.totalProducts,
+  };
 };
 
 // --------------------------- FETCH PAGINATED PRODUCTS CLIENT SIDE ENDS ----------------------------------------
@@ -116,7 +118,7 @@ export const fetchInitialProducts = async (
     );
 
     // console.log("[fetchInitialProducts] Total products:", totalProducts);
-    console.log("[fetchInitialProducts] isDeal products:", products);
+    // console.log("[fetchInitialProducts] isDeal products:", products);
 
     return { products, totalProducts };
   } catch (error) {

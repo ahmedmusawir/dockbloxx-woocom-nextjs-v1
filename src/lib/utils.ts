@@ -1,5 +1,17 @@
 import { Product, ProductVariation } from "@/types/product";
 
+// Returns dynamic product slugs for site map
+export const generateProductSitemapUrls = (slugs: string[]): string => {
+  return slugs
+    .map(
+      (slug) => `
+  <url>
+    <loc>https://dockbloxx.com/shop/${slug}</loc>
+  </url>`
+    )
+    .join("");
+};
+
 // Handles Sale Prices Cleaning up price_html data
 export function cleanPriceHtml(html: string): string {
   return (

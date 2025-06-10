@@ -31,11 +31,6 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
-        hostname: "dbp.dockbloxx.com", // Your headless WP backend
-        pathname: "/**", // Allows all paths from this backend
-      },
-      {
-        protocol: "https",
         hostname: "dockbloxx.mystagingwebsite.com", // Your headless WP backend
         pathname: "/**", // Allows all paths from this backend
       },

@@ -50,8 +50,8 @@ export async function GET(request: Request) {
   const categorySlug = searchParams.get("category");
   const page = parseInt(searchParams.get("page") || "1", 10);
   const perPage = parseInt(searchParams.get("perPage") || "4", 10); // 4 for home, can be increased for shop
-  const orderBy = searchParams.get("orderby") || "date"; // Default order by date
-  const order = searchParams.get("order") || "desc"; // Default descending
+  const orderBy = searchParams.get("orderby") || "menu_order"; // Default order by date
+  const order = searchParams.get("order") || "asc"; // Default descending
 
   if (!categorySlug) {
     return NextResponse.json(
@@ -93,6 +93,7 @@ export async function GET(request: Request) {
 
     // Step 2: Fetch Products with Dynamic Params
     const productsUrl = `${WOOCOM_REST_API_URL}/products?category=${categoryId}&per_page=${perPage}&page=${page}&orderby=${orderBy}&order=${order}&consumer_key=${WOOCOM_CONSUMER_KEY}&consumer_secret=${WOOCOM_CONSUMER_SECRET}&status=publish`;
+
     const productsResponse = await fetch(productsUrl, {
       headers: { "Content-Type": "application/json" },
     });

@@ -29,6 +29,7 @@ export async function POST(req: Request) {
       payment_method_title: "Online Payment",
       billing: checkoutData.billing,
       shipping: checkoutData.shipping,
+      customer_note: checkoutData.customerNote,
       line_items: checkoutData.cartItems.map((item: any) => {
         // Flatten each custom field into its own meta entry
         const customMeta = (item.customFields || []).map(

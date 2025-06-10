@@ -57,7 +57,7 @@ export default async function RootLayout({
         {/* Header tracker – loads before hydration */}
         <Script
           id="moose-tracker-head"
-          strategy="beforeInteractive"
+          strategy="lazyOnload"
           dangerouslySetInnerHTML={{ __html: headerJS }}
         />
       </head>

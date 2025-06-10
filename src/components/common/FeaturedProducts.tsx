@@ -2,63 +2,13 @@ import { Product } from "@/types/product";
 import Link from "next/link";
 import React from "react";
 
-const relatedProducts = [
-  {
-    id: 1,
-    name: "Billfold Wallet",
-    href: "#",
-    imageSrc:
-      "https://res.cloudinary.com/dyb0qa58h/image/upload/v1699356460/bxnjpaubvbqedieglq2w.jpg",
-    imageAlt: "Front of Billfold Wallet in natural leather.",
-    price: "$118",
-    color: "Natural",
-  },
-  {
-    id: 2,
-    name: "Basic Tee",
-    href: "#",
-    price: "$32.00",
-    color: "Sienna",
-    inStock: true,
-    size: "Large",
-    imageSrc:
-      "https://res.cloudinary.com/dyb0qa58h/image/upload/v1699356435/qvg6d7teq8hm1wnbup2a.jpg",
-    imageAlt: "Front of men's Basic Tee in sienna.",
-  },
-  {
-    id: 3,
-    name: "Basic Tee",
-    href: "#",
-    price: "$32.00",
-    color: "Black",
-    inStock: false,
-    leadTime: "3–4 weeks",
-    size: "Large",
-    imageSrc:
-      "https://res.cloudinary.com/dyb0qa58h/image/upload/v1699356511/kqtfimpi1wbohxxujjkp.jpg",
-    imageAlt: "Front of men's Basic Tee in black.",
-  },
-  {
-    id: 4,
-    name: "Nomad Tumbler",
-    href: "#",
-    price: "$35.00",
-    color: "White",
-    inStock: true,
-    imageSrc:
-      "https://res.cloudinary.com/dyb0qa58h/image/upload/v1699356684/ite2ep7qmfj8yebjxdhi.jpg",
-    imageAlt: "Insulated bottle with white base and black snap lid.",
-  },
-  // More products...
-];
-
 interface Props {
   featuredProducts: Product[];
 }
 
 const FeaturedProducts = ({ featuredProducts }: Props) => {
   return (
-    <section aria-labelledby="related-heading" className="mt-24">
+    <section aria-labelledby="related-heading" className="mt-5">
       <h2
         id="related-heading"
         className="text-2xl font-bold text-gray-900 pb-5"

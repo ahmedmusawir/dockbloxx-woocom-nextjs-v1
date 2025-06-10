@@ -16,6 +16,8 @@ export interface SignupUser {
 
 export const useSignupTracking = () => {
   const trackSignup = (user: SignupUser) => {
+    if (process.env.NODE_ENV !== "production") return;
+
     trackEvent({
       event: "user_signup",
       user_id: user.id,

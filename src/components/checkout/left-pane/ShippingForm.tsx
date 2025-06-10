@@ -6,6 +6,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
 import dynamic from "next/dynamic";
+import { useCheckoutTracking } from "@/hooks/useCheckoutTracking";
 
 // 1. Extend the Zod schema for shipping fields, adding "state"
 const shippingSchema = z.object({
@@ -33,6 +34,9 @@ const ShippingForm = () => {
     setBillingSameAsShipping,
     setIsAnyBlockEditing,
   } = useCheckoutStore();
+
+  // Checkout Tracking Hook for Stape.io
+  const { trackAddShippingInfo } = useCheckoutTracking();
 
   // Local state to control editing mode.
   const [isEditing, setIsEditing] = useState<boolean>(
@@ -71,6 +75,10 @@ const ShippingForm = () => {
     if (billingSameAsShipping) {
       setBilling(updatedShipping);
     }
+
+    // Track shipping info added for analytics (GTM/GA4)
+    trackAddShippingInfo(checkoutData);
+
     // After saving, switch to display mode.
     setIsEditing(false);
     // Set block editing status for payment to show up

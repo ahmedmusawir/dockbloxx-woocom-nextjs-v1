@@ -13,8 +13,13 @@ if (typeof window === "undefined") {
   }
 }
 
+// ORDER BY DATE
+// export const WOOCOM_REST_GET_ALL_PRODUCTS = (page = 1, perPage = 12) =>
+//   `${BASE_URL}/products?per_page=${perPage}&page=${page}&consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&orderby=date&order=asc&status=publish`;
+
+// ORDER BY MENU ORDER
 export const WOOCOM_REST_GET_ALL_PRODUCTS = (page = 1, perPage = 12) =>
-  `${BASE_URL}/products?per_page=${perPage}&page=${page}&consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&orderby=date&order=asc&status=publish`;
+  `${BASE_URL}/products?per_page=${perPage}&page=${page}&consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}&orderby=menu_order&order=asc&status=publish`;
 
 export const WOOCOM_REST_GET_PRODUCT_BY_ID = (id: number) =>
   `${BASE_URL}/products/${id}?consumer_key=${CONSUMER_KEY}&consumer_secret=${CONSUMER_SECRET}`;

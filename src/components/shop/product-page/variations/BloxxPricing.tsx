@@ -4,6 +4,7 @@ import { ProductVariation } from "@/types/product";
 import React, { useState, useEffect } from "react";
 import BloxxPricingPoleStyles from "./BloxxPricingPoleStyles";
 import { CartItem } from "@/types/cart";
+import Link from "next/link";
 
 interface BloxxPricingProps {
   onPriceChange: (price: number | null) => void;
@@ -23,6 +24,13 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
   );
   const [customSize, setCustomSize] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null); // For validation feedback
+
+  // Fixing Pole Style square octagon which is considered square
+  const normalizePoleStyle = (style: string | null): string | null => {
+    if (!style) return null;
+    if (style === "square_octagon") return "square";
+    return style;
+  };
 
   // Fetch and parse variations JSON on mount
   useEffect(() => {
@@ -77,7 +85,10 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
       ...prev,
       variations: prev.variations.map((variation) =>
         variation.name === "Pole Style"
-          ? { ...variation, value: defaultStyle || "Unknown" }
+          ? {
+              ...variation,
+              value: normalizePoleStyle(defaultStyle) || "Unknown",
+            }
           : variation
       ),
     }));
@@ -143,7 +154,10 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
           ...prev,
           variations: [
             { name: "Pole Shape", value: defaultShape },
-            { name: "Pole Style", value: defaultStyle || "Unknown" },
+            {
+              name: "Pole Style",
+              value: normalizePoleStyle(defaultStyle) || "Unknown",
+            },
             { name: "Pole Size", value: defaultSize || "Unknown" },
           ],
         }));
@@ -199,7 +213,10 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
           ...prev,
           variations: [
             { name: "Pole Shape", value: defaultShape },
-            { name: "Pole Style", value: defaultStyle || "Unknown" },
+            {
+              name: "Pole Style",
+              value: normalizePoleStyle(defaultStyle) || "Unknown",
+            },
             { name: "Pole Size", value: defaultSize || "Unknown" },
             { name: "Version", value: defaultVersion },
           ],
@@ -381,15 +398,6 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
   // Handle Pole Style Change
   const handlePoleStyleChange = (selectedStyle: string) => {
     setSelectedPoleStyle(selectedStyle);
-
-    // Update cart item
-    setCartItem((prev) => {
-      const updatedVariations = [
-        ...(prev.variations || []).filter((v) => v.name !== "Pole Style"),
-        { name: "Pole Style", value: selectedStyle },
-      ];
-      return { ...prev, variations: updatedVariations };
-    });
   };
 
   // Handle Custom Size When the 'Other' Pole Size is Chosen (Mainly for Round and Octagon)
@@ -481,9 +489,6 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
           selectedPoleStyle={selectedPoleStyle}
           selectedShape={selectedShape}
         />
-
-        {/* Debugging or additional logic */}
-        <p className="mt-5">Current Selected Pole Style: {selectedPoleStyle}</p>
       </div>
 
       {/* Version Options */}
@@ -530,6 +535,14 @@ const BloxxPricing = ({ onPriceChange, setCartItem }: BloxxPricingProps) => {
               {size}
             </button>
           ))}
+        </div>
+        <div>
+          <p className="mt-5">
+            Don't see your size?{" "}
+            <Link href="/build-a-bloxx">
+              <u>Click here</u>
+            </Link>
+          </p>
         </div>
 
         {/* Render the custom size input if "Other" is selected */}

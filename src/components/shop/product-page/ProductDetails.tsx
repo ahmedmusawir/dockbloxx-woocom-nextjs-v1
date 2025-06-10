@@ -131,7 +131,7 @@ const ProductDetails = ({ product }: Props) => {
 
     /* -------------------- 4 · Open mini-cart & debug ------------------ */
     setIsCartOpen(true);
-    console.log("[AddToCart] stored item:", itemToStore);
+    console.log("[ProductDetails] stored item:", itemToStore);
   };
 
   // console.log("[ProductDetails] cartItem", cartItem);
