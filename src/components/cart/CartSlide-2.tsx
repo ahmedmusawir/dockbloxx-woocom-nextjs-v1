@@ -29,34 +29,20 @@ const CartSlide = () => {
 
   // Handle quantity changes
   const handleQuantityChange = (
-    cartItem: CartItem,
+    itemId: number,
     action: "increase" | "decrease"
   ) => {
     if (action === "increase") {
-      increaseCartQuantity(cartItem);
+      increaseCartQuantity(itemId); // Increase the quantity of the item
     } else if (action === "decrease") {
-      if (cartItem.quantity === 1) {
-        removeCartItem(cartItem);
+      const item = cartItems.find((item) => item.id === itemId);
+      if (item?.quantity === 1) {
+        removeCartItem(item); // Remove item if quantity is 1
       } else {
-        decreaseCartQuantity(cartItem);
+        decreaseCartQuantity(itemId); // Decrease the quantity of the item
       }
     }
   };
-  // const handleQuantityChange = (
-  //   itemId: number,
-  //   action: "increase" | "decrease"
-  // ) => {
-  //   if (action === "increase") {
-  //     increaseCartQuantity(itemId); // Increase the quantity of the item
-  //   } else if (action === "decrease") {
-  //     const item = cartItems.find((item) => item.id === itemId);
-  //     if (item?.quantity === 1) {
-  //       removeCartItem(item); // Remove item if quantity is 1
-  //     } else {
-  //       decreaseCartQuantity(itemId); // Decrease the quantity of the item
-  //     }
-  //   }
-  // };
 
   // Redirect to shop if cart is empty after removal
   const handleRemoveCartItem = (item: CartItem) => {
@@ -135,7 +121,6 @@ const CartSlide = () => {
                                 </div>
                                 <p className="my-2 text-xs text-gray-500 font-bold">
                                   {cartItem.variations
-                                    .filter((c) => c.value !== "Unknown")
                                     .map((c) => c.value)
                                     .join(" · ")}
                                 </p>
@@ -153,7 +138,10 @@ const CartSlide = () => {
                                     // className="px-2 py-1 text-gray-700 border rounded-md"
                                     className="text-2xl flex h-10 w-10 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
                                     onClick={() =>
-                                      handleQuantityChange(cartItem, "decrease")
+                                      handleQuantityChange(
+                                        cartItem.id,
+                                        "decrease"
+                                      )
                                     }
                                   >
                                     -
@@ -169,7 +157,10 @@ const CartSlide = () => {
                                     // className="px-2 py-1 text-gray-700 border rounded-md"
                                     className="text-2xl flex h-10 w-10 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
                                     onClick={() =>
-                                      handleQuantityChange(cartItem, "increase")
+                                      handleQuantityChange(
+                                        cartItem.id,
+                                        "increase"
+                                      )
                                     }
                                   >
                                     +

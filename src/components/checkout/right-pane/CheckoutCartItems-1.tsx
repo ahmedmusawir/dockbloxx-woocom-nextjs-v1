@@ -3,7 +3,6 @@
 import { CartItem } from "@/types/cart";
 import React from "react";
 import { useRouter } from "next/navigation";
-import { useCartStore } from "@/store/useCartStore";
 
 interface Props {
   cartData: CartItem[];
@@ -11,7 +10,11 @@ interface Props {
 
 const CheckoutCartItems = ({ cartData }: Props) => {
   const router = useRouter();
-  const { makeKey } = useCartStore();
+
+  // Redirect to shop if cart is empty
+  const editInCart = () => {
+    router.push("/cart");
+  };
 
   return (
     <>
@@ -19,7 +22,7 @@ const CheckoutCartItems = ({ cartData }: Props) => {
       <ul role="list" className="divide-y divide-gray-200">
         {cartData.length > 0 &&
           cartData.map((product) => (
-            <li key={makeKey(product)} className="flex px-4 py-6 sm:px-6">
+            <li key={product.id} className="flex px-4 py-6 sm:px-6">
               <div className="shrink-0">
                 <img
                   alt={product.name}

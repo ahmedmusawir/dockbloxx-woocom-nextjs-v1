@@ -17,11 +17,10 @@ interface CartStore {
   removeCartItem: (item: CartItem) => void;
   clearCart: () => void; // Clear the entire cart
   getCartDetails: () => CartItem[]; // Get detailed cart items
-  increaseCartQuantity: (target: CartItem) => void; // Add item to cart by ID
-  decreaseCartQuantity: (target: CartItem) => void; // Decrement the quantity of a specific item
+  increaseCartQuantity: (itemId: number) => void; // Add item to cart by ID
+  decreaseCartQuantity: (itemId: number) => void; // Decrement the quantity of a specific item
   subtotal: () => number; // Calculate the subtotal of all items in the cart
   getItemQuantity: (itemId: number) => number; // Get the quantity of a specific item
-  makeKey: (item: CartItem) => string;
 }
 
 // Define the Zustand store with persist middleware
@@ -100,49 +99,43 @@ export const useCartStore = create<CartStore>()(
 
       getCartDetails: () => get().cartItems,
 
-      // Helper to generate a unique cart key
-      makeKey: (item: CartItem) =>
-        `${item.id}::${JSON.stringify(
-          item.variations || {}
-        )}}::${JSON.stringify(item.customFields || {})}`,
-
-      increaseCartQuantity: (target: CartItem) => {
-        const makeKey = get().makeKey;
-        set((state) => {
-          return {
-            cartItems: state.cartItems.map((item) =>
-              makeKey(item) === makeKey(target)
-                ? { ...item, quantity: Math.max(1, item.quantity + 1) }
-                : item
-            ),
-          };
-        });
-      },
-
-      decreaseCartQuantity: (target: CartItem) => {
-        const makeKey = get().makeKey;
+      increaseCartQuantity: (itemId: number) => {
         set((state) => {
           const existingItem = state.cartItems.find(
-            (item) => makeKey(item) === makeKey(target)
+            (item) => item.id === itemId
           );
-          if (existingItem?.quantity === 1) {
-            // Remove the item
-            return {
-              cartItems: state.cartItems.filter(
-                (item) => makeKey(item) !== makeKey(target)
-              ),
-            };
-          } else if (existingItem) {
-            // Decrement
+          if (existingItem) {
             return {
               cartItems: state.cartItems.map((item) =>
-                makeKey(item) === makeKey(target)
-                  ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+                item.id === itemId
+                  ? { ...item, quantity: item.quantity + 1 }
                   : item
               ),
             };
           }
-          return state;
+          return state; // No changes if item doesn't exist
+        });
+      },
+
+      decreaseCartQuantity: (itemId: number) => {
+        set((state) => {
+          const existingItem = state.cartItems.find(
+            (item) => item.id === itemId
+          );
+          if (existingItem?.quantity === 1) {
+            return {
+              cartItems: state.cartItems.filter((item) => item.id !== itemId),
+            };
+          } else if (existingItem) {
+            return {
+              cartItems: state.cartItems.map((item) =>
+                item.id === itemId
+                  ? { ...item, quantity: item.quantity - 1 }
+                  : item
+              ),
+            };
+          }
+          return state; // No changes if item doesn't exist
         });
       },
 

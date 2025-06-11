@@ -17,7 +17,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Image from "next/image";
-import { CartItem } from "@/types/cart";
 
 const CartItems = () => {
   const router = useRouter();
@@ -29,7 +28,6 @@ const CartItems = () => {
     setIsCartOpen,
     isLoading,
     setCartItems,
-    makeKey,
   } = useCartStore();
 
   // Closes the sidebar Cart Slide
@@ -47,26 +45,16 @@ const CartItems = () => {
   }
 
   // Handle quantity changes
-  const handleQuantityChange = (target: CartItem, newQuantity: number) => {
-    const { makeKey } = useCartStore.getState();
+  const handleQuantityChange = (itemId: number, newQuantity: number) => {
     const updatedCartItems = cartItems.map((item) =>
-      makeKey(item) === makeKey(target)
-        ? { ...item, quantity: newQuantity }
-        : item
+      item.id === itemId ? { ...item, quantity: newQuantity } : item
     );
     setCartItems(updatedCartItems); // Update Zustand store
   };
 
-  // const handleQuantityChange = (itemId: number, newQuantity: number) => {
-  //   const updatedCartItems = cartItems.map((item) =>
-  //     item.id === itemId ? { ...item, quantity: newQuantity } : item
-  //   );
-  //   setCartItems(updatedCartItems); // Update Zustand store
-  // };
-
   // Redirect to shop if cart is empty
-  const handleRemoveCartItem = (item: CartItem) => {
-    removeCartItem(item);
+  const handleRemoveCartItem = (id: number) => {
+    removeCartItem(id);
 
     if (cartItems.length === 0) {
       console.log("Cart Items [CartPageContent.tsx]:", cartItems);
@@ -111,11 +99,7 @@ const CartItems = () => {
               className="divide-y divide-gray-200 border-b border-t border-gray-200"
             >
               {cartItems.map((product) => (
-                <li
-                  // key={`${product.id}-${product.variation_id}`}
-                  key={makeKey(product)}
-                  className="flex py-6 sm:py-10"
-                >
+                <li key={product.id} className="flex py-6 sm:py-10">
                   <div className="shrink-0">
                     <CartImage
                       cartItem={product}
@@ -137,12 +121,6 @@ const CartItems = () => {
                             </Link>
                           </h3>
                         </div>
-                        <p className="my-2 text-xs text-gray-500 font-bold">
-                          {product.variations
-                            .filter((c) => c.value !== "Unknown")
-                            .map((c) => c.value)
-                            .join(" · ")}
-                        </p>
                         <div className="mt-1 flex text-sm">
                           <p className="text-gray-500">
                             {product.categories.map((cat) => cat.name)}
@@ -159,7 +137,7 @@ const CartItems = () => {
                           <button
                             onClick={() =>
                               handleQuantityChange(
-                                product,
+                                product.id,
                                 Math.max(1, product.quantity - 1)
                               )
                             }
@@ -178,7 +156,7 @@ const CartItems = () => {
                           <button
                             onClick={() =>
                               handleQuantityChange(
-                                product,
+                                product.id,
                                 product.quantity + 1
                               )
                             }
@@ -193,7 +171,7 @@ const CartItems = () => {
                           <button
                             type="button"
                             className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
-                            onClick={() => handleRemoveCartItem(product)}
+                            onClick={() => handleRemoveCartItem(product.id)}
                           >
                             <span className="sr-only">Remove</span>
                             <XMarkIconMini

@@ -13,15 +13,13 @@ interface CartStore {
     updater: CartItem[] | ((prevItems: CartItem[]) => CartItem[])
   ) => void; // Directly update cart items or use a callback
   addOrUpdateCartItem: (item: CartItem) => void; // Add or update a cart item
-  // removeCartItem: (itemId: number) => void; // Remove an item from the cart
-  removeCartItem: (item: CartItem) => void;
+  removeCartItem: (itemId: number) => void; // Remove an item from the cart
   clearCart: () => void; // Clear the entire cart
   getCartDetails: () => CartItem[]; // Get detailed cart items
-  increaseCartQuantity: (target: CartItem) => void; // Add item to cart by ID
-  decreaseCartQuantity: (target: CartItem) => void; // Decrement the quantity of a specific item
+  increaseCartQuantity: (itemId: number) => void; // Add item to cart by ID
+  decreaseCartQuantity: (itemId: number) => void; // Decrement the quantity of a specific item
   subtotal: () => number; // Calculate the subtotal of all items in the cart
   getItemQuantity: (itemId: number) => number; // Get the quantity of a specific item
-  makeKey: (item: CartItem) => string;
 }
 
 // Define the Zustand store with persist middleware
@@ -47,102 +45,92 @@ export const useCartStore = create<CartStore>()(
 
       addOrUpdateCartItem: (newItem) => {
         set((state) => {
-          // Normalize payload so `price` is unit-price
+          // 🛡️ Always normalize the incoming payload so `price` is unit-price
           const unitPriceItem = {
             ...newItem,
             price:
               typeof newItem.basePrice === "number"
-                ? newItem.basePrice
-                : newItem.price / Math.max(newItem.quantity || 1, 1),
+                ? newItem.basePrice // preferred path
+                : newItem.price / Math.max(newItem.quantity || 1, 1), // fallback
           };
 
-          // Build a unique key comprising product ID + variations + customFields
-          const makeKey = (item: CartItem) =>
-            `${item.id}::${JSON.stringify(
-              item.variations || {}
-            )}::${JSON.stringify(item.customFields || {})}`;
-
-          const newKey = makeKey(unitPriceItem);
-          const existingIndex = state.cartItems.findIndex(
-            (item) => makeKey(item) === newKey
+          const existingItemIndex = state.cartItems.findIndex(
+            // (item) => item.id === newItem.id
+            (item) => item.id === unitPriceItem.id
           );
 
-          if (existingIndex !== -1) {
-            // Exact same variation combo → increment quantity
-            const updated = [...state.cartItems];
-            updated[existingIndex] = {
-              ...updated[existingIndex],
+          if (existingItemIndex !== -1) {
+            // Update existing item
+            const updatedCartItems = [...state.cartItems];
+            updatedCartItems[existingItemIndex] = {
+              ...updatedCartItems[existingItemIndex],
+              // quantity:
+              //   updatedCartItems[existingItemIndex].quantity + newItem.quantity,
               quantity:
-                updated[existingIndex].quantity + unitPriceItem.quantity,
+                updatedCartItems[existingItemIndex].quantity +
+                unitPriceItem.quantity,
+              variations:
+                newItem.variations ||
+                updatedCartItems[existingItemIndex].variations,
+              customFields:
+                newItem.customFields ||
+                updatedCartItems[existingItemIndex].customFields,
             };
-            return { cartItems: updated };
+
+            return { cartItems: updatedCartItems };
           }
 
-          // Different combo → push as a new line item
+          // Add new item
           return { cartItems: [...state.cartItems, unitPriceItem] };
         });
       },
 
-      removeCartItem: (targetItem) => {
-        // Build the same composite key we use for add/update
-        const makeKey = (ci: CartItem) =>
-          `${ci.id}::${JSON.stringify(ci.variations || {})}}::${JSON.stringify(
-            ci.customFields || {}
-          )}`;
-
-        const targetKey = makeKey(targetItem);
+      removeCartItem: (itemId) =>
         set((state) => ({
-          cartItems: state.cartItems.filter((ci) => makeKey(ci) !== targetKey),
-        }));
-      },
+          cartItems: state.cartItems.filter((item) => item.id !== itemId),
+        })),
 
       clearCart: () => set({ cartItems: [] }),
 
       getCartDetails: () => get().cartItems,
 
-      // Helper to generate a unique cart key
-      makeKey: (item: CartItem) =>
-        `${item.id}::${JSON.stringify(
-          item.variations || {}
-        )}}::${JSON.stringify(item.customFields || {})}`,
-
-      increaseCartQuantity: (target: CartItem) => {
-        const makeKey = get().makeKey;
-        set((state) => {
-          return {
-            cartItems: state.cartItems.map((item) =>
-              makeKey(item) === makeKey(target)
-                ? { ...item, quantity: Math.max(1, item.quantity + 1) }
-                : item
-            ),
-          };
-        });
-      },
-
-      decreaseCartQuantity: (target: CartItem) => {
-        const makeKey = get().makeKey;
+      increaseCartQuantity: (itemId: number) => {
         set((state) => {
           const existingItem = state.cartItems.find(
-            (item) => makeKey(item) === makeKey(target)
+            (item) => item.id === itemId
           );
-          if (existingItem?.quantity === 1) {
-            // Remove the item
-            return {
-              cartItems: state.cartItems.filter(
-                (item) => makeKey(item) !== makeKey(target)
-              ),
-            };
-          } else if (existingItem) {
-            // Decrement
+          if (existingItem) {
             return {
               cartItems: state.cartItems.map((item) =>
-                makeKey(item) === makeKey(target)
-                  ? { ...item, quantity: Math.max(1, item.quantity - 1) }
+                item.id === itemId
+                  ? { ...item, quantity: item.quantity + 1 }
                   : item
               ),
             };
           }
-          return state;
+          return state; // No changes if item doesn't exist
+        });
+      },
+
+      decreaseCartQuantity: (itemId: number) => {
+        set((state) => {
+          const existingItem = state.cartItems.find(
+            (item) => item.id === itemId
+          );
+          if (existingItem?.quantity === 1) {
+            return {
+              cartItems: state.cartItems.filter((item) => item.id !== itemId),
+            };
+          } else if (existingItem) {
+            return {
+              cartItems: state.cartItems.map((item) =>
+                item.id === itemId
+                  ? { ...item, quantity: item.quantity - 1 }
+                  : item
+              ),
+            };
+          }
+          return state; // No changes if item doesn't exist
         });
       },
 

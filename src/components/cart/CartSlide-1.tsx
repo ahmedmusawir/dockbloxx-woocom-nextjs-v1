@@ -11,7 +11,6 @@ import { useRouter } from "next/navigation";
 import { useCartStore } from "@/store/useCartStore";
 import Link from "next/link";
 import CartImage from "./CartImage";
-import { CartItem } from "@/types/cart";
 
 const CartSlide = () => {
   const router = useRouter();
@@ -29,38 +28,24 @@ const CartSlide = () => {
 
   // Handle quantity changes
   const handleQuantityChange = (
-    cartItem: CartItem,
+    itemId: number,
     action: "increase" | "decrease"
   ) => {
     if (action === "increase") {
-      increaseCartQuantity(cartItem);
+      increaseCartQuantity(itemId); // Increase the quantity of the item
     } else if (action === "decrease") {
-      if (cartItem.quantity === 1) {
-        removeCartItem(cartItem);
+      const item = cartItems.find((item) => item.id === itemId);
+      if (item?.quantity === 1) {
+        removeCartItem(itemId); // Remove item if quantity is 1
       } else {
-        decreaseCartQuantity(cartItem);
+        decreaseCartQuantity(itemId); // Decrease the quantity of the item
       }
     }
   };
-  // const handleQuantityChange = (
-  //   itemId: number,
-  //   action: "increase" | "decrease"
-  // ) => {
-  //   if (action === "increase") {
-  //     increaseCartQuantity(itemId); // Increase the quantity of the item
-  //   } else if (action === "decrease") {
-  //     const item = cartItems.find((item) => item.id === itemId);
-  //     if (item?.quantity === 1) {
-  //       removeCartItem(item); // Remove item if quantity is 1
-  //     } else {
-  //       decreaseCartQuantity(itemId); // Decrease the quantity of the item
-  //     }
-  //   }
-  // };
 
   // Redirect to shop if cart is empty after removal
-  const handleRemoveCartItem = (item: CartItem) => {
-    removeCartItem(item);
+  const handleRemoveCartItem = (id: number) => {
+    removeCartItem(id);
     if (cartItems.length === 1) {
       router.push("/shop");
     }
@@ -117,10 +102,7 @@ const CartSlide = () => {
                         className="-my-6 divide-y divide-gray-200"
                       >
                         {cartItems.map((cartItem) => (
-                          <li
-                            key={`${cartItem.id}-${cartItem.variation_id}`}
-                            className="flex py-6"
-                          >
+                          <li key={cartItem.id} className="flex py-6">
                             <CartImage
                               cartItem={cartItem}
                               imgHeight={85}
@@ -133,12 +115,7 @@ const CartSlide = () => {
                                   <h3 className="text-lg">{cartItem.name}</h3>
                                   <p className="ml-4">${cartItem.price}</p>
                                 </div>
-                                <p className="my-2 text-xs text-gray-500 font-bold">
-                                  {cartItem.variations
-                                    .filter((c) => c.value !== "Unknown")
-                                    .map((c) => c.value)
-                                    .join(" · ")}
-                                </p>
+
                                 <p className="my-2 text-xs text-gray-500 font-bold">
                                   {cartItem.categories
                                     .map((c) => c.name)
@@ -153,7 +130,10 @@ const CartSlide = () => {
                                     // className="px-2 py-1 text-gray-700 border rounded-md"
                                     className="text-2xl flex h-10 w-10 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
                                     onClick={() =>
-                                      handleQuantityChange(cartItem, "decrease")
+                                      handleQuantityChange(
+                                        cartItem.id,
+                                        "decrease"
+                                      )
                                     }
                                   >
                                     -
@@ -169,7 +149,10 @@ const CartSlide = () => {
                                     // className="px-2 py-1 text-gray-700 border rounded-md"
                                     className="text-2xl flex h-10 w-10 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
                                     onClick={() =>
-                                      handleQuantityChange(cartItem, "increase")
+                                      handleQuantityChange(
+                                        cartItem.id,
+                                        "increase"
+                                      )
                                     }
                                   >
                                     +
@@ -178,7 +161,9 @@ const CartSlide = () => {
                                 <button
                                   type="button"
                                   className="font-medium text-red-600 hover:text-red-500 border border-gray-300 px-4 py-1"
-                                  onClick={() => handleRemoveCartItem(cartItem)}
+                                  onClick={() =>
+                                    handleRemoveCartItem(cartItem.id)
+                                  }
                                 >
                                   Remove
                                 </button>

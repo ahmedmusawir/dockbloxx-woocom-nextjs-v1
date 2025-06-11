@@ -7,16 +7,34 @@ import { useProductTracking } from "@/hooks/useProductTracking";
 
 interface AddToCartButtonProps {
   cartItem: CartItem; // Pass the entire CartItem
-  handleAddToCart: () => void; // (used for ROUND OTHER CUSTOM FIELD variation logic & zustand store)
+  // handleAddToCart: () => void; // (no longer used for variation logic)
 }
 
 const AddToCartButton = ({
   cartItem,
-  handleAddToCart,
-}: AddToCartButtonProps) => {
-  // Delegate click to parent handler
+}: // handleAddToCart, // still accepted but no longer primary
+AddToCartButtonProps) => {
+  const { addOrUpdateCartItem, setIsCartOpen } = useCartStore();
+
+  const { trackAddToCart } = useProductTracking();
+
+  // Handle click w/ add to cart and GTM Tracking
   const handleClick = () => {
-    handleAddToCart();
+    // Use variation-aware store action instead of generic add
+    addOrUpdateCartItem(cartItem);
+
+    trackAddToCart(
+      {
+        id: cartItem.id,
+        name: cartItem.name,
+        category: cartItem.categories[0].name || "Uncategorized",
+        brand: "Dockbloxx",
+        price: Number(cartItem.basePrice),
+      },
+      cartItem.quantity || 1
+    );
+
+    setIsCartOpen(true);
   };
 
   console.log("CartItem [AddToCartButton]", cartItem);
