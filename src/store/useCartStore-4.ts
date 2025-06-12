@@ -13,7 +13,7 @@ interface CartStore {
     updater: CartItem[] | ((prevItems: CartItem[]) => CartItem[])
   ) => void; // Directly update cart items or use a callback
   addOrUpdateCartItem: (item: CartItem) => void; // Add or update a cart item
-  setOrReplaceCartItemQuantity: (item: CartItem) => void; // Replace or set item quantity for same-key items
+  // removeCartItem: (itemId: number) => void; // Remove an item from the cart
   removeCartItem: (item: CartItem) => void;
   clearCart: () => void; // Clear the entire cart
   getCartDetails: () => CartItem[]; // Get detailed cart items
@@ -80,32 +80,6 @@ export const useCartStore = create<CartStore>()(
 
           // Different combo → push as a new line item
           return { cartItems: [...state.cartItems, unitPriceItem] };
-        });
-      },
-
-      // Adds or replaces quantity for a cart item (same key)
-      setOrReplaceCartItemQuantity: (newItem: CartItem) => {
-        set((state) => {
-          // Compose key (same as addOrUpdateCartItem)
-          const makeKey = (item: CartItem) =>
-            `${item.id}::${JSON.stringify(
-              item.variations || {}
-            )}}::${JSON.stringify(item.customFields || {})}`;
-          const newKey = makeKey(newItem);
-          const existingIndex = state.cartItems.findIndex(
-            (item) => makeKey(item) === newKey
-          );
-          if (existingIndex !== -1) {
-            // Replace the quantity (not increment)
-            const updated = [...state.cartItems];
-            updated[existingIndex] = {
-              ...updated[existingIndex],
-              quantity: newItem.quantity, // SET not increment
-            };
-            return { cartItems: updated };
-          }
-          // Not found: add as new
-          return { cartItems: [...state.cartItems, newItem] };
         });
       },
 

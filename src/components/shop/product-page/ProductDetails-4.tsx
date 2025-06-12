@@ -87,9 +87,8 @@ const ProductDetails = ({ product }: Props) => {
 
   // Add this function inside the ProductDetails component
   const handleAddToCart = () => {
-    // const { addOrUpdateCartItem, setIsCartOpen } = useCartStore.getState();
-    const { setOrReplaceCartItemQuantity, setIsCartOpen } =
-      useCartStore.getState();
+    // const { setCartItems, setIsCartOpen } = useCartStore.getState();
+    const { addOrUpdateCartItem, setIsCartOpen } = useCartStore.getState();
 
     /* -------------------- 1 · Pole-size validation -------------------- */
     const poleSizeVariation = cartItem.variations?.find(
@@ -118,7 +117,8 @@ const ProductDetails = ({ product }: Props) => {
     };
 
     /* -------------------- 3 · Push into Zustand ----------------------- */
-    setOrReplaceCartItemQuantity(itemToStore);
+    addOrUpdateCartItem(itemToStore);
+
     /* -------------------- 4 · Track & Open mini-cart ------------------ */
     trackAddToCart(
       {

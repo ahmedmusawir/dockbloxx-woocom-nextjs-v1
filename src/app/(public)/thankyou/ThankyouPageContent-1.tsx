@@ -30,8 +30,6 @@ const ThankyouPageContent = () => {
 
     // Retrieve the latest order from localStorage
     const storedOrder = localStorage.getItem("latestOrder");
-    console.log("LATEST ORDER - thankyoupagecontent", storedOrder);
-
     if (storedOrder) {
       const parsed = JSON.parse(storedOrder);
       setLatestOrder(parsed);
@@ -133,12 +131,6 @@ const ThankyouPageContent = () => {
                               <span>${item.price}</span>
                             </div>
                           </div>
-                          <p className="my-2 text-xs text-gray-500 font-bold">
-                            {/* {item.variations
-                              .filter((c) => c.value !== "Unknown")
-                              .map((c) => c.value)
-                              .join(" · ")} */}
-                          </p>
                         </li>
                       ))}
                     </ul>
