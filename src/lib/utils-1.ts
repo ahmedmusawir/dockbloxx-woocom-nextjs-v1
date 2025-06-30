@@ -186,8 +186,6 @@ export function cn(...inputs: ClassValue[]) {
  */
 
 export const detectProductCategory = (product: {
-  name: string;
-  slug: string;
   variations: ProductVariation[];
   attributes: { name: string; options: string[] }[];
   price: number;
@@ -197,23 +195,6 @@ export const detectProductCategory = (product: {
   defaultSelections?: Record<string, string>;
   filtering?: Record<string, string[]>;
 } => {
-  // console.log("Product in [/lib/utils.ts] FN: detectProductCategory", product);
-
-  /**
-   * Determines if a product is a gift card based on its slug or name.
-   * Gift card products typically originate from the 'SomewhereWarm' plugin.
-   * They are characterized by having no WooCommerce variations (options are metadata)
-   * and either a slug of "gift-card" or a name of "Gift Card".
-   *
-   * This function assigns them a custom type of "giftcard" for front-end rendering.
-   */
-  if (
-    product?.slug === "gift-card" ||
-    product?.name?.toLowerCase() === "gift card"
-  ) {
-    return { type: "giftcard" };
-  }
-
   if (product.variations.length === 0) {
     // return { type: "simple" }; // Simple product
     return { type: "simple", price: product.price }; // Include price for simple products

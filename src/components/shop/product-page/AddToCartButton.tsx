@@ -19,7 +19,7 @@ const AddToCartButton = ({
     handleAddToCart();
   };
 
-  console.log("CartItem [AddToCartButton]", cartItem);
+  // console.log("CartItem [AddToCartButton]", cartItem);
 
   return (
     <div className="flex w-full">

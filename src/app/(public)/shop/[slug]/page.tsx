@@ -73,7 +73,6 @@ const SingleProductPage = async ({
     related_products: await fetchRelatedProductsById(
       singleProduct.related_ids.slice(0, 4) // Brings only 4 related products
     ),
-    // related_products: await fetchRelatedProductsById(singleProduct.related_ids), // Brings all related products
   };
 
   // console.log("varions [SingleProduct Page]", productWithVariations.variations);
@@ -85,11 +84,6 @@ const SingleProductPage = async ({
 
   // Detect the product category
   const customCategory = detectProductCategory(productWithVariations);
-  // console.log(
-  //   "Product Variations [SingleProduct page]",
-  //   productWithVariations.variations
-  // );
-  // console.log("custom Category [SingleProduct page]", customCategory);
 
   // Fetch pole styles for Bloxx category
   const poleStyles =
