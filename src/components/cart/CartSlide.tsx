@@ -42,21 +42,6 @@ const CartSlide = () => {
       }
     }
   };
-  // const handleQuantityChange = (
-  //   itemId: number,
-  //   action: "increase" | "decrease"
-  // ) => {
-  //   if (action === "increase") {
-  //     increaseCartQuantity(itemId); // Increase the quantity of the item
-  //   } else if (action === "decrease") {
-  //     const item = cartItems.find((item) => item.id === itemId);
-  //     if (item?.quantity === 1) {
-  //       removeCartItem(item); // Remove item if quantity is 1
-  //     } else {
-  //       decreaseCartQuantity(itemId); // Decrease the quantity of the item
-  //     }
-  //   }
-  // };
 
   // Redirect to shop if cart is empty after removal
   const handleRemoveCartItem = (item: CartItem) => {

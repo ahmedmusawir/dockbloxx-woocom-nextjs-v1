@@ -102,7 +102,7 @@ const SingleVariationPricing = ({
     }));
   };
 
-  console.log("CartItem [SingleVariationPricing]", cartItem);
+  // console.log("CartItem [SingleVariationPricing]", cartItem);
 
   return (
     <div className="mt-10">

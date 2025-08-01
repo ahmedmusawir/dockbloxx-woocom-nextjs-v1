@@ -57,25 +57,18 @@ const CartItems = () => {
     setCartItems(updatedCartItems); // Update Zustand store
   };
 
-  // const handleQuantityChange = (itemId: number, newQuantity: number) => {
-  //   const updatedCartItems = cartItems.map((item) =>
-  //     item.id === itemId ? { ...item, quantity: newQuantity } : item
-  //   );
-  //   setCartItems(updatedCartItems); // Update Zustand store
-  // };
-
   // Redirect to shop if cart is empty
   const handleRemoveCartItem = (item: CartItem) => {
     removeCartItem(item);
 
     if (cartItems.length === 0) {
-      console.log("Cart Items [CartPageContent.tsx]:", cartItems);
+      // console.log("Cart Items [CartItems.tsx]:", cartItems);
       router.push("/shop");
       const { resetPagination } = useNumberedPaginationStore.getState();
       const totalProducts = useProductStore.getState().products.length; // Dynamically get total product count
       resetPagination([], totalProducts); // Reset pagination with dynamic total
     }
-    console.log("Cart Items [CartPageContent.tsx]:", cartItems);
+    // console.log("Cart Items [CartItems.tsx]:", cartItems);
   };
 
   // Go back to shop link
@@ -111,11 +104,7 @@ const CartItems = () => {
               className="divide-y divide-gray-200 border-b border-t border-gray-200"
             >
               {cartItems.map((product) => (
-                <li
-                  // key={`${product.id}-${product.variation_id}`}
-                  key={makeKey(product)}
-                  className="flex py-6 sm:py-10"
-                >
+                <li key={makeKey(product)} className="flex py-6 sm:py-10">
                   <div className="shrink-0">
                     <CartImage
                       cartItem={product}
@@ -130,7 +119,7 @@ const CartItems = () => {
                         <div className="flex justify-between">
                           <h3 className="text-sm">
                             <Link
-                              href={`/shop/${product.id}`}
+                              href={`/shop/${product.slug}`}
                               className="text-xl font-bold text-gray-700 hover:text-gray-800"
                             >
                               {product.name}

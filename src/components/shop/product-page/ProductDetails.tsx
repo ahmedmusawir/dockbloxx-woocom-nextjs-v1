@@ -37,6 +37,7 @@ const ProductDetails = ({ product }: Props) => {
   const [cartItem, setCartItem] = useState<CartItem>({
     id: product.id,
     name: product.name,
+    slug: product.slug,
     price: 0, // Default price
     quantity: 1, // Default quantity
     image:
@@ -133,7 +134,7 @@ const ProductDetails = ({ product }: Props) => {
 
     /* -------------------- 4 · Open mini-cart & debug ------------------ */
     setIsCartOpen(true);
-    console.log("[ProductDetails] stored item:", itemToStore);
+    // console.log("[ProductDetails] stored item:", itemToStore);
   };
 
   // console.log("[ProductDetails] cartItem", cartItem);

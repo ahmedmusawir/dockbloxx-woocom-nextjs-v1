@@ -14,8 +14,8 @@ interface Props {
 const ProductListItem = ({ product }: Props) => {
   const featuredImage = getFeaturedImage(product.images);
 
-  console.log("[ProductListItem] product", product);
-  console.log("[ProductListItem] isDeal", product.isDeal);
+  // console.log("[ProductListItem] product", product);
+  // console.log("[ProductListItem] isDeal", product.isDeal);
 
   return (
     <div key={product.id} className="group relative my-5">

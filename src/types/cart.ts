@@ -2,6 +2,7 @@
 export interface CartItem {
   id: number; // Product ID
   name: string; // Product Name
+  slug?: string; // Product Slug
   price: number; // Total Price (basePrice * quantity)
   quantity: number; // Quantity added to the cart
   image: string; // Main image of the product
