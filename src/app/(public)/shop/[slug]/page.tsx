@@ -114,11 +114,12 @@ const SingleProductPage = async ({
           __html: JSON.stringify(augmentedCategory),
         }}
       />
+
       {schema && (
         <script
           id={`yoast-schema-product-${slug}`}
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+          dangerouslySetInnerHTML={{ __html: schema }}
         />
       )}
 
