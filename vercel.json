@@ -1,0 +1,36 @@
+{
+  "redirects": [
+    {
+      "source": "/product/:slug*",
+      "destination": "/shop/:slug*",
+      "permanent": true
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' *.vercel.app *.googleapis.com *.gstatic.com *.facebook.net *.tiktok.com *.google-analytics.com *.googletagmanager.com js.stripe.com www.clarity.ms googleads.g.doubleclick.net static.cdn.vwo.js scripts.clarity.ms stapecdn.com; style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.gstatic.com; img-src 'self' data: blob: *.vercel.app *.facebook.com *.google-analytics.com dbp.dockbloxx.com prod.proxy.cyberizedev.com www.googleadservices.com googleads.g.doubleclick.net www.google.com google.com; connect-src 'self' *.vercel.app *.googleapis.com *.google-analytics.com *.facebook.net *.tiktok.com dbp.dockbloxx.com api.stripe.com *.clarity.ms fp.dockbloxx.com googleads.g.doubleclick.net www.googleadservices.com www.google.com; frame-src 'self' *.facebook.com *.google.com *.youtube.com link.cyberizegroup.com js.stripe.com hooks.stripe.com www.googletagmanager.com fp.dockbloxx.com"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        }
+      ]
+    }
+  ]
+}

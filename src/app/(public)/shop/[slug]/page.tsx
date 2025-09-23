@@ -43,14 +43,37 @@ const SingleProductPage = async ({
 }) => {
   const { slug } = await params;
 
-  const singleProduct = await fetchProductBySlug(slug);
-
-  // console.log("Single Product only [shop/[slug]/page.tsx]", singleProduct);
+  //------------------ UPDATE 18 SEP 2025 ----------------------------------
+  // const singleProduct = await fetchProductBySlug(slug);
+  let singleProduct = null;
+  try {
+    singleProduct = await fetchProductBySlug(slug);
+    // If the fetch is successful but returns no product, it's a true 404
+    if (!singleProduct) {
+      notFound();
+    }
+  } catch (error) {
+    console.error(`\n--- FATAL BUILD ERROR ---`);
+    console.error(`Failed to fetch MAIN product data for slug: "${slug}"`);
+    console.error(`This is likely an issue with the WooCommerce backend.`);
+    console.error(`Halting build process.`);
+    console.error(`-----------------------\n`);
+    process.exit(1); // This forces the build to fail
+  }
 
   // Run this somewhere in a server-side context (e.g., inside an API route or a page)
-  const yoast = await fetchProductSEOBySlug(slug);
+  let yoast = null;
+  try {
+    yoast = await fetchProductSEOBySlug(slug);
+  } catch (error) {
+    console.error(
+      `[Build Error] Failed to fetch SEO data for slug: ${slug}. This page will be missing its schema script.`
+    );
+  }
 
   let schema = yoast?.schema ? JSON.stringify(yoast.schema) : null;
+
+  //------------------ UPDATE 18 SEP 2025 ----------------------------------
 
   if (schema) {
     schema = fixUrl(schema);
