@@ -254,3 +254,17 @@ export const detectProductCategory = (product: {
 
   return { type: "complex-variation", defaultSelections };
 };
+
+import pLimit from "p-limit";
+
+// 🚦 SHARED CONCURRENCY LIMITER - Used across ALL WooCommerce API calls
+export const wooCommerceLimit = pLimit(1); // Single instance prevents self-DOS
+
+export const sleep = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
+
+export interface RetryOptions {
+  maxRetries?: number;
+  timeoutMs?: number;
+  baseDelay?: number;
+}

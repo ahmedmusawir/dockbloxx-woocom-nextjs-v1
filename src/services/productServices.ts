@@ -1,5 +1,6 @@
 import { Product, RelatedProduct } from "@/types/product";
 import { WC_REST_URL } from "@/constants/apiEndpoints";
+import { wooCommerceLimit as limit, sleep, RetryOptions } from "@/lib/utils";
 
 /**
  * Fetch Paginated Products [FROM CLIENT SIDE]
@@ -131,78 +132,241 @@ export const fetchInitialProducts = async (
 
 // --------------------------- FETCH  ALL PRODUCT SLUGS STARTS ----------------------------------------
 
-/**
- * Fetch All Product Slugs
- *
- * This function fetches all product slugs from the WooCommerce REST API in batches.
- * It extracts only the `slug` field from the response and returns an array of slugs.
- *
- * @param {number} page - The starting page number for pagination (default is 1).
- * @param {number} perPage - The number of products to fetch per batch (default is 100).
- * @returns {Promise<string[]>} An array of product slugs.
- * @throws {Error} If the request fails or the response is invalid.
- *
- * Note:
- * - Designed for use in `generateStaticParams` to fetch slugs for SSG/ISR.
- * - Combines results from multiple pages until all slugs are fetched.
- */
-
 import { WOOCOM_REST_GET_ALL_PRODUCT_SLUGS } from "@/rest-api/products";
 
+/**
+ * 🎯 BULLETPROOF PRODUCT SLUGS FETCHER
+ *
+ * Fetches ALL WooCommerce product slugs with:
+ * - p-limit concurrency control (prevents API overload)
+ * - Exponential backoff retry logic per page
+ * - Comprehensive error handling
+ * - Build-safe failure modes
+ *
+ * Used for: generateStaticParams() - CRITICAL for SSG
+ * Build Impact: CATASTROPHIC if this fails - NO PAGES GET GENERATED
+ *
+ * @param page - Starting page number (default: 1)
+ * @param perPage - Products per page (default: 100)
+ * @param options - Retry configuration options
+ * @returns Promise<string[]> - Array of all product slugs
+ */
 export const fetchAllProductSlugs = async (
   page: number = 1,
-  perPage: number = 100
+  perPage: number = 100,
+  options: RetryOptions = {}
 ): Promise<string[]> => {
+  const { maxRetries = 3, timeoutMs = 30000, baseDelay = 1000 } = options;
+
   let allSlugs: string[] = [];
+  let currentPage = page;
   let hasNextPage = true;
+
+  console.log(
+    `[fetchAllProductSlugs] 🎯 Starting to fetch ALL product slugs with p-limit protection`
+  );
 
   try {
     while (hasNextPage) {
-      // Construct the URL for the current page
-      const url = WOOCOM_REST_GET_ALL_PRODUCT_SLUGS(page, perPage);
+      // 🚦 Each page fetch is wrapped with p-limit + retry logic
+      const pageResults = await limit(async () => {
+        const totalAttempts = maxRetries + 1;
+        let lastError: Error | null = null;
 
-      // console.log(`[fetchAllProductSlugs] Fetching slugs from: ${url}`);
+        for (let attempt = 1; attempt <= totalAttempts; attempt++) {
+          let timeoutId: NodeJS.Timeout | undefined;
 
-      // Fetch data from the WooCommerce REST API
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+          try {
+            console.log(
+              `[fetchAllProductSlugs] Page ${currentPage} - Attempt ${attempt}/${totalAttempts}`
+            );
+
+            const url = WOOCOM_REST_GET_ALL_PRODUCT_SLUGS(currentPage, perPage);
+
+            // Create AbortController for timeout
+            const controller = new AbortController();
+            timeoutId = setTimeout(() => {
+              console.warn(
+                `[fetchAllProductSlugs] Request timeout after ${timeoutMs}ms for page ${currentPage}`
+              );
+              controller.abort();
+            }, timeoutMs);
+
+            const response = await fetch(url, {
+              method: "GET",
+              headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json",
+                "User-Agent": "NextJS-App/1.0",
+              },
+              signal: controller.signal,
+            });
+
+            // Check if response is ok
+            if (!response.ok) {
+              let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+
+              try {
+                const contentType = response.headers.get("content-type");
+                if (contentType?.includes("application/json")) {
+                  const errorData = await response.json();
+                  console.error(
+                    `[fetchAllProductSlugs] WooCommerce API Error for page ${currentPage}:`,
+                    errorData
+                  );
+                  errorMessage += ` - ${JSON.stringify(errorData)}`;
+                } else {
+                  const errorText = await response.text();
+                  console.error(
+                    `[fetchAllProductSlugs] Non-JSON response for page ${currentPage}:`,
+                    errorText.substring(0, 200)
+                  );
+                  errorMessage +=
+                    " - Received non-JSON response (likely HTML error page)";
+                }
+              } catch (parseError) {
+                console.error(
+                  `[fetchAllProductSlugs] Error parsing error response for page ${currentPage}:`,
+                  parseError
+                );
+                errorMessage += " - Could not parse error response";
+              }
+
+              throw new Error(errorMessage);
+            }
+
+            // Validate content type before attempting to parse
+            const contentType = response.headers.get("content-type");
+            if (!contentType?.includes("application/json")) {
+              const responseText = await response.text();
+              console.error(
+                `[fetchAllProductSlugs] Expected JSON but got for page ${currentPage}:`,
+                contentType
+              );
+              console.error(
+                `[fetchAllProductSlugs] Response preview:`,
+                responseText.substring(0, 200)
+              );
+              throw new Error(
+                `Expected JSON response but got: ${contentType}. This usually means WooCommerce returned an error page.`
+              );
+            }
+
+            // Parse the response JSON with detailed error handling
+            const responseText = await response.text();
+            let products: Product[];
+
+            try {
+              products = JSON.parse(responseText);
+            } catch (parseError) {
+              console.error(
+                `[fetchAllProductSlugs] JSON Parse Error for page ${currentPage}:`,
+                parseError
+              );
+              console.error(
+                `[fetchAllProductSlugs] Response that failed to parse:`,
+                responseText.substring(0, 500)
+              );
+              throw new Error(
+                `Failed to parse JSON response for page ${currentPage}: ${
+                  parseError instanceof Error
+                    ? parseError.message
+                    : String(parseError)
+                }`
+              );
+            }
+
+            // Extract slugs from products
+            const slugs = products.map((product) => product.slug);
+
+            console.log(
+              `[fetchAllProductSlugs] ✅ SUCCESS: Page ${currentPage} fetched ${slugs.length} slugs`
+            );
+
+            return { slugs, hasMore: products.length === perPage };
+          } catch (error) {
+            lastError =
+              error instanceof Error ? error : new Error(String(error));
+
+            console.error(
+              `[fetchAllProductSlugs] ❌ Page ${currentPage} - Attempt ${attempt}/${totalAttempts} failed:`,
+              lastError.message
+            );
+
+            // If this is NOT the last attempt, wait before retrying
+            if (attempt < totalAttempts) {
+              const delay =
+                baseDelay * Math.pow(2, attempt - 1) + Math.random() * 1000;
+              console.log(
+                `[fetchAllProductSlugs] ⏳ Retrying page ${currentPage} in ${Math.round(
+                  delay
+                )}ms...`
+              );
+              await sleep(delay);
+            }
+          } finally {
+            if (timeoutId) {
+              clearTimeout(timeoutId);
+            }
+          }
+        }
+
+        // 🚨 ALL ATTEMPTS FAILED FOR THIS PAGE
+        console.error(
+          `[fetchAllProductSlugs] 🚨 CATASTROPHIC FAILURE: All ${totalAttempts} attempts failed for page ${currentPage}`
+        );
+
+        throw new Error(
+          `CATASTROPHIC BUILD FAILURE: Failed to fetch product slugs page ${currentPage} after ${totalAttempts} attempts. generateStaticParams() cannot continue.`,
+          { cause: lastError }
+        );
       });
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        console.error(
-          "[fetchAllProductSlugs] WooCommerce API Error:",
-          errorData
-        );
-        throw new Error(
-          `Failed to fetch product slugs: ${response.statusText}`
-        );
-      }
-
-      // Parse the response JSON
-      const products: Product[] = await response.json();
-
-      // Extract slugs and add them to the allSlugs array
-      const slugs = products.map((product) => product.slug);
-      allSlugs = [...allSlugs, ...slugs];
-
-      // console.log(`[fetchAllProductSlugs] Page ${page} fetched:`, slugs);
-
-      // Check if there are more pages (based on the number of results returned)
-      hasNextPage = products.length === perPage;
-      page += 1; // Increment the page number for the next fetch
+      // Add this page's slugs to the total
+      allSlugs = [...allSlugs, ...pageResults.slugs];
+      hasNextPage = pageResults.hasMore;
+      currentPage += 1;
     }
 
-    // console.log("[fetchAllProductSlugs] Total slugs fetched:", allSlugs.length);
-
+    console.log(
+      `[fetchAllProductSlugs] 🎉 COMPLETE SUCCESS: ${
+        allSlugs.length
+      } total slugs fetched across ${currentPage - 1} pages`
+    );
     return allSlugs;
   } catch (error) {
-    console.error("[fetchAllProductSlugs] Error fetching slugs:", error);
+    console.error(
+      `[fetchAllProductSlugs] 🚨 CATASTROPHIC BUILD FAILURE: Failed to fetch product slugs`
+    );
+    console.error(
+      `[fetchAllProductSlugs] 🚨 generateStaticParams() CANNOT CONTINUE - NO PAGES WILL BE GENERATED!`
+    );
     throw error;
   }
+};
+
+// 🚀 BUILD-OPTIMIZED VERSION with more aggressive retries
+export const fetchAllProductSlugsForBuild = async (
+  page: number = 1,
+  perPage: number = 100
+): Promise<string[]> => {
+  return fetchAllProductSlugs(page, perPage, {
+    maxRetries: 5, // 6 total attempts per page
+    timeoutMs: 45000, // 45 second timeout per page
+    baseDelay: 2000, // 2 second base delay
+  });
+};
+
+// 🛡️ ULTRA-SAFE BUILD VERSION
+export const fetchAllProductSlugsUltraSafe = async (
+  page: number = 1,
+  perPage: number = 100
+): Promise<string[]> => {
+  return fetchAllProductSlugs(page, perPage, {
+    maxRetries: 8, // 9 total attempts per page
+    timeoutMs: 60000, // 1 minute timeout per page
+    baseDelay: 3000, // 3 second base delay
+  });
 };
 
 // --------------------------- FETCH  ALL PRODUCT SLUGS ENDS ------------------------------------------
@@ -210,63 +374,244 @@ export const fetchAllProductSlugs = async (
 // --------------------------- FETCH PRODUCT BY SLUG STARTS ------------------------------------------
 
 /**
- * Fetch Product by Slug
+ * Fetch Product by Slug with Bulletproof Retry Logic
  *
  * This function retrieves a single product from the WooCommerce REST API
- * based on its slug. It uses the `WOOCOM_REST_GET_PRODUCT_BY_SLUG` endpoint
- * to fetch the product data.
+ * based on its slug with built-in retry mechanism and bulletproof error handling.
+ *
+ * CRITICAL: This function will NEVER skip products - it either succeeds or throws
+ * an error that will fail the build. This ensures no products go missing.
  *
  * @param {string} slug - The slug of the product to fetch.
- * @returns {Promise<Product | null>} A single product object or null if not found.
- * @throws {Error} If the request fails or the response is invalid.
- *
- * Note:
- * - The slug is a unique identifier for a product, often derived from its name.
- * - The response is filtered to return only the first matching product, if any.
- * - Use this function to fetch data for product detail pages.
+ * @param {number} maxRetries - Maximum number of RETRIES after first attempt (default: 3)
+ * @param {number} timeoutMs - Request timeout in milliseconds (default: 30000)
+ * @returns {Promise<Product | null>} A single product object or null if legitimately not found.
+ * @throws {Error} If all attempts fail - WILL HALT BUILD to prevent missing products.
  */
 
+import pLimit from "p-limit";
 import { WOOCOM_REST_GET_PRODUCT_BY_SLUG } from "@/rest-api/products";
 
 export const fetchProductBySlug = async (
-  slug: string
+  slug: string,
+  options: RetryOptions = {}
 ): Promise<Product | null> => {
-  try {
-    // Construct the request URL for fetching the product by slug
-    const url = WOOCOM_REST_GET_PRODUCT_BY_SLUG(slug);
+  // 🎯 THE MAGIC - Wrap your proven code with p-limit
+  return limit(async () => {
+    const {
+      maxRetries = 3, // 3 retries = 4 total attempts
+      timeoutMs = 30000, // 30 seconds
+      baseDelay = 1000, // 1 second base delay
+    } = options;
 
-    // console.log("[fetchProductBySlug] Fetching product from:", url);
+    const totalAttempts = maxRetries + 1; // Be crystal clear about total attempts
+    let lastError: Error | null = null;
 
-    // Fetch data from the WooCommerce REST API
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      next: { revalidate: 60 }, // Cache the response for 60 seconds
-    });
+    for (let attempt = 1; attempt <= totalAttempts; attempt++) {
+      let timeoutId: NodeJS.Timeout | undefined;
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("[fetchProductBySlug] WooCommerce API Error:", errorData);
-      throw new Error(
-        `Failed to fetch product by slug: ${response.statusText}`
-      );
+      try {
+        console.log(
+          `[fetchProductBySlug] Attempt ${attempt}/${totalAttempts} for slug: ${slug}`
+        );
+
+        const url = WOOCOM_REST_GET_PRODUCT_BY_SLUG(slug);
+
+        // Create AbortController for timeout
+        const controller = new AbortController();
+        timeoutId = setTimeout(() => {
+          console.warn(
+            `[fetchProductBySlug] Request timeout after ${timeoutMs}ms for slug: ${slug}`
+          );
+          controller.abort();
+        }, timeoutMs);
+
+        // Fetch data from the WooCommerce REST API
+        const response = await fetch(url, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            // Add user agent to avoid potential blocking
+            "User-Agent": "NextJS-App/1.0",
+          },
+          signal: controller.signal,
+          next: { revalidate: 60 },
+        });
+
+        // Check if response is ok
+        if (!response.ok) {
+          let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+
+          try {
+            // Try to get error details from response
+            const contentType = response.headers.get("content-type");
+            if (contentType?.includes("application/json")) {
+              const errorData = await response.json();
+              console.error(
+                "[fetchProductBySlug] WooCommerce API Error:",
+                errorData
+              );
+              errorMessage += ` - ${JSON.stringify(errorData)}`;
+            } else {
+              // If it's not JSON, get text (might be HTML error page)
+              const errorText = await response.text();
+              console.error(
+                "[fetchProductBySlug] Non-JSON response:",
+                errorText.substring(0, 200)
+              );
+              errorMessage +=
+                " - Received non-JSON response (likely HTML error page)";
+            }
+          } catch (parseError) {
+            console.error(
+              "[fetchProductBySlug] Error parsing error response:",
+              parseError
+            );
+            errorMessage += " - Could not parse error response";
+          }
+
+          throw new Error(errorMessage);
+        }
+
+        // Validate content type before attempting to parse
+        const contentType = response.headers.get("content-type");
+        if (!contentType?.includes("application/json")) {
+          const responseText = await response.text();
+          console.error(
+            "[fetchProductBySlug] Expected JSON but got:",
+            contentType
+          );
+          console.error(
+            "[fetchProductBySlug] Response preview:",
+            responseText.substring(0, 200)
+          );
+          throw new Error(
+            `Expected JSON response but got: ${contentType}. This usually means WooCommerce returned an error page.`
+          );
+        }
+
+        // Parse the response JSON with detailed error handling
+        const responseText = await response.text();
+        let products;
+
+        try {
+          products = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("[fetchProductBySlug] JSON Parse Error:", parseError);
+          console.error(
+            "[fetchProductBySlug] Response that failed to parse:",
+            responseText.substring(0, 500)
+          );
+          throw new Error(
+            `Failed to parse JSON response: ${
+              parseError instanceof Error
+                ? parseError.message
+                : String(parseError)
+            }`
+          );
+        }
+
+        // WooCommerce returns an array even for a single slug, so we take the first item
+        const product =
+          Array.isArray(products) && products.length > 0 ? products[0] : null;
+
+        if (product) {
+          console.log(
+            `[fetchProductBySlug] ✅ SUCCESS: Product fetched for slug: ${slug}`
+          );
+          return product;
+        } else {
+          console.warn(
+            `[fetchProductBySlug] ⚠️ No product found for slug: ${slug} - this might be legitimate (product doesn't exist)`
+          );
+          return null; // This is OK - product genuinely doesn't exist
+        }
+      } catch (error) {
+        lastError = error instanceof Error ? error : new Error(String(error));
+
+        console.error(
+          `[fetchProductBySlug] ❌ Attempt ${attempt}/${totalAttempts} failed for slug "${slug}":`,
+          lastError.message
+        );
+
+        // If this is NOT the last attempt, wait before retrying
+        if (attempt < totalAttempts) {
+          // Exponential backoff with jitter to avoid thundering herd
+          const delay =
+            baseDelay * Math.pow(2, attempt - 1) + Math.random() * 1000;
+          console.log(
+            `[fetchProductBySlug] ⏳ Retrying in ${Math.round(delay)}ms...`
+          );
+          await sleep(delay);
+        }
+      } finally {
+        // Always clear the timeout, whether we succeeded or failed
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+      }
     }
 
-    // Parse the response JSON
-    const products = await response.json();
+    // 🚨 ALL ATTEMPTS FAILED - THIS IS CRITICAL 🚨
+    console.error(
+      `[fetchProductBySlug] 🚨 CRITICAL FAILURE: All ${totalAttempts} attempts failed for slug: "${slug}"`
+    );
+    console.error(
+      `[fetchProductBySlug] 🚨 BUILD WILL FAIL to prevent missing products!`
+    );
 
-    // WooCommerce returns an array even for a single slug, so we take the first item
-    const product = products.length > 0 ? products[0] : null;
+    // Preserve the full error chain with cause - this is GOLD for debugging
+    throw new Error(
+      `CRITICAL BUILD FAILURE: Failed to fetch product "${slug}" after ${totalAttempts} attempts. This build cannot continue with missing products.`,
+      { cause: lastError } // 🎯 This preserves the original error with full stack trace
+    );
+  });
+};
 
-    // console.log("[fetchProductBySlug] Product fetched successfully:", product);
+// Helper function for build-time usage with MORE AGGRESSIVE retries
+export const fetchProductBySlugForBuild = async (
+  slug: string
+): Promise<Product | null> => {
+  return fetchProductBySlug(slug, {
+    maxRetries: 5, // 6 total attempts for build stability
+    timeoutMs: 45000, // 45 second timeout for build
+    baseDelay: 2000, // 2 second base delay for build
+  });
+};
 
-    return product;
+// 🛡️ ULTRA-SAFE BUILD VERSION - Use this if you're paranoid about build failures
+export const fetchProductBySlugUltraSafe = async (
+  slug: string
+): Promise<Product | null> => {
+  return fetchProductBySlug(slug, {
+    maxRetries: 8, // 9 total attempts - very aggressive
+    timeoutMs: 60000, // 1 minute timeout
+    baseDelay: 3000, // 3 second base delay
+  });
+};
+
+// 🚀 BONUS: Multiple products fetcher (useful for generateStaticParams)
+export const fetchMultipleProducts = async (
+  slugs: string[]
+): Promise<(Product | null)[]> => {
+  console.log(
+    `[fetchMultipleProducts] 🎯 Fetching ${slugs.length} products with p-limit concurrency control`
+  );
+
+  // p-limit will automatically queue and run these one at a time
+  const promises = slugs.map((slug) => fetchProductBySlugForBuild(slug));
+
+  try {
+    const results = await Promise.all(promises);
+    const successCount = results.filter((r) => r !== null).length;
+    console.log(
+      `[fetchMultipleProducts] ✅ Success: ${successCount}/${slugs.length} products fetched`
+    );
+    return results;
   } catch (error) {
     console.error(
-      "[fetchProductBySlug] Error fetching product by slug:",
-      error
+      `[fetchMultipleProducts] 🚨 FAILED - Build will halt to prevent missing products`
     );
     throw error;
   }
@@ -297,58 +642,244 @@ import { ACF_REST_OPTIONS } from "@/constants/apiEndpoints";
  * - The function uses the REST endpoint for fetching individual variations.
  */
 
+/**
+ * 🎯 BULLETPROOF PRODUCT VARIATIONS FETCHER
+ *
+ * Fetches WooCommerce product variations by their IDs with:
+ * - p-limit concurrency control (prevents API overload)
+ * - Exponential backoff retry logic per variation
+ * - Comprehensive error handling
+ * - Build-safe failure modes
+ *
+ * Used for: Every single product page - variations data
+ * Build Impact: CRITICAL - Product pages need variation data for pricing/options
+ *
+ * @param productId - WooCommerce product ID
+ * @param variationIds - Array of variation IDs for this product
+ * @param options - Retry configuration options
+ * @returns Promise<ProductVariation[]> - Formatted variation data for UI
+ */
 export const fetchProductVariationsById = async (
   productId: number,
-  variationIds: number[]
+  variationIds: number[],
+  options: RetryOptions = {}
 ): Promise<ProductVariation[]> => {
+  const { maxRetries = 3, timeoutMs = 30000, baseDelay = 1000 } = options;
+
+  console.log(
+    `[fetchProductVariationsById] 🎯 Fetching ${variationIds.length} variations for product ${productId} with p-limit protection`
+  );
+
   try {
-    // Fetch all variations concurrently using Promise.all
+    // 🚦 Each variation fetch is wrapped with p-limit + retry logic
     const variations = await Promise.all(
       variationIds.map(async (variationId) => {
-        const response = await fetch(
-          WOOCOM_REST_GET_VARIATION_BY_ID(productId, variationId),
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            next: { revalidate: 60 }, // Cache the response for 60 seconds
+        return limit(async () => {
+          const totalAttempts = maxRetries + 1;
+          let lastError: Error | null = null;
+
+          for (let attempt = 1; attempt <= totalAttempts; attempt++) {
+            let timeoutId: NodeJS.Timeout | undefined;
+
+            try {
+              console.log(
+                `[fetchProductVariationsById] Product ${productId} - Variation ${variationId} - Attempt ${attempt}/${totalAttempts}`
+              );
+
+              const url = WOOCOM_REST_GET_VARIATION_BY_ID(
+                productId,
+                variationId
+              );
+
+              // Create AbortController for timeout
+              const controller = new AbortController();
+              timeoutId = setTimeout(() => {
+                console.warn(
+                  `[fetchProductVariationsById] Request timeout after ${timeoutMs}ms for variation ${variationId}`
+                );
+                controller.abort();
+              }, timeoutMs);
+
+              const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                  "User-Agent": "NextJS-App/1.0",
+                },
+                signal: controller.signal,
+                next: { revalidate: 60 },
+              });
+
+              // Check if response is ok
+              if (!response.ok) {
+                let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+
+                try {
+                  const contentType = response.headers.get("content-type");
+                  if (contentType?.includes("application/json")) {
+                    const errorData = await response.json();
+                    console.error(
+                      `[fetchProductVariationsById] WooCommerce API Error for variation ${variationId}:`,
+                      errorData
+                    );
+                    errorMessage += ` - ${JSON.stringify(errorData)}`;
+                  } else {
+                    const errorText = await response.text();
+                    console.error(
+                      `[fetchProductVariationsById] Non-JSON response for variation ${variationId}:`,
+                      errorText.substring(0, 200)
+                    );
+                    errorMessage +=
+                      " - Received non-JSON response (likely HTML error page)";
+                  }
+                } catch (parseError) {
+                  console.error(
+                    `[fetchProductVariationsById] Error parsing error response for variation ${variationId}:`,
+                    parseError
+                  );
+                  errorMessage += " - Could not parse error response";
+                }
+
+                throw new Error(errorMessage);
+              }
+
+              // Validate content type before attempting to parse
+              const contentType = response.headers.get("content-type");
+              if (!contentType?.includes("application/json")) {
+                const responseText = await response.text();
+                console.error(
+                  `[fetchProductVariationsById] Expected JSON but got for variation ${variationId}:`,
+                  contentType
+                );
+                console.error(
+                  `[fetchProductVariationsById] Response preview:`,
+                  responseText.substring(0, 200)
+                );
+                throw new Error(
+                  `Expected JSON response but got: ${contentType}. This usually means WooCommerce returned an error page.`
+                );
+              }
+
+              // Parse the response JSON with detailed error handling
+              const responseText = await response.text();
+              let variation;
+
+              try {
+                variation = JSON.parse(responseText);
+              } catch (parseError) {
+                console.error(
+                  `[fetchProductVariationsById] JSON Parse Error for variation ${variationId}:`,
+                  parseError
+                );
+                console.error(
+                  `[fetchProductVariationsById] Response that failed to parse:`,
+                  responseText.substring(0, 500)
+                );
+                throw new Error(
+                  `Failed to parse JSON response for variation ${variationId}: ${
+                    parseError instanceof Error
+                      ? parseError.message
+                      : String(parseError)
+                  }`
+                );
+              }
+
+              // Format the variation data
+              const formattedVariation: ProductVariation = {
+                id: variation.id,
+                price: variation.price,
+                sale_price: variation.sale_price,
+                regular_price: variation.regular_price,
+                attributes: variation.attributes,
+                stock_status: variation.stock_status,
+                sku: variation.sku,
+              };
+
+              console.log(
+                `[fetchProductVariationsById] ✅ SUCCESS: Variation ${variationId} fetched for product ${productId}`
+              );
+
+              return formattedVariation;
+            } catch (error) {
+              lastError =
+                error instanceof Error ? error : new Error(String(error));
+
+              console.error(
+                `[fetchProductVariationsById] ❌ Product ${productId} - Variation ${variationId} - Attempt ${attempt}/${totalAttempts} failed:`,
+                lastError.message
+              );
+
+              // If this is NOT the last attempt, wait before retrying
+              if (attempt < totalAttempts) {
+                const delay =
+                  baseDelay * Math.pow(2, attempt - 1) + Math.random() * 1000;
+                console.log(
+                  `[fetchProductVariationsById] ⏳ Retrying variation ${variationId} in ${Math.round(
+                    delay
+                  )}ms...`
+                );
+                await sleep(delay);
+              }
+            } finally {
+              if (timeoutId) {
+                clearTimeout(timeoutId);
+              }
+            }
           }
-        );
 
-        if (!response.ok) {
+          // 🚨 ALL ATTEMPTS FAILED FOR THIS VARIATION
           console.error(
-            `[fetchProductVariationsById] Failed to fetch variation ${variationId}:`,
-            await response.json()
+            `[fetchProductVariationsById] 🚨 CRITICAL FAILURE: All ${totalAttempts} attempts failed for variation ${variationId} of product ${productId}`
           );
-          throw new Error(`Failed to fetch variation ${variationId}`);
-        }
 
-        const variation = await response.json();
-        return {
-          id: variation.id,
-          price: variation.price,
-          sale_price: variation.sale_price,
-          regular_price: variation.regular_price,
-          attributes: variation.attributes, // Array of attributes (e.g., color, size)
-          stock_status: variation.stock_status,
-          sku: variation.sku,
-        };
+          throw new Error(
+            `CRITICAL BUILD FAILURE: Failed to fetch variation "${variationId}" for product "${productId}" after ${totalAttempts} attempts.`,
+            { cause: lastError }
+          );
+        });
       })
     );
 
-    // console.log(
-    //   "[fetchProductVariationsById] Variations fetched successfully:",
-    //   variations
-    // );
+    const successCount = variations.length;
+    console.log(
+      `[fetchProductVariationsById] ✅ SUCCESS: ${successCount}/${variationIds.length} variations fetched for product ${productId}`
+    );
+
     return variations;
   } catch (error) {
     console.error(
-      "[fetchProductVariationsById] Error fetching variations:",
-      error
+      `[fetchProductVariationsById] 🚨 CRITICAL BUILD FAILURE: Failed to fetch variations for product ${productId}`
+    );
+    console.error(
+      `[fetchProductVariationsById] 🚨 BUILD WILL HALT to prevent missing variation data!`
     );
     throw error;
   }
+};
+
+// 🚀 BUILD-OPTIMIZED VERSION with more aggressive retries
+export const fetchProductVariationsByIdForBuild = async (
+  productId: number,
+  variationIds: number[]
+): Promise<ProductVariation[]> => {
+  return fetchProductVariationsById(productId, variationIds, {
+    maxRetries: 5, // 6 total attempts for build stability
+    timeoutMs: 45000, // 45 second timeout
+    baseDelay: 2000, // 2 second base delay
+  });
+};
+
+// 🛡️ ULTRA-SAFE BUILD VERSION
+export const fetchProductVariationsByIdUltraSafe = async (
+  productId: number,
+  variationIds: number[]
+): Promise<ProductVariation[]> => {
+  return fetchProductVariationsById(productId, variationIds, {
+    maxRetries: 8, // 9 total attempts
+    timeoutMs: 60000, // 1 minute timeout
+    baseDelay: 3000, // 3 second base delay
+  });
 };
 
 // --------------------------- FETCH PRODUCT VARIATIONS BY VARIATION IDs ENDS --------------------------------------------
@@ -356,69 +887,239 @@ export const fetchProductVariationsById = async (
 // --------------------------- FETCH RELATED PRODUCT IDs STARTS ----------------------------------------------------------
 
 /**
- * Fetch Related Products by IDs
+ * 🎯 BULLETPROOF RELATED PRODUCTS FETCHER
  *
- * This function retrieves the details of related products based on their IDs
- * from the WooCommerce REST API. It is optimized for fetching only the minimal
- * data required for the related products section.
+ * Fetches multiple WooCommerce products by their IDs with:
+ * - p-limit concurrency control (prevents API overload)
+ * - Exponential backoff retry logic
+ * - Comprehensive error handling
+ * - Build-safe failure modes
  *
- * @param {number[]} productIds - Array of related product IDs.
- * @returns {Promise<RelatedProduct[]>} - Array of formatted related product objects.
- * @throws {Error} If fetching any product fails.
+ * Used for: Related products, cross-sells, upsells
+ * Build Impact: CRITICAL - Build fails if this fails (by design)
+ *
+ * @param productIds - Array of WooCommerce product IDs
+ * @param options - Retry configuration options
+ * @returns Promise<RelatedProduct[]> - Formatted product data for UI
  */
+
 export const fetchRelatedProductsById = async (
-  productIds: number[]
+  productIds: number[],
+  options: RetryOptions = {}
 ): Promise<RelatedProduct[]> => {
+  const { maxRetries = 3, timeoutMs = 30000, baseDelay = 1000 } = options;
+
+  console.log(
+    `[fetchRelatedProductsById] 🎯 Fetching ${productIds.length} related products with p-limit protection`
+  );
+
   try {
-    // Fetch all related products concurrently using Promise.all
+    // 🚦 Each product fetch is wrapped with p-limit + retry logic
     const relatedProducts = await Promise.all(
       productIds.map(async (productId) => {
-        const response = await fetch(
-          WOOCOM_REST_GET_PRODUCT_BY_ID(productId), // Use the ID to fetch product details
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            next: { revalidate: 60 }, // Cache the response for 60 seconds
+        return limit(async () => {
+          const totalAttempts = maxRetries + 1;
+          let lastError: Error | null = null;
+
+          for (let attempt = 1; attempt <= totalAttempts; attempt++) {
+            let timeoutId: NodeJS.Timeout | undefined;
+
+            try {
+              console.log(
+                `[fetchRelatedProductsById] Attempt ${attempt}/${totalAttempts} for product ID: ${productId}`
+              );
+
+              const url = WOOCOM_REST_GET_PRODUCT_BY_ID(productId);
+
+              // Create AbortController for timeout
+              const controller = new AbortController();
+              timeoutId = setTimeout(() => {
+                console.warn(
+                  `[fetchRelatedProductsById] Request timeout after ${timeoutMs}ms for product ID: ${productId}`
+                );
+                controller.abort();
+              }, timeoutMs);
+
+              const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  Accept: "application/json",
+                  "User-Agent": "NextJS-App/1.0",
+                },
+                signal: controller.signal,
+                next: { revalidate: 60 },
+              });
+
+              // Check if response is ok
+              if (!response.ok) {
+                let errorMessage = `HTTP ${response.status}: ${response.statusText}`;
+
+                try {
+                  const contentType = response.headers.get("content-type");
+                  if (contentType?.includes("application/json")) {
+                    const errorData = await response.json();
+                    console.error(
+                      `[fetchRelatedProductsById] WooCommerce API Error for product ${productId}:`,
+                      errorData
+                    );
+                    errorMessage += ` - ${JSON.stringify(errorData)}`;
+                  } else {
+                    const errorText = await response.text();
+                    console.error(
+                      `[fetchRelatedProductsById] Non-JSON response for product ${productId}:`,
+                      errorText.substring(0, 200)
+                    );
+                    errorMessage +=
+                      " - Received non-JSON response (likely HTML error page)";
+                  }
+                } catch (parseError) {
+                  console.error(
+                    `[fetchRelatedProductsById] Error parsing error response for product ${productId}:`,
+                    parseError
+                  );
+                  errorMessage += " - Could not parse error response";
+                }
+
+                throw new Error(errorMessage);
+              }
+
+              // Validate content type before attempting to parse
+              const contentType = response.headers.get("content-type");
+              if (!contentType?.includes("application/json")) {
+                const responseText = await response.text();
+                console.error(
+                  `[fetchRelatedProductsById] Expected JSON but got for product ${productId}:`,
+                  contentType
+                );
+                console.error(
+                  `[fetchRelatedProductsById] Response preview:`,
+                  responseText.substring(0, 200)
+                );
+                throw new Error(
+                  `Expected JSON response but got: ${contentType}. This usually means WooCommerce returned an error page.`
+                );
+              }
+
+              // Parse the response JSON with detailed error handling
+              const responseText = await response.text();
+              let product;
+
+              try {
+                product = JSON.parse(responseText);
+              } catch (parseError) {
+                console.error(
+                  `[fetchRelatedProductsById] JSON Parse Error for product ${productId}:`,
+                  parseError
+                );
+                console.error(
+                  `[fetchRelatedProductsById] Response that failed to parse:`,
+                  responseText.substring(0, 500)
+                );
+                throw new Error(
+                  `Failed to parse JSON response for product ${productId}: ${
+                    parseError instanceof Error
+                      ? parseError.message
+                      : String(parseError)
+                  }`
+                );
+              }
+
+              // Format the data to return only necessary fields
+              const relatedProduct: RelatedProduct = {
+                id: product.id,
+                name: product.name,
+                slug: product.slug,
+                price_html: product.price_html,
+                image:
+                  product.images[0]?.type === "video"
+                    ? product.images[1]?.src
+                    : product.images[0]?.src || "",
+              };
+
+              console.log(
+                `[fetchRelatedProductsById] ✅ SUCCESS: Related product fetched for ID: ${productId}`
+              );
+
+              return relatedProduct;
+            } catch (error) {
+              lastError =
+                error instanceof Error ? error : new Error(String(error));
+
+              console.error(
+                `[fetchRelatedProductsById] ❌ Attempt ${attempt}/${totalAttempts} failed for product ID ${productId}:`,
+                lastError.message
+              );
+
+              // If this is NOT the last attempt, wait before retrying
+              if (attempt < totalAttempts) {
+                const delay =
+                  baseDelay * Math.pow(2, attempt - 1) + Math.random() * 1000;
+                console.log(
+                  `[fetchRelatedProductsById] ⏳ Retrying in ${Math.round(
+                    delay
+                  )}ms...`
+                );
+                await sleep(delay);
+              }
+            } finally {
+              if (timeoutId) {
+                clearTimeout(timeoutId);
+              }
+            }
           }
-        );
 
-        if (!response.ok) {
+          // 🚨 ALL ATTEMPTS FAILED FOR THIS PRODUCT
           console.error(
-            `[fetchRelatedProductsById] Failed to fetch product ${productId}:`,
-            await response.json()
+            `[fetchRelatedProductsById] 🚨 CRITICAL FAILURE: All ${totalAttempts} attempts failed for product ID: ${productId}`
           );
-          throw new Error(`Failed to fetch related product ${productId}`);
-        }
 
-        const product = await response.json();
-
-        // Format the data to return only necessary fields
-        // Since some product images gallery has a video instead of an image as the first item
-        return {
-          id: product.id,
-          name: product.name,
-          slug: product.slug,
-          price_html: product.price_html,
-          image:
-            product.images[0]?.type === "video"
-              ? product.images[1]?.src
-              : product.images[0]?.src || "", // Use the first image as the featured image
-        };
+          throw new Error(
+            `CRITICAL BUILD FAILURE: Failed to fetch related product ID "${productId}" after ${totalAttempts} attempts.`,
+            { cause: lastError }
+          );
+        });
       })
+    );
+
+    const successCount = relatedProducts.length;
+    console.log(
+      `[fetchRelatedProductsById] ✅ SUCCESS: ${successCount}/${productIds.length} related products fetched`
     );
 
     return relatedProducts;
   } catch (error) {
     console.error(
-      "[fetchRelatedProductsById] Error fetching related products:",
-      error
+      `[fetchRelatedProductsById] 🚨 CRITICAL BUILD FAILURE: Failed to fetch related products`
+    );
+    console.error(
+      `[fetchRelatedProductsById] 🚨 BUILD WILL HALT to prevent missing related products!`
     );
     throw error;
   }
 };
 
+// 🚀 BUILD-OPTIMIZED VERSION with more aggressive retries
+export const fetchRelatedProductsByIdForBuild = async (
+  productIds: number[]
+): Promise<RelatedProduct[]> => {
+  return fetchRelatedProductsById(productIds, {
+    maxRetries: 5, // 6 total attempts for build stability
+    timeoutMs: 45000, // 45 second timeout
+    baseDelay: 2000, // 2 second base delay
+  });
+};
+
+// 🛡️ ULTRA-SAFE BUILD VERSION
+export const fetchRelatedProductsByIdUltraSafe = async (
+  productIds: number[]
+): Promise<RelatedProduct[]> => {
+  return fetchRelatedProductsById(productIds, {
+    maxRetries: 8, // 9 total attempts
+    timeoutMs: 60000, // 1 minute timeout
+    baseDelay: 3000, // 3 second base delay
+  });
+};
 // --------------------------- FETCH RELATED PRODUCT IDs ENDS ------------------------------------------------------------
 
 // --------------------------- FETCH POLE SHAPE STYLES FROM ACF STARTS ------------------------------------------------------------
