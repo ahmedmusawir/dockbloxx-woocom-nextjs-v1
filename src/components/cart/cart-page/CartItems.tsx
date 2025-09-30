@@ -6,18 +6,17 @@ import { Button } from "@/components/ui/button";
 import { useCartStore } from "@/store/useCartStore";
 import { useNumberedPaginationStore } from "@/store/useNumberedPaginationStore";
 import { useProductStore } from "@/store/useProductStore";
-import { ChevronDownIcon } from "@heroicons/react/16/solid";
-import {
-  CheckIcon,
-  ClockIcon,
-  QuestionMarkCircleIcon,
-  XMarkIcon as XMarkIconMini,
-} from "@heroicons/react/20/solid";
+import { XMarkIcon as XMarkIconMini } from "@heroicons/react/20/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Image from "next/image";
 import { CartItem } from "@/types/cart";
+
+// --- START: MODIFICATIONS ---
+import { useCheckoutStore } from "@/store/useCheckoutStore";
+import { parseCouponMeta } from "@/lib/couponUtils";
+// --- END: MODIFICATIONS ---
 
 const CartItems = () => {
   const router = useRouter();
@@ -31,6 +30,9 @@ const CartItems = () => {
     setCartItems,
     makeKey,
   } = useCartStore();
+
+  // Access Checkout store to get the currently applied coupon
+  const { coupon } = useCheckoutStore((state) => state.checkoutData);
 
   // Closes the sidebar Cart Slide
   useEffect(() => {
@@ -98,105 +100,134 @@ const CartItems = () => {
             <h2 id="cart-heading" className="sr-only">
               Items in your shopping cart
             </h2>
-
             <ul
               role="list"
               className="divide-y divide-gray-200 border-b border-t border-gray-200"
             >
-              {cartItems.map((product) => (
-                <li key={makeKey(product)} className="flex py-6 sm:py-10">
-                  <div className="shrink-0">
-                    <CartImage
-                      cartItem={product}
-                      imgHeight={200}
-                      imgWidth={200}
-                    />
-                  </div>
+              {cartItems.map((product) => {
+                // --- START: NEW LOGIC ---
+                // Determine if this specific product is limited to a quantity of one
+                let isLimitedToOne = false;
+                if (coupon) {
+                  const meta = parseCouponMeta(coupon);
+                  if (
+                    meta.percentPerProduct === 100 &&
+                    coupon.products_included.includes(product.id)
+                  ) {
+                    isLimitedToOne = true;
+                  }
+                }
 
-                  <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
-                    <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
-                      <div>
-                        <div className="flex justify-between">
-                          <h3 className="text-sm">
-                            <Link
-                              href={`/shop/${product.slug}`}
-                              className="text-xl font-bold text-gray-700 hover:text-gray-800"
-                            >
-                              {product.name}
-                            </Link>
-                          </h3>
-                        </div>
-                        <p className="my-2 text-xs text-gray-500 font-bold">
-                          {product.variations
-                            .filter((c) => c.value !== "Unknown")
-                            .map((c) => c.value)
-                            .join(" · ")}
-                        </p>
-                        <div className="mt-1 flex text-sm">
-                          <p className="text-gray-500">
-                            {product.categories.map((cat) => cat.name)}
+                return (
+                  <li key={makeKey(product)} className="flex py-6 sm:py-10">
+                    <div className="shrink-0">
+                      <CartImage
+                        cartItem={product}
+                        imgHeight={200}
+                        imgWidth={200}
+                      />
+                    </div>
+
+                    <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                      <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                        <div>
+                          <div className="flex justify-between">
+                            <h3 className="text-sm">
+                              <Link
+                                href={`/shop/${product.slug}`}
+                                className="text-xl font-bold text-gray-700 hover:text-gray-800"
+                              >
+                                {product.name}
+                              </Link>
+                            </h3>
+                          </div>
+                          <p className="my-2 text-xs text-gray-500 font-bold">
+                            {product.variations
+                              .filter((c) => c.value !== "Unknown")
+                              .map((c) => c.value)
+                              .join(" · ")}
+                          </p>
+                          <div className="mt-1 flex text-sm">
+                            <p className="text-gray-500">
+                              {product.categories.map((cat) => cat.name)}
+                            </p>
+                          </div>
+                          <p className="mt-1 text-xl font-bold text-gray-900">
+                            ${product.price}.00
                           </p>
                         </div>
-                        <p className="mt-1 text-xl font-bold text-gray-900">
-                          ${product.price}.00
-                        </p>
-                      </div>
 
-                      <div className="mt-4 sm:mt-0 sm:pr-9">
-                        <div className="flex items-center gap-2">
-                          {/* Decrease Button */}
-                          <button
-                            onClick={() =>
-                              handleQuantityChange(
-                                product,
-                                Math.max(1, product.quantity - 1)
-                              )
-                            }
-                            aria-label={`Decrease quantity of ${product.name}`}
-                            className="text-2xl flex h-12 w-12 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
-                          >
-                            −
-                          </button>
+                        <div className="mt-4 sm:mt-0 sm:pr-9">
+                          <div className="flex items-center gap-2">
+                            {/* Decrease Button */}
+                            <button
+                              onClick={() =>
+                                handleQuantityChange(
+                                  product,
+                                  Math.max(1, product.quantity - 1)
+                                )
+                              }
+                              aria-label={`Decrease quantity of ${product.name}`}
+                              className="text-2xl flex h-12 w-12 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-lime-600"
+                            >
+                              −
+                            </button>
 
-                          {/* Quantity Display */}
-                          <span className="w-6 text-center text-base font-medium text-gray-900">
-                            {product.quantity}
-                          </span>
+                            {/* Quantity Display */}
+                            <span className="w-6 text-center text-base font-medium text-gray-900">
+                              {product.quantity}
+                            </span>
 
-                          {/* Increase Button */}
-                          <button
-                            onClick={() =>
-                              handleQuantityChange(
-                                product,
-                                product.quantity + 1
-                              )
-                            }
-                            aria-label={`Increase quantity of ${product.name}`}
-                            className="text-2xl flex h-12 w-12 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                          >
-                            +
-                          </button>
-                        </div>
+                            {/* --- START: MODIFIED INCREASE BUTTON --- */}
+                            <button
+                              onClick={() =>
+                                handleQuantityChange(
+                                  product,
+                                  product.quantity + 1
+                                )
+                              }
+                              disabled={isLimitedToOne}
+                              aria-label={`Increase quantity of ${product.name}`}
+                              className={`text-2xl flex h-12 w-12 items-center justify-center rounded-full border-2 border-lime-500 bg-white text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-indigo-600 ${
+                                isLimitedToOne
+                                  ? "opacity-50 cursor-not-allowed"
+                                  : ""
+                              }`}
+                            >
+                              +
+                            </button>
+                            {/* --- END: MODIFIED INCREASE BUTTON --- */}
+                          </div>
 
-                        <div className="absolute right-0 top-0">
-                          <button
-                            type="button"
-                            className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
-                            onClick={() => handleRemoveCartItem(product)}
-                          >
-                            <span className="sr-only">Remove</span>
-                            <XMarkIconMini
-                              aria-hidden="true"
-                              className="size-8"
-                            />
-                          </button>
+                          {/* --- START: NEW HELPER TEXT --- */}
+                          {isLimitedToOne && (
+                            <p className="text-xs text-center text-gray-500 mt-2">
+                              Limited to one with coupon.
+                            </p>
+                          )}
+                          {/* --- END: NEW HELPER TEXT --- */}
+
+                          <div className="absolute right-0 top-0">
+                            <button
+                              type="button"
+                              className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
+                              onClick={() => handleRemoveCartItem(product)}
+                            >
+                              <span className="sr-only">Remove</span>
+                              <XMarkIconMini
+                                aria-hidden="true"
+                                className="size-8"
+                              />
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
             </ul>
+            // --- END: MODIFICATIONS ---
           </section>
         )}
         {/* ORDER SUMMARY */}

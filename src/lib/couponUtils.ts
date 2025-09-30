@@ -96,7 +96,35 @@ export const validateCoupon = (
     }
   }
 
-  // 2. Expiration Check
+  // --- START: UPGRADED LOGIC FOR QUANTITY LIMIT ---
+
+  // 2. If it's a 100% "FREE" coupon, check the TOTAL quantity of eligible items.
+  if (meta.percentPerProduct === 100) {
+    // Find all items in the cart that are eligible for this coupon
+    const eligibleItems = checkoutData.cartItems.filter((item) =>
+      coupon.products_included.includes(item.id)
+    );
+
+    // Calculate the total quantity of these eligible items
+    const totalEligibleQuantity = eligibleItems.reduce(
+      (sum, item) => sum + item.quantity,
+      0
+    );
+
+    if (totalEligibleQuantity > 1) {
+      console.warn(
+        `Coupon ${coupon.code} cannot be applied. Total quantity of eligible free items is ${totalEligibleQuantity}.`
+      );
+      return {
+        isValid: false,
+        message: "Free item coupons are limited to a total quantity of one.",
+      };
+    }
+  }
+
+  // --- END: UPGRADED LOGIC ---
+
+  // 2.2 Expiration Check
   if (coupon.expires_on && new Date() > new Date(coupon.expires_on)) {
     console.log("Validation FAILED: Coupon is expired.");
     return { isValid: false, message: "This coupon has expired." };
