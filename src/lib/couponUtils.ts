@@ -10,6 +10,60 @@ import { CheckoutData } from "@/types/checkout";
 import { CartItem } from "@/types/cart";
 import { Coupon } from "@/types/coupon";
 
+// --- START: NEW CODE FOR PHASE 1 ---
+
+export interface CouponMeta {
+  percentPerProduct?: number;
+  allowedEmails?: string[];
+}
+
+/**
+ * Parses the raw meta_data from a Coupon object into a clean, typed object.
+ * This acts as an anti-corruption layer to protect our app from API changes.
+ * @param coupon - The raw coupon object from the API.
+ * @returns {CouponMeta} A structured object with our custom coupon properties.
+ */
+export function parseCouponMeta(coupon: Coupon): CouponMeta {
+  const meta: CouponMeta = {};
+
+  // Ensure meta_data exists and is an array before iterating
+  if (!Array.isArray(coupon.meta_data)) {
+    return meta;
+  }
+
+  coupon.meta_data.forEach(({ key, value }) => {
+    if (key === "_dockbloxx_discount_percent_per_product") {
+      const percentValue = Number(value);
+      if (!isNaN(percentValue)) {
+        meta.percentPerProduct = percentValue;
+      }
+    }
+
+    if (key === "_dockbloxx_allowed_emails") {
+      // Handle both array (from our plugin) and comma-separated string (manual entry)
+      const emails = Array.isArray(value)
+        ? value
+        : String(value)
+            .split(",")
+            .map((v) => v.trim());
+
+      // Filter out any empty strings and convert to lowercase
+      meta.allowedEmails = emails
+        .filter((email) => email)
+        .map((email) => email.toLowerCase());
+    }
+  });
+
+  return meta;
+}
+
+// --- END: NEW CODE FOR PHASE 1 ---
+
+/**
+ * Validates a coupon based on expiry date, min/max spend, and product/category restrictions.
+ * ... (rest of the file remains the same for now) ...
+ */
+
 /**
  * Validates a coupon based on expiry date, min/max spend, and product/category restrictions.
  * @param coupon - The coupon object from the available coupon list.
