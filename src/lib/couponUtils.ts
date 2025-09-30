@@ -74,6 +74,24 @@ export const validateCoupon = (
   coupon: Coupon,
   checkoutData: CheckoutData
 ): { isValid: boolean; message: string } => {
+  // --- START: NEW CODE FOR PHASE 2 ---
+
+  const meta = parseCouponMeta(coupon);
+  const userEmail = checkoutData.billing.email?.trim().toLowerCase();
+
+  // 1. Check for email restrictions first.
+  if (meta.allowedEmails && meta.allowedEmails.length > 0) {
+    if (!userEmail || !meta.allowedEmails.includes(userEmail)) {
+      console.warn("Email not valid for coupon:", coupon.code, userEmail);
+      return {
+        isValid: false,
+        message: "This coupon is restricted to specific users.",
+      };
+    }
+  }
+
+  // --- END: NEW CODE FOR PHASE 2 ---
+
   const now = new Date();
   const expiryDate = new Date(coupon.expires_on);
 
@@ -172,7 +190,7 @@ export const validateCoupon = (
   }
 
   // 5. Validate per-user usage limit
-  const userEmail = checkoutData.billing.email.trim().toLowerCase();
+  // const userEmail = checkoutData.billing.email.trim().toLowerCase();
   const userUsageCount = coupon.used_by.filter(
     (email) => email.toLowerCase() === userEmail
   ).length;
