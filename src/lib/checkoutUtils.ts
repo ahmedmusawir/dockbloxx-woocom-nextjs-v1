@@ -29,6 +29,7 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   let updatedCartItems = [...checkoutData.cartItems].map((item) => ({
     ...item,
     isFree: false,
+    discountApplied: 0,
   }));
 
   // --- START: NEW LOGIC BLOCK FOR PHASE 3 ---

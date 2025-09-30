@@ -169,6 +169,7 @@ export const fetchCouponByCode = async (
       usage_limit_per_user: coupon.usage_limit_per_user,
       used_by: coupon.used_by || [], // NEW: Track which users have used the coupon
       expires_on: coupon.date_expires,
+      meta_data: coupon.meta_data,
     };
   } catch (error) {
     console.error("Error fetching coupon:", error);

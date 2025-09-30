@@ -74,15 +74,21 @@ export const validateCoupon = (
   coupon: Coupon,
   checkoutData: CheckoutData
 ): { isValid: boolean; message: string } => {
-  // --- START: NEW CODE FOR PHASE 2 ---
-
   const meta = parseCouponMeta(coupon);
   const userEmail = checkoutData.billing.email?.trim().toLowerCase();
 
-  // 1. Check for email restrictions first.
+  console.log("--- [COUPON VALIDATION TRACE] ---");
+  console.log("Coupon Code:", coupon.code);
+  console.log("User Email for Check:", userEmail);
+  console.log("Allowed Emails from Meta:", meta.allowedEmails);
+
+  // 1. Email Restriction Check (Highest Priority)
   if (meta.allowedEmails && meta.allowedEmails.length > 0) {
-    if (!userEmail || !meta.allowedEmails.includes(userEmail)) {
-      console.warn("Email not valid for coupon:", coupon.code, userEmail);
+    const isMatch = userEmail && meta.allowedEmails.includes(userEmail);
+    console.log("Email check result - Is Match:", isMatch);
+
+    if (!isMatch) {
+      console.log("Validation FAILED: Email not on allowed list.");
       return {
         isValid: false,
         message: "This coupon is restricted to specific users.",
@@ -90,18 +96,13 @@ export const validateCoupon = (
     }
   }
 
-  // --- END: NEW CODE FOR PHASE 2 ---
-
-  const now = new Date();
-  const expiryDate = new Date(coupon.expires_on);
-
-  // 1. Check if coupon is expired
-  if (now > expiryDate) {
-    console.warn("Coupon expired:", coupon.code);
+  // 2. Expiration Check
+  if (coupon.expires_on && new Date() > new Date(coupon.expires_on)) {
+    console.log("Validation FAILED: Coupon is expired.");
     return { isValid: false, message: "This coupon has expired." };
   }
 
-  // 2. Validate min/max spend requirements
+  // 3. Validate min/max spend requirements
   const subtotal = checkoutData.subtotal;
   const minSpend = parseFloat(coupon.min_spend);
   const maxSpend = parseFloat(coupon.max_spend);
@@ -125,7 +126,7 @@ export const validateCoupon = (
     };
   }
 
-  // 3. Validate product/category restrictions
+  // 4. Validate product/category restrictions
   const cartProductIds = checkoutData.cartItems.map((item) => item.id);
   const cartCategoryIds = checkoutData.cartItems.flatMap(
     (item) => item.categories
@@ -176,7 +177,7 @@ export const validateCoupon = (
     };
   }
 
-  // 4. Validate global usage limit
+  // 5. Validate global usage limit
   if (
     coupon.usage_count &&
     coupon.usage_limit &&
@@ -189,7 +190,7 @@ export const validateCoupon = (
     };
   }
 
-  // 5. Validate per-user usage limit
+  // 6. Validate per-user usage limit
   // const userEmail = checkoutData.billing.email.trim().toLowerCase();
   const userUsageCount = coupon.used_by.filter(
     (email) => email.toLowerCase() === userEmail
