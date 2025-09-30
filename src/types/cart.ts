@@ -22,4 +22,6 @@ export interface CartItem {
     value: string; // User-entered value
   }>; // User-defined fields
   metadata?: Record<string, any>; // Additional metadata (e.g., SKU, stock info)
+  isFree?: boolean; // This should already be here from our previous step
+  discountApplied?: number; // <-- ADD THIS LINE
 }

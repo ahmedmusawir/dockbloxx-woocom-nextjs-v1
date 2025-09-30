@@ -56,6 +56,9 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
           // Use our new, guaranteed-to-be-a-number constant for the calculation
           const itemDiscount = (itemTotal * discountPercent) / 100;
 
+          // Add the discount amount to the item itself
+          item.discountApplied = itemDiscount;
+
           // If discount is 100%, flag the item as free for the UI
           if (discountPercent === 100) {
             item.isFree = true;
