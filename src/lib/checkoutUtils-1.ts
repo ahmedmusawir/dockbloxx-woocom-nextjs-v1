@@ -99,14 +99,6 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   let shippingCost = 0;
   let shippingMethod = checkoutData.shippingMethod;
 
-  console.log("💰 [updateCheckoutTotals] Shipping calculation START:", {
-    hasCoupon: !!coupon,
-    couponFreeShipping: coupon?.free_shipping,
-    currentShippingMethod: checkoutData.shippingMethod,
-    subtotal,
-    hasAddress,
-  });
-
   if (coupon?.free_shipping) {
     shippingMethod = "free_shipping";
     shippingCost = 0;
@@ -134,15 +126,6 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
 
   // 4) Compute final total
   const total = subtotal + shippingCost - discountTotal;
-
-  console.log("💰 [updateCheckoutTotals] FINAL RESULT:", {
-    subtotal,
-    shippingCost,
-    shippingMethod,
-    discountTotal,
-    total,
-    hasCoupon: !!coupon,
-  });
 
   // 5) Return the updated CheckoutData object
   return {

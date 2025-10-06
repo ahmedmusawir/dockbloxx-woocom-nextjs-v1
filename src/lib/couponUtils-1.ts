@@ -8,9 +8,14 @@
 
 import { CheckoutData } from "@/types/checkout";
 import { CartItem } from "@/types/cart";
-import { Coupon, CouponMeta } from "@/types/coupon";
+import { Coupon } from "@/types/coupon";
 
 // --- START: NEW CODE FOR PHASE 1 ---
+
+export interface CouponMeta {
+  percentPerProduct?: number;
+  allowedEmails?: string[];
+}
 
 /**
  * Parses the raw meta_data from a Coupon object into a clean, typed object.
@@ -47,294 +52,12 @@ export function parseCouponMeta(coupon: Coupon): CouponMeta {
         .filter((email) => email)
         .map((email) => email.toLowerCase());
     }
-
-    // NEW: Extract expiry time (HH:MM format)
-    if (key === "_expiry_time") {
-      meta.expiryTime = String(value).trim();
-    }
-
-    // NEW: Extract expiry timezone (IANA timezone string)
-    // if (key === "_expiry_timezone") {
-    //   meta.expiryTimezone = String(value).trim();
-    // }
-
-    // NEW: Extract expiry timezone (IANA timezone string)
-    if (key === "_expiry_timezone") {
-      // Handle format: "[UTC+08:00] Asia/Kuala_Lumpur" or just "Asia/Kuala_Lumpur"
-      const rawTimezone = String(value).trim();
-
-      // Extract just the IANA timezone part (after the ] if it exists)
-      const match = rawTimezone.match(/\]\s*(.+)$/);
-      meta.expiryTimezone = match ? match[1].trim() : rawTimezone;
-    }
   });
 
   return meta;
 }
 
-/**
- * DEBUG ONLY: Comprehensive timezone debugging
- * Shows all timezone-related information in one place
- */
-export function debugTimezoneInfo(coupon: Coupon, meta: CouponMeta): void {
-  console.log("\n" + "=".repeat(80));
-  console.log("🔍 TIMEZONE DEBUG REPORT - " + coupon.code);
-  console.log("=".repeat(80));
-
-  // 1. What the API gave us
-  console.log("\n📦 RAW DATA FROM API:");
-  console.log("  - expires_on:", coupon.expires_on);
-  console.log("  - meta_data:", coupon.meta_data);
-
-  // 2. What we parsed
-  console.log("\n🔧 PARSED META:");
-  console.log("  - expiryTime:", meta.expiryTime);
-  console.log("  - expiryTimezone:", meta.expiryTimezone);
-
-  // 3. Current time in different formats
-  const now = new Date();
-  console.log("\n⏰ CURRENT TIME (Browser):");
-  console.log("  - Browser local time:", now.toString());
-  console.log("  - UTC time:", now.toUTCString());
-  console.log("  - ISO string:", now.toISOString());
-
-  // 4. Current time in the coupon's timezone
-  if (meta.expiryTimezone) {
-    try {
-      const formatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: meta.expiryTimezone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-        timeZoneName: "short",
-      });
-
-      const timeInCouponTZ = formatter.format(now);
-      console.log(
-        "\n🌍 CURRENT TIME IN COUPON TIMEZONE (" + meta.expiryTimezone + "):"
-      );
-      console.log("  - Formatted:", timeInCouponTZ);
-
-      // Get individual parts
-      const parts = formatter.formatToParts(now);
-      const year = parts.find((p) => p.type === "year")?.value;
-      const month = parts.find((p) => p.type === "month")?.value;
-      const day = parts.find((p) => p.type === "day")?.value;
-      const hour = parts.find((p) => p.type === "hour")?.value;
-      const minute = parts.find((p) => p.type === "minute")?.value;
-      const second = parts.find((p) => p.type === "second")?.value;
-
-      console.log("  - Year:", year);
-      console.log("  - Month:", month);
-      console.log("  - Day:", day);
-      console.log("  - Hour:", hour);
-      console.log("  - Minute:", minute);
-      console.log("  - Second:", second);
-    } catch (error) {
-      console.log("  ❌ Error formatting time in timezone:", error);
-    }
-  }
-
-  // 5. Expiry time breakdown
-  console.log("\n📅 COUPON EXPIRY:");
-  console.log("  - Date:", coupon.expires_on);
-  console.log("  - Time:", meta.expiryTime || "NOT SET");
-  console.log("  - Timezone:", meta.expiryTimezone || "NOT SET");
-  console.log(
-    "  - Combined:",
-    `${coupon.expires_on}T${meta.expiryTime || "00:00"}:00`
-  );
-
-  // 6. Server location (if we can detect it)
-  console.log("\n🖥️ BROWSER INFO:");
-  console.log("  - Timezone offset (minutes):", now.getTimezoneOffset());
-  console.log(
-    "  - Detected timezone:",
-    Intl.DateTimeFormat().resolvedOptions().timeZone
-  );
-
-  console.log("\n" + "=".repeat(80) + "\n");
-}
 // --- END: NEW CODE FOR PHASE 1 ---
-
-/**
- * Checks if a coupon is expired using timezone-aware validation.
- * Combines date + time + timezone to perform accurate UTC-based comparison.
- *
- * @param coupon - The coupon object with expires_on date
- * @param meta - Parsed meta data containing expiryTime and expiryTimezone
- * @returns {boolean} - true if expired, false if still valid
- */
-/**
- * Checks if a coupon is expired using timezone-aware validation.
- * Combines date + time + timezone to perform accurate UTC-based comparison.
- *
- * @param coupon - The coupon object with expires_on date
- * @param meta - Parsed meta data containing expiryTime and expiryTimezone
- * @returns {boolean} - true if expired, false if still valid
- */
-
-/**
- * Checks if a coupon is expired using timezone-aware validation.
- * Combines date + time + timezone to perform accurate UTC-based comparison.
- *
- * @param coupon - The coupon object with expires_on date
- * @param meta - Parsed meta data containing expiryTime and expiryTimezone
- * @returns {boolean} - true if expired, false if still valid
- */
-export function isCouponExpiredByTimezone(
-  coupon: Coupon,
-  meta: CouponMeta
-): boolean {
-  // If no expiry date is set, coupon never expires
-  if (!coupon.expires_on) {
-    return false;
-  }
-
-  // If timezone data is missing, fall back to date-only check
-  if (!meta.expiryTime || !meta.expiryTimezone) {
-    console.warn(
-      `[Coupon ${coupon.code}] Missing timezone data. Falling back to date-only check.`
-    );
-    return new Date() > new Date(coupon.expires_on);
-  }
-
-  try {
-    const expiryDate = coupon.expires_on; // "2025-10-02"
-    const expiryTime = meta.expiryTime; // "15:55"
-    const timezone = meta.expiryTimezone; // "Asia/Kuala_Lumpur"
-
-    // 🔍 DEBUG: Log raw values from meta_data
-    console.log(`[DEBUG - ${coupon.code}] Raw meta_data:`, coupon.meta_data);
-    console.log(`[DEBUG - ${coupon.code}] Parsed meta:`, meta);
-    console.log(`[DEBUG - ${coupon.code}] Expiry Date:`, expiryDate);
-    console.log(`[DEBUG - ${coupon.code}] Expiry Time:`, expiryTime);
-    console.log(`[DEBUG - ${coupon.code}] Timezone:`, timezone);
-
-    // Combine into ISO-like string
-    const dateTimeString = `${expiryDate}T${expiryTime}:00`;
-
-    // Get current time in the target timezone as a parseable string
-    const formatter = new Intl.DateTimeFormat("en-CA", {
-      timeZone: timezone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-
-    const parts = formatter.formatToParts(new Date());
-    const nowYear = parts.find((p) => p.type === "year")?.value;
-    const nowMonth = parts.find((p) => p.type === "month")?.value;
-    const nowDay = parts.find((p) => p.type === "day")?.value;
-    const nowHour = parts.find((p) => p.type === "hour")?.value;
-    const nowMinute = parts.find((p) => p.type === "minute")?.value;
-    const nowSecond = parts.find((p) => p.type === "second")?.value;
-
-    // 🔍 DEBUG: Log all parsed values before Date construction
-    console.log("🔢 VALUES BEFORE DATE CONSTRUCTION:", {
-      nowYear,
-      nowMonth,
-      nowDay,
-      nowHour,
-      nowMinute,
-      nowSecond,
-      expiryYear: expiryDate.split("-")[0],
-      expiryMonth: expiryDate.split("-")[1],
-      expiryDay: expiryDate.split("-")[2],
-      expiryHour: expiryTime.split(":")[0],
-      expiryMinute: expiryTime.split(":")[1],
-    });
-
-    // Parse expiry date components
-    const [expiryYear, expiryMonth, expiryDay] = expiryDate
-      .split("-")
-      .map(Number);
-    const [expiryHour, expiryMinute] = expiryTime.split(":").map(Number);
-
-    // Create Date objects using UTC to avoid timezone issues
-    const nowDate = new Date(
-      parseInt(String(nowYear)),
-      parseInt(String(nowMonth)) - 1, // JS months are 0-indexed
-      parseInt(String(nowDay)),
-      parseInt(String(nowHour)),
-      parseInt(String(nowMinute)),
-      parseInt(String(nowSecond))
-    );
-
-    const expiryDateObj = new Date(
-      parseInt(String(expiryYear)),
-      parseInt(String(expiryMonth)) - 1, // JS months are 0-indexed
-      parseInt(String(expiryDay)),
-      parseInt(String(expiryHour)),
-      parseInt(String(expiryMinute)),
-      0
-    );
-
-    // Create Date objects using UTC to avoid timezone issues
-    // const nowDate = new Date(
-    //   Number(nowYear),
-    //   Number(nowMonth) - 1, // JS months are 0-indexed
-    //   Number(nowDay),
-    //   Number(nowHour),
-    //   Number(nowMinute),
-    //   Number(nowSecond)
-    // );
-
-    // const expiryDateObj = new Date(
-    //   expiryYear,
-    //   expiryMonth - 1, // JS months are 0-indexed
-    //   expiryDay,
-    //   expiryHour,
-    //   expiryMinute,
-    //   0
-    // );
-
-    // Compare timestamps
-    const isExpired = nowDate.getTime() > expiryDateObj.getTime();
-
-    console.log(`[Coupon Expiry Check - ${coupon.code}]`, {
-      expiryDate,
-      expiryTime,
-      timezone,
-      nowParts: {
-        year: nowYear,
-        month: nowMonth,
-        day: nowDay,
-        hour: nowHour,
-        minute: nowMinute,
-      },
-      expiryParts: {
-        year: expiryYear,
-        month: expiryMonth,
-        day: expiryDay,
-        hour: expiryHour,
-        minute: expiryMinute,
-      },
-      nowTimestamp: nowDate.getTime(),
-      expiryTimestamp: expiryDateObj.getTime(),
-      nowDate: nowDate.toISOString(),
-      expiryDateObj: expiryDateObj.toISOString(),
-      isExpired,
-    });
-
-    return isExpired;
-  } catch (error) {
-    console.error(
-      `[Coupon ${coupon.code}] Error parsing timezone data:`,
-      error
-    );
-    // Fall back to date-only check on error
-    return new Date() > new Date(coupon.expires_on);
-  }
-}
 
 /**
  * Validates a coupon based on expiry date, min/max spend, and product/category restrictions.
@@ -352,10 +75,6 @@ export const validateCoupon = (
   checkoutData: CheckoutData
 ): { isValid: boolean; message: string } => {
   const meta = parseCouponMeta(coupon);
-
-  // 🔍 DEBUG: Show comprehensive timezone info
-  debugTimezoneInfo(coupon, meta);
-
   const userEmail = checkoutData.billing.email?.trim().toLowerCase();
 
   console.log("--- [COUPON VALIDATION TRACE] ---");
@@ -405,9 +124,9 @@ export const validateCoupon = (
 
   // --- END: UPGRADED LOGIC ---
 
-  // 2.2 Expiration Check (Timezone-Aware)
-  if (isCouponExpiredByTimezone(coupon, meta)) {
-    console.log("Validation FAILED: Coupon is expired (timezone-aware check).");
+  // 2.2 Expiration Check
+  if (coupon.expires_on && new Date() > new Date(coupon.expires_on)) {
+    console.log("Validation FAILED: Coupon is expired.");
     return { isValid: false, message: "This coupon has expired." };
   }
 
@@ -625,12 +344,10 @@ export function calculateCouponDiscount(
   cartItems: CartItem[],
   subtotal: number
 ): number {
-  // Parse meta data for timezone-aware expiry check
-  const meta = parseCouponMeta(coupon);
-
-  // Use timezone-aware expiry check
-  if (isCouponExpiredByTimezone(coupon, meta)) {
-    console.warn(`Coupon ${coupon.code} is expired (timezone-aware check).`);
+  const now = new Date();
+  const expiryDate = new Date(coupon.expires_on);
+  if (now > expiryDate) {
+    console.warn(`Coupon ${coupon.code} is expired.`);
     return 0;
   }
 

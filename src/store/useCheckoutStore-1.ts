@@ -235,51 +235,16 @@ export const useCheckoutStore = create<CheckoutStore>()(
         console.log("After applying coupon:", get().checkoutData.coupon);
       },
 
-      // removeCoupon: () =>
-      //   set((state) => {
-      //     // Create an updated checkout data object with the coupon removed.
-      //     const updatedCheckoutData = {
-      //       ...state.checkoutData,
-      //       coupon: null,
-      //     };
-
-      //     // Recalculate everything using our single source of truth.
-      //     const newTotals = updateCheckoutTotals(updatedCheckoutData);
-
-      //     return { checkoutData: newTotals };
-      //   }),
-
       removeCoupon: () =>
         set((state) => {
-          console.log("🗑️ [removeCoupon] BEFORE removal:", {
-            coupon: state.checkoutData.coupon,
-            shippingCost: state.checkoutData.shippingCost,
-            shippingMethod: state.checkoutData.shippingMethod,
-            subtotal: state.checkoutData.subtotal,
-            total: state.checkoutData.total,
-          });
-
           // Create an updated checkout data object with the coupon removed.
           const updatedCheckoutData = {
             ...state.checkoutData,
             coupon: null,
           };
 
-          console.log(
-            "🗑️ [removeCoupon] After setting coupon to null:",
-            updatedCheckoutData
-          );
-
           // Recalculate everything using our single source of truth.
           const newTotals = updateCheckoutTotals(updatedCheckoutData);
-
-          console.log("🗑️ [removeCoupon] AFTER recalculation:", {
-            coupon: newTotals.coupon,
-            shippingCost: newTotals.shippingCost,
-            shippingMethod: newTotals.shippingMethod,
-            subtotal: newTotals.subtotal,
-            total: newTotals.total,
-          });
 
           return { checkoutData: newTotals };
         }),

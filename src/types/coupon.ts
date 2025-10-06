@@ -6,6 +6,12 @@ export interface CouponMetaData {
   key: string;
   value: any; // 'value' can be a string, array, or other types
 }
+export interface CouponMeta {
+  percentPerProduct?: number;
+  allowedEmails?: string[];
+  expiryTime?: string;      // NEW: HH:MM format (e.g., "23:59")
+  expiryTimezone?: string;  // NEW: IANA timezone (e.g., "America/New_York")
+}
 
 export interface Coupon {
   id: number;

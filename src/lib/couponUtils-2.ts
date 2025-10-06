@@ -54,129 +54,15 @@ export function parseCouponMeta(coupon: Coupon): CouponMeta {
     }
 
     // NEW: Extract expiry timezone (IANA timezone string)
-    // if (key === "_expiry_timezone") {
-    //   meta.expiryTimezone = String(value).trim();
-    // }
-
-    // NEW: Extract expiry timezone (IANA timezone string)
     if (key === "_expiry_timezone") {
-      // Handle format: "[UTC+08:00] Asia/Kuala_Lumpur" or just "Asia/Kuala_Lumpur"
-      const rawTimezone = String(value).trim();
-
-      // Extract just the IANA timezone part (after the ] if it exists)
-      const match = rawTimezone.match(/\]\s*(.+)$/);
-      meta.expiryTimezone = match ? match[1].trim() : rawTimezone;
+      meta.expiryTimezone = String(value).trim();
     }
   });
 
   return meta;
 }
 
-/**
- * DEBUG ONLY: Comprehensive timezone debugging
- * Shows all timezone-related information in one place
- */
-export function debugTimezoneInfo(coupon: Coupon, meta: CouponMeta): void {
-  console.log("\n" + "=".repeat(80));
-  console.log("🔍 TIMEZONE DEBUG REPORT - " + coupon.code);
-  console.log("=".repeat(80));
-
-  // 1. What the API gave us
-  console.log("\n📦 RAW DATA FROM API:");
-  console.log("  - expires_on:", coupon.expires_on);
-  console.log("  - meta_data:", coupon.meta_data);
-
-  // 2. What we parsed
-  console.log("\n🔧 PARSED META:");
-  console.log("  - expiryTime:", meta.expiryTime);
-  console.log("  - expiryTimezone:", meta.expiryTimezone);
-
-  // 3. Current time in different formats
-  const now = new Date();
-  console.log("\n⏰ CURRENT TIME (Browser):");
-  console.log("  - Browser local time:", now.toString());
-  console.log("  - UTC time:", now.toUTCString());
-  console.log("  - ISO string:", now.toISOString());
-
-  // 4. Current time in the coupon's timezone
-  if (meta.expiryTimezone) {
-    try {
-      const formatter = new Intl.DateTimeFormat("en-US", {
-        timeZone: meta.expiryTimezone,
-        year: "numeric",
-        month: "2-digit",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: false,
-        timeZoneName: "short",
-      });
-
-      const timeInCouponTZ = formatter.format(now);
-      console.log(
-        "\n🌍 CURRENT TIME IN COUPON TIMEZONE (" + meta.expiryTimezone + "):"
-      );
-      console.log("  - Formatted:", timeInCouponTZ);
-
-      // Get individual parts
-      const parts = formatter.formatToParts(now);
-      const year = parts.find((p) => p.type === "year")?.value;
-      const month = parts.find((p) => p.type === "month")?.value;
-      const day = parts.find((p) => p.type === "day")?.value;
-      const hour = parts.find((p) => p.type === "hour")?.value;
-      const minute = parts.find((p) => p.type === "minute")?.value;
-      const second = parts.find((p) => p.type === "second")?.value;
-
-      console.log("  - Year:", year);
-      console.log("  - Month:", month);
-      console.log("  - Day:", day);
-      console.log("  - Hour:", hour);
-      console.log("  - Minute:", minute);
-      console.log("  - Second:", second);
-    } catch (error) {
-      console.log("  ❌ Error formatting time in timezone:", error);
-    }
-  }
-
-  // 5. Expiry time breakdown
-  console.log("\n📅 COUPON EXPIRY:");
-  console.log("  - Date:", coupon.expires_on);
-  console.log("  - Time:", meta.expiryTime || "NOT SET");
-  console.log("  - Timezone:", meta.expiryTimezone || "NOT SET");
-  console.log(
-    "  - Combined:",
-    `${coupon.expires_on}T${meta.expiryTime || "00:00"}:00`
-  );
-
-  // 6. Server location (if we can detect it)
-  console.log("\n🖥️ BROWSER INFO:");
-  console.log("  - Timezone offset (minutes):", now.getTimezoneOffset());
-  console.log(
-    "  - Detected timezone:",
-    Intl.DateTimeFormat().resolvedOptions().timeZone
-  );
-
-  console.log("\n" + "=".repeat(80) + "\n");
-}
 // --- END: NEW CODE FOR PHASE 1 ---
-
-/**
- * Checks if a coupon is expired using timezone-aware validation.
- * Combines date + time + timezone to perform accurate UTC-based comparison.
- *
- * @param coupon - The coupon object with expires_on date
- * @param meta - Parsed meta data containing expiryTime and expiryTimezone
- * @returns {boolean} - true if expired, false if still valid
- */
-/**
- * Checks if a coupon is expired using timezone-aware validation.
- * Combines date + time + timezone to perform accurate UTC-based comparison.
- *
- * @param coupon - The coupon object with expires_on date
- * @param meta - Parsed meta data containing expiryTime and expiryTimezone
- * @returns {boolean} - true if expired, false if still valid
- */
 
 /**
  * Checks if a coupon is expired using timezone-aware validation.
@@ -204,22 +90,28 @@ export function isCouponExpiredByTimezone(
   }
 
   try {
-    const expiryDate = coupon.expires_on; // "2025-10-02"
-    const expiryTime = meta.expiryTime; // "15:55"
-    const timezone = meta.expiryTimezone; // "Asia/Kuala_Lumpur"
+    // Parse the expiry date (YYYY-MM-DD format from WooCommerce)
+    const expiryDate = coupon.expires_on; // e.g., "2025-12-31"
+    const expiryTime = meta.expiryTime; // e.g., "23:59"
+    const timezone = meta.expiryTimezone; // e.g., "America/New_York"
 
-    // 🔍 DEBUG: Log raw values from meta_data
-    console.log(`[DEBUG - ${coupon.code}] Raw meta_data:`, coupon.meta_data);
-    console.log(`[DEBUG - ${coupon.code}] Parsed meta:`, meta);
-    console.log(`[DEBUG - ${coupon.code}] Expiry Date:`, expiryDate);
-    console.log(`[DEBUG - ${coupon.code}] Expiry Time:`, expiryTime);
-    console.log(`[DEBUG - ${coupon.code}] Timezone:`, timezone);
-
-    // Combine into ISO-like string
+    // Combine date and time into ISO-like string
     const dateTimeString = `${expiryDate}T${expiryTime}:00`;
 
-    // Get current time in the target timezone as a parseable string
-    const formatter = new Intl.DateTimeFormat("en-CA", {
+    // Create a date object in the coupon's timezone
+    // We'll use Intl.DateTimeFormat to convert to UTC
+    const parts = expiryDate.split("-");
+    const timeParts = expiryTime.split(":");
+
+    const year = parseInt(parts[0]);
+    const month = parseInt(parts[1]) - 1; // JS months are 0-indexed
+    const day = parseInt(parts[2]);
+    const hour = parseInt(timeParts[0]);
+    const minute = parseInt(timeParts[1]);
+
+    // Get UTC offset for the specified timezone at the expiry date/time
+    // This handles DST automatically
+    const formatter = new Intl.DateTimeFormat("en-US", {
       timeZone: timezone,
       year: "numeric",
       month: "2-digit",
@@ -230,98 +122,75 @@ export function isCouponExpiredByTimezone(
       hour12: false,
     });
 
-    const parts = formatter.formatToParts(new Date());
-    const nowYear = parts.find((p) => p.type === "year")?.value;
-    const nowMonth = parts.find((p) => p.type === "month")?.value;
-    const nowDay = parts.find((p) => p.type === "day")?.value;
-    const nowHour = parts.find((p) => p.type === "hour")?.value;
-    const nowMinute = parts.find((p) => p.type === "minute")?.value;
-    const nowSecond = parts.find((p) => p.type === "second")?.value;
+    // Create a date string in the target timezone
+    const targetDate = new Date(year, month, day, hour, minute, 0);
 
-    // 🔍 DEBUG: Log all parsed values before Date construction
-    console.log("🔢 VALUES BEFORE DATE CONSTRUCTION:", {
-      nowYear,
-      nowMonth,
-      nowDay,
-      nowHour,
-      nowMinute,
-      nowSecond,
-      expiryYear: expiryDate.split("-")[0],
-      expiryMonth: expiryDate.split("-")[1],
-      expiryDay: expiryDate.split("-")[2],
-      expiryHour: expiryTime.split(":")[0],
-      expiryMinute: expiryTime.split(":")[1],
+    // Format it in the target timezone to get the actual local time
+    const formatted = formatter.format(targetDate);
+
+    // Parse back to get UTC equivalent
+    // This is a workaround since we can't directly create dates in specific timezones
+    const localDateString = `${year}-${String(month + 1).padStart(
+      2,
+      "0"
+    )}-${String(day).padStart(2, "0")}T${String(hour).padStart(
+      2,
+      "0"
+    )}:${String(minute).padStart(2, "0")}:00`;
+
+    // Use a more reliable method: create the date and adjust for timezone offset
+    const utcDate = new Date(localDateString);
+
+    // Get the offset between the timezone and UTC
+    const utcFormatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: "UTC",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
     });
 
-    // Parse expiry date components
-    const [expiryYear, expiryMonth, expiryDay] = expiryDate
-      .split("-")
-      .map(Number);
-    const [expiryHour, expiryMinute] = expiryTime.split(":").map(Number);
+    const tzFormatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: timezone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    });
 
-    // Create Date objects using UTC to avoid timezone issues
-    const nowDate = new Date(
-      parseInt(String(nowYear)),
-      parseInt(String(nowMonth)) - 1, // JS months are 0-indexed
-      parseInt(String(nowDay)),
-      parseInt(String(nowHour)),
-      parseInt(String(nowMinute)),
-      parseInt(String(nowSecond))
-    );
+    // Create a reference date to calculate offset
+    const referenceDate = new Date(Date.UTC(year, month, day, hour, minute, 0));
+    const utcString = utcFormatter.format(referenceDate);
+    const tzString = tzFormatter.format(referenceDate);
 
-    const expiryDateObj = new Date(
-      parseInt(String(expiryYear)),
-      parseInt(String(expiryMonth)) - 1, // JS months are 0-indexed
-      parseInt(String(expiryDay)),
-      parseInt(String(expiryHour)),
-      parseInt(String(expiryMinute)),
-      0
-    );
+    // Calculate the actual expiry time in UTC
+    // This is a simplified approach - we'll use toLocaleString with the timezone
+    const expiryInTimezone = new Date(`${expiryDate}T${expiryTime}:00`);
 
-    // Create Date objects using UTC to avoid timezone issues
-    // const nowDate = new Date(
-    //   Number(nowYear),
-    //   Number(nowMonth) - 1, // JS months are 0-indexed
-    //   Number(nowDay),
-    //   Number(nowHour),
-    //   Number(nowMinute),
-    //   Number(nowSecond)
-    // );
+    // Convert to UTC by using toLocaleString
+    const expiryUTCString = expiryInTimezone.toLocaleString("en-US", {
+      timeZone: timezone,
+    });
+    const expiryUTC = new Date(expiryUTCString);
 
-    // const expiryDateObj = new Date(
-    //   expiryYear,
-    //   expiryMonth - 1, // JS months are 0-indexed
-    //   expiryDay,
-    //   expiryHour,
-    //   expiryMinute,
-    //   0
-    // );
+    // Get current time in UTC
+    const nowUTC = new Date();
 
-    // Compare timestamps
-    const isExpired = nowDate.getTime() > expiryDateObj.getTime();
+    // Compare
+    const isExpired = nowUTC > expiryUTC;
 
     console.log(`[Coupon Expiry Check - ${coupon.code}]`, {
       expiryDate,
       expiryTime,
       timezone,
-      nowParts: {
-        year: nowYear,
-        month: nowMonth,
-        day: nowDay,
-        hour: nowHour,
-        minute: nowMinute,
-      },
-      expiryParts: {
-        year: expiryYear,
-        month: expiryMonth,
-        day: expiryDay,
-        hour: expiryHour,
-        minute: expiryMinute,
-      },
-      nowTimestamp: nowDate.getTime(),
-      expiryTimestamp: expiryDateObj.getTime(),
-      nowDate: nowDate.toISOString(),
-      expiryDateObj: expiryDateObj.toISOString(),
+      expiryUTC: expiryUTC.toISOString(),
+      nowUTC: nowUTC.toISOString(),
       isExpired,
     });
 
@@ -352,10 +221,6 @@ export const validateCoupon = (
   checkoutData: CheckoutData
 ): { isValid: boolean; message: string } => {
   const meta = parseCouponMeta(coupon);
-
-  // 🔍 DEBUG: Show comprehensive timezone info
-  debugTimezoneInfo(coupon, meta);
-
   const userEmail = checkoutData.billing.email?.trim().toLowerCase();
 
   console.log("--- [COUPON VALIDATION TRACE] ---");
