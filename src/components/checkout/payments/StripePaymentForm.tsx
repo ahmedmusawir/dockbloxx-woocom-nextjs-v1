@@ -60,6 +60,15 @@ const StripePaymentForm = () => {
     }
 
     try {
+      console.log("🛒 [StripePaymentForm] Submitting order with cartItems:", 
+        checkoutData.cartItems.map(item => ({
+          id: item.id,
+          basePrice: item.basePrice,
+          discountApplied: item.discountApplied,
+          isFree: item.isFree
+        }))
+      );
+      
       const orderResponse = await createWoocomOrder(checkoutData);
       if (!orderResponse) {
         setError("Order submission failed. Please try again.");
@@ -69,13 +78,27 @@ const StripePaymentForm = () => {
 
       console.log("Order submission successful:", orderResponse);
 
+      // Calculate discount from either discount_total (standard coupons) or fee_lines (custom coupons)
+      let discountTotal = orderResponse.discount_total || "0";
+      
+      // If no discount_total, check for negative fees (custom coupons)
+      if (parseFloat(discountTotal) === 0 && orderResponse.fee_lines?.length > 0) {
+        const discountFee = orderResponse.fee_lines.find((fee: any) => 
+          parseFloat(fee.total) < 0
+        );
+        if (discountFee) {
+          // Fee is negative, so we take absolute value for display
+          discountTotal = Math.abs(parseFloat(discountFee.total)).toFixed(2);
+        }
+      }
+
       const orderObject: OrderSummary = {
         // Build simplified order object
         id: orderResponse.id,
         status: orderResponse.status,
         total: orderResponse.total,
         shippingCost: orderResponse.shipping_lines?.[0]?.total,
-        discountTotal: orderResponse.discount_total,
+        discountTotal, // Now handles both standard and custom coupons
         billing: orderResponse.billing,
         shipping: orderResponse.shipping,
         customer_note: orderResponse.customer_note,
@@ -86,7 +109,10 @@ const StripePaymentForm = () => {
           price: item.total,
           image: item.image?.src,
         })),
-        coupon: orderResponse.coupon_lines?.[0]?.code ?? null,
+        coupon: orderResponse.coupon_lines?.[0]?.code ?? 
+                (orderResponse.fee_lines?.[0]?.name?.includes('Coupon:') 
+                  ? orderResponse.fee_lines[0].name.replace('Coupon: ', '') 
+                  : null),
       };
 
       console.log("Simplified Order Object:", orderObject);

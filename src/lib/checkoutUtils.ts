@@ -108,15 +108,15 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   });
 
   if (coupon?.free_shipping) {
+    // Coupon grants free shipping
     shippingMethod = "free_shipping";
     shippingCost = 0;
   } else if (checkoutData.shippingMethod === "local_pickup") {
+    // User explicitly selected local pickup (preserve this choice)
     shippingMethod = "local_pickup";
     shippingCost = 0;
-  } else if (checkoutData.shippingMethod === "free_shipping") {
-    shippingMethod = "free_shipping";
-    shippingCost = 0;
   } else {
+    // No coupon or special method → Calculate flat rate based on subtotal
     if (subtotal < 100) {
       shippingMethod = "flat_rate";
       shippingCost = 10;

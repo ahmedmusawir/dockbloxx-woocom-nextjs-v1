@@ -13,10 +13,8 @@ import { useEffect } from "react";
 import Image from "next/image";
 import { CartItem } from "@/types/cart";
 
-// --- START: MODIFICATIONS ---
 import { useCheckoutStore } from "@/store/useCheckoutStore";
 import { parseCouponMeta } from "@/lib/couponUtils";
-// --- END: MODIFICATIONS ---
 
 const CartItems = () => {
   const router = useRouter();
@@ -227,7 +225,6 @@ const CartItems = () => {
                 );
               })}
             </ul>
-            // --- END: MODIFICATIONS ---
           </section>
         )}
         {/* ORDER SUMMARY */}

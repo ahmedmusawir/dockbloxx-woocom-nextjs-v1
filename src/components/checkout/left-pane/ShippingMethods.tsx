@@ -22,16 +22,17 @@ const ShippingMethods = ({
   const { flat_rates } = shippingData;
   const { setShippingMethod, checkoutData } = useCheckoutStore();
 
-  // Check if coupon has free_shipping, if so, forcibly add "Free Shipping" to the array
-  if (
-    checkoutData.coupon?.free_shipping &&
-    !availableMethods.includes("Free Shipping")
-  ) {
-    availableMethods.push("Free Shipping");
-    console.log(
-      "[ShippingMethods] Pushed 'Free Shipping' into availableMethods"
-    );
-  }
+  // Check if coupon has free_shipping, if so, add "Free Shipping" to the methods (without mutating)
+  const effectiveAvailableMethods = useMemo(() => {
+    if (
+      checkoutData.coupon?.free_shipping &&
+      !availableMethods.includes("Free Shipping")
+    ) {
+      console.log("[ShippingMethods] Adding 'Free Shipping' for coupon");
+      return [...availableMethods, "Free Shipping"]; // Create new array
+    }
+    return availableMethods;
+  }, [availableMethods, checkoutData.coupon?.free_shipping]);
 
   // Compute the applicable flat rate cost based on subtotal.
   const computedFlatRate = useMemo(() => {
@@ -68,22 +69,22 @@ const ShippingMethods = ({
       },
     ];
 
-    // Only include options that are available per availableMethods prop.
+    // Only include options that are available per effectiveAvailableMethods.
     return fullShippingOptions.filter((option) => {
       if (option.id === "flat_rate") {
-        return availableMethods.some((m) => m.includes("Flat Rate"));
+        return effectiveAvailableMethods.some((m) => m.includes("Flat Rate"));
       }
       if (option.id === "free_shipping") {
-        return availableMethods.includes("Free Shipping");
+        return effectiveAvailableMethods.includes("Free Shipping");
       }
       if (option.id === "local_pickup") {
-        return availableMethods.includes("Local Pickup");
+        return effectiveAvailableMethods.includes("Local Pickup");
       }
       return false;
     });
-  }, [availableMethods, computedFlatRate]);
+  }, [effectiveAvailableMethods, computedFlatRate]);
 
-  // Compute the default selection based on availableMethods.
+  // Compute the default selection based on effectiveAvailableMethods.
   const computedDefaultSelection = useMemo(() => {
     // If coupon says free shipping, override everything
     if (checkoutData.coupon?.free_shipping) {
@@ -91,16 +92,16 @@ const ShippingMethods = ({
     }
 
     // Otherwise, fallback to the normal logic
-    if (availableMethods.includes("Free Shipping")) {
+    if (effectiveAvailableMethods.includes("Free Shipping")) {
       return "free_shipping";
-    } else if (availableMethods.some((m) => m.includes("Flat Rate"))) {
+    } else if (effectiveAvailableMethods.some((m) => m.includes("Flat Rate"))) {
       return "flat_rate";
-    } else if (availableMethods.includes("Local Pickup")) {
+    } else if (effectiveAvailableMethods.includes("Local Pickup")) {
       return "local_pickup";
     }
 
     return "";
-  }, [availableMethods, checkoutData.coupon?.free_shipping]);
+  }, [effectiveAvailableMethods, checkoutData.coupon?.free_shipping]);
 
   // Manage the selected method state.
   const [selectedMethod, setSelectedMethod] = useState(
@@ -136,7 +137,7 @@ const ShippingMethods = ({
             Free Shipping Applied with Coupon: {checkoutData.coupon.code}
           </span>
         </div>
-      ) : availableMethods.length === 0 ? (
+      ) : effectiveAvailableMethods.length === 0 ? (
         <div className="mt-4 p-4 border border-gray-300 rounded-none bg-white text-center text-gray-500">
           Please select a shipping address in order to see shipping quotes
         </div>

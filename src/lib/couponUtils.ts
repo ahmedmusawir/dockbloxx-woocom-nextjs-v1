@@ -204,125 +204,32 @@ export function isCouponExpiredByTimezone(
   }
 
   try {
-    const expiryDate = coupon.expires_on; // "2025-10-02"
-    const expiryTime = meta.expiryTime; // "15:55"
+    const expiryDate = coupon.expires_on; // "2025-10-06"
     const timezone = meta.expiryTimezone; // "Asia/Kuala_Lumpur"
 
-    // 🔍 DEBUG: Log raw values from meta_data
-    console.log(`[DEBUG - ${coupon.code}] Raw meta_data:`, coupon.meta_data);
-    console.log(`[DEBUG - ${coupon.code}] Parsed meta:`, meta);
-    console.log(`[DEBUG - ${coupon.code}] Expiry Date:`, expiryDate);
-    console.log(`[DEBUG - ${coupon.code}] Expiry Time:`, expiryTime);
-    console.log(`[DEBUG - ${coupon.code}] Timezone:`, timezone);
-
-    // Combine into ISO-like string
-    const dateTimeString = `${expiryDate}T${expiryTime}:00`;
-
-    // Get current time in the target timezone as a parseable string
-    const formatter = new Intl.DateTimeFormat("en-CA", {
+    // DATE-ONLY VALIDATION (Timezone-Aware)
+    // Strategy: Check what "today's date" is in the coupon's timezone
+    
+    // Get current date in the coupon's timezone
+    const nowInTZ = new Date().toLocaleDateString('en-CA', {
       timeZone: timezone,
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: false,
-    });
-
-    const parts = formatter.formatToParts(new Date());
-    const nowYear = parts.find((p) => p.type === "year")?.value;
-    const nowMonth = parts.find((p) => p.type === "month")?.value;
-    const nowDay = parts.find((p) => p.type === "day")?.value;
-    const nowHour = parts.find((p) => p.type === "hour")?.value;
-    const nowMinute = parts.find((p) => p.type === "minute")?.value;
-    const nowSecond = parts.find((p) => p.type === "second")?.value;
-
-    // 🔍 DEBUG: Log all parsed values before Date construction
-    console.log("🔢 VALUES BEFORE DATE CONSTRUCTION:", {
-      nowYear,
-      nowMonth,
-      nowDay,
-      nowHour,
-      nowMinute,
-      nowSecond,
-      expiryYear: expiryDate.split("-")[0],
-      expiryMonth: expiryDate.split("-")[1],
-      expiryDay: expiryDate.split("-")[2],
-      expiryHour: expiryTime.split(":")[0],
-      expiryMinute: expiryTime.split(":")[1],
-    });
-
-    // Parse expiry date components
-    const [expiryYear, expiryMonth, expiryDay] = expiryDate
-      .split("-")
-      .map(Number);
-    const [expiryHour, expiryMinute] = expiryTime.split(":").map(Number);
-
-    // Create Date objects using UTC to avoid timezone issues
-    const nowDate = new Date(
-      parseInt(String(nowYear)),
-      parseInt(String(nowMonth)) - 1, // JS months are 0-indexed
-      parseInt(String(nowDay)),
-      parseInt(String(nowHour)),
-      parseInt(String(nowMinute)),
-      parseInt(String(nowSecond))
-    );
-
-    const expiryDateObj = new Date(
-      parseInt(String(expiryYear)),
-      parseInt(String(expiryMonth)) - 1, // JS months are 0-indexed
-      parseInt(String(expiryDay)),
-      parseInt(String(expiryHour)),
-      parseInt(String(expiryMinute)),
-      0
-    );
-
-    // Create Date objects using UTC to avoid timezone issues
-    // const nowDate = new Date(
-    //   Number(nowYear),
-    //   Number(nowMonth) - 1, // JS months are 0-indexed
-    //   Number(nowDay),
-    //   Number(nowHour),
-    //   Number(nowMinute),
-    //   Number(nowSecond)
-    // );
-
-    // const expiryDateObj = new Date(
-    //   expiryYear,
-    //   expiryMonth - 1, // JS months are 0-indexed
-    //   expiryDay,
-    //   expiryHour,
-    //   expiryMinute,
-    //   0
-    // );
-
-    // Compare timestamps
-    const isExpired = nowDate.getTime() > expiryDateObj.getTime();
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }); // Returns "YYYY-MM-DD" format
+    
+    // Compare dates as strings (both in YYYY-MM-DD format)
+    // Coupon expires at END of the expiry date in its timezone
+    const isExpired = nowInTZ > expiryDate;
 
     console.log(`[Coupon Expiry Check - ${coupon.code}]`, {
-      expiryDate,
-      expiryTime,
       timezone,
-      nowParts: {
-        year: nowYear,
-        month: nowMonth,
-        day: nowDay,
-        hour: nowHour,
-        minute: nowMinute,
-      },
-      expiryParts: {
-        year: expiryYear,
-        month: expiryMonth,
-        day: expiryDay,
-        hour: expiryHour,
-        minute: expiryMinute,
-      },
-      nowTimestamp: nowDate.getTime(),
-      expiryTimestamp: expiryDateObj.getTime(),
-      nowDate: nowDate.toISOString(),
-      expiryDateObj: expiryDateObj.toISOString(),
+      expiryDate,
+      nowInTZ,
       isExpired,
+      explanation: isExpired 
+        ? `Today (${nowInTZ}) is after expiry date (${expiryDate})` 
+        : `Coupon valid until end of ${expiryDate} (${timezone})`,
     });
 
     return isExpired;
@@ -352,20 +259,36 @@ export const validateCoupon = (
   checkoutData: CheckoutData
 ): { isValid: boolean; message: string } => {
   const meta = parseCouponMeta(coupon);
-
-  // 🔍 DEBUG: Show comprehensive timezone info
-  debugTimezoneInfo(coupon, meta);
-
   const userEmail = checkoutData.billing.email?.trim().toLowerCase();
+  const userZipCode = checkoutData.shipping.postcode?.trim();
 
   console.log("--- [COUPON VALIDATION TRACE] ---");
   console.log("Coupon Code:", coupon.code);
-  console.log("User Email for Check:", userEmail);
+  console.log("User Email:", userEmail);
+  console.log("User Zip Code:", userZipCode);
   console.log("Allowed Emails from Meta:", meta.allowedEmails);
 
-  // 1. Email Restriction Check (Highest Priority)
+  // 0. REQUIRE EMAIL (Security Check)
+  if (!userEmail) {
+    console.log("Validation FAILED: No email provided.");
+    return {
+      isValid: false,
+      message: "Please enter your email address to apply a coupon.",
+    };
+  }
+
+  // 0.1 REQUIRE ZIP CODE (Shipping Check)
+  if (!userZipCode) {
+    console.log("Validation FAILED: No zip code provided.");
+    return {
+      isValid: false,
+      message: "Please enter your shipping zip code to apply a coupon.",
+    };
+  }
+
+  // 1. Email Restriction Check (If coupon has specific allowed emails)
   if (meta.allowedEmails && meta.allowedEmails.length > 0) {
-    const isMatch = userEmail && meta.allowedEmails.includes(userEmail);
+    const isMatch = meta.allowedEmails.includes(userEmail);
     console.log("Email check result - Is Match:", isMatch);
 
     if (!isMatch) {
