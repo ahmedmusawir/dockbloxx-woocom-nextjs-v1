@@ -1,17 +1,25 @@
-const { createDefaultPreset } = require("ts-jest");
-
-const tsJestTransformCfg = createDefaultPreset().transform;
-
 /** @type {import("jest").Config} **/
 module.exports = {
-  testEnvironment: "node",
   /**
    * Sets up JSDOM as the test environment for browser-like DOM in React tests.
-   * Can be overridden for Node.js-only tests.
    */
   testEnvironment: "jsdom",
+  
+  /**
+   * Transform TypeScript and TSX files with ts-jest
+   */
+  preset: "ts-jest",
+  
   transform: {
-    ...tsJestTransformCfg,
+    "^.+\\.tsx?$": [
+      "ts-jest",
+      {
+        tsconfig: {
+          jsx: "react-jsx", // ← Use new JSX transform (React 17+)
+          esModuleInterop: true,
+        },
+      },
+    ],
   },
 
   /**
