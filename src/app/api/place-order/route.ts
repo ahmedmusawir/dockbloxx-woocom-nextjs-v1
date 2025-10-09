@@ -29,14 +29,22 @@ export async function POST(req: Request) {
     );
 
     // Check if coupon is a custom per-product percentage type
-    const isCustomCoupon = checkoutData.coupon 
+    // Custom coupons use fee_lines, native WooCommerce coupons use coupon_lines
+    const isCustomPercentageCoupon = checkoutData.coupon 
       ? parseCouponMeta(checkoutData.coupon).percentPerProduct !== undefined
+      : false;
+    
+    // Native fixed_product discount uses coupon_lines (WooCommerce handles it)
+    const isNativeFixedProductCoupon = checkoutData.coupon
+      ? checkoutData.coupon.discount_type === "fixed_product" && 
+        checkoutData.coupon.products_included.length > 0
       : false;
     
     console.log("🎫 [Coupon Type Check]:", {
       hasCoupon: !!checkoutData.coupon,
       couponCode: checkoutData.coupon?.code,
-      isCustomCoupon,
+      isCustomPercentageCoupon,
+      isNativeFixedProductCoupon,
       discountTotal: checkoutData.discountTotal
     });
 
@@ -68,7 +76,8 @@ export async function POST(req: Request) {
           itemTotal,
           discountApplied,
           priceAfterDiscount,
-          isCustomCoupon
+          isCustomPercentageCoupon,
+          isNativeFixedProductCoupon
         });
 
         // For custom coupons, send full price and let fee_lines handle discount
@@ -104,9 +113,14 @@ export async function POST(req: Request) {
           total: checkoutData.shippingCost.toFixed(2),
         },
       ],
-      // Only send coupon to WooCommerce if it's a STANDARD coupon type
-      // Custom per-product percentage coupons will be handled as fee lines
-      coupon_lines: checkoutData.coupon && !isCustomCoupon
+      // Coupon handling logic:
+      // 1. Native WooCommerce coupons (fixed_cart, percent, fixed_product) → coupon_lines
+      // 2. Custom percentage per product → fee_lines
+      coupon_lines: checkoutData.coupon && 
+                    !isCustomPercentageCoupon && 
+                    (isNativeFixedProductCoupon || 
+                     checkoutData.coupon.discount_type === "fixed_cart" || 
+                     checkoutData.coupon.discount_type === "percent")
         ? [
             {
               code: checkoutData.coupon.code,
@@ -114,8 +128,8 @@ export async function POST(req: Request) {
             },
           ]
         : [],
-      // For custom coupons, add discount as a negative fee line
-      fee_lines: checkoutData.coupon && isCustomCoupon && checkoutData.discountTotal > 0
+      // For custom percentage coupons, add discount as a negative fee line
+      fee_lines: checkoutData.coupon && isCustomPercentageCoupon && checkoutData.discountTotal > 0
         ? [
             {
               name: `Coupon: ${checkoutData.coupon.code}`,

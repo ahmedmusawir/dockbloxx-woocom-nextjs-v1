@@ -284,4 +284,177 @@ describe("updateCheckoutTotals - Per-Product Percentage Discount", () => {
     expect(result.shippingCost).toBe(20); // $169 subtotal gets $20 shipping
     expect(result.total).toBeCloseTo(81.9, 1); // 169 - 107.1 + 20 shipping
   });
+
+  test("applies fixed_product discount correctly", () => {
+    const coupon: Coupon = {
+      id: 1,
+      code: "15BANJO",
+      description: "$15 off Banjo Bloxx",
+      discount_type: "fixed_product",
+      discount_value: 15, // $15 off
+      free_shipping: false,
+      min_spend: "0",
+      max_spend: "0",
+      products_included: [2733], // Banjo Bloxx
+      products_excluded: [],
+      categories_included: [],
+      categories_excluded: [],
+      usage_limit: null,
+      usage_count: null,
+      usage_limit_per_user: null,
+      used_by: [],
+      expires_on: "",
+      meta_data: [], // No custom percentage
+    };
+
+    const checkoutData = createCheckoutData({
+      cartItems: [
+        createCartItem({
+          id: 2733,
+          name: "Banjo Bloxx",
+          basePrice: 189,
+          quantity: 1,
+        }),
+      ],
+      coupon,
+    });
+
+    const result = updateCheckoutTotals(checkoutData);
+
+    expect(result.subtotal).toBe(189);
+    expect(result.discountTotal).toBe(15); // $15 fixed discount
+    expect(result.shippingCost).toBe(20); // $189 subtotal gets $20 shipping
+    expect(result.total).toBe(194); // 189 - 15 + 20 shipping
+    expect(result.cartItems[0].discountApplied).toBe(15);
+  });
+
+  test("applies fixed_product discount with multiple quantities", () => {
+    const coupon: Coupon = {
+      id: 1,
+      code: "15BANJO",
+      description: "$15 off Banjo Bloxx",
+      discount_type: "fixed_product",
+      discount_value: 15,
+      free_shipping: false,
+      min_spend: "0",
+      max_spend: "0",
+      products_included: [2733],
+      products_excluded: [],
+      categories_included: [],
+      categories_excluded: [],
+      usage_limit: null,
+      usage_count: null,
+      usage_limit_per_user: null,
+      used_by: [],
+      expires_on: "",
+      meta_data: [],
+    };
+
+    const checkoutData = createCheckoutData({
+      cartItems: [
+        createCartItem({
+          id: 2733,
+          name: "Banjo Bloxx",
+          basePrice: 189,
+          quantity: 2, // 2 items
+        }),
+      ],
+      coupon,
+    });
+
+    const result = updateCheckoutTotals(checkoutData);
+
+    expect(result.subtotal).toBe(378); // 189 * 2
+    expect(result.discountTotal).toBe(30); // $15 * 2 items
+    expect(result.cartItems[0].discountApplied).toBe(30);
+  });
+
+  test("fixed_product discount doesn't exceed item price", () => {
+    const coupon: Coupon = {
+      id: 1,
+      code: "BIGDISCOUNT",
+      description: "$200 off",
+      discount_type: "fixed_product",
+      discount_value: 200, // More than item price!
+      free_shipping: false,
+      min_spend: "0",
+      max_spend: "0",
+      products_included: [2733],
+      products_excluded: [],
+      categories_included: [],
+      categories_excluded: [],
+      usage_limit: null,
+      usage_count: null,
+      usage_limit_per_user: null,
+      used_by: [],
+      expires_on: "",
+      meta_data: [],
+    };
+
+    const checkoutData = createCheckoutData({
+      cartItems: [
+        createCartItem({
+          id: 2733,
+          name: "Cheap Item",
+          basePrice: 50,
+          quantity: 1,
+        }),
+      ],
+      coupon,
+    });
+
+    const result = updateCheckoutTotals(checkoutData);
+
+    expect(result.subtotal).toBe(50);
+    expect(result.discountTotal).toBe(50); // Capped at item price
+    expect(result.cartItems[0].isFree).toBe(true); // Item is free
+  });
+
+  test("fixed_product discount only applies to specified products", () => {
+    const coupon: Coupon = {
+      id: 1,
+      code: "15BANJO",
+      description: "$15 off Banjo Bloxx",
+      discount_type: "fixed_product",
+      discount_value: 15,
+      free_shipping: false,
+      min_spend: "0",
+      max_spend: "0",
+      products_included: [2733], // Only Banjo Bloxx
+      products_excluded: [],
+      categories_included: [],
+      categories_excluded: [],
+      usage_limit: null,
+      usage_count: null,
+      usage_limit_per_user: null,
+      used_by: [],
+      expires_on: "",
+      meta_data: [],
+    };
+
+    const checkoutData = createCheckoutData({
+      cartItems: [
+        createCartItem({
+          id: 2733,
+          name: "Banjo Bloxx",
+          basePrice: 189,
+          quantity: 1,
+        }),
+        createCartItem({
+          id: 9999,
+          name: "Other Product",
+          basePrice: 70,
+          quantity: 1,
+        }),
+      ],
+      coupon,
+    });
+
+    const result = updateCheckoutTotals(checkoutData);
+
+    expect(result.subtotal).toBe(259); // 189 + 70
+    expect(result.discountTotal).toBe(15); // Only applies to Banjo Bloxx
+    expect(result.cartItems[0].discountApplied).toBe(15); // Banjo has discount
+    expect(result.cartItems[1].discountApplied).toBe(0); // Other product has no discount
+  });
 });

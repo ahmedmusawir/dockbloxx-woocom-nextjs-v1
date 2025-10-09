@@ -269,3 +269,101 @@ describe("place-order API - No Coupon", () => {
     expect(orderData.fee_lines).toHaveLength(0);
   });
 });
+
+describe("place-order API - Fixed Product Discount (15BANJO)", () => {
+  test("fixed_product discount goes to coupon_lines (WooCommerce native)", () => {
+    const coupon: Coupon = {
+      id: 4,
+      code: "15BANJO",
+      description: "$15 off Banjo Bloxx",
+      discount_type: "fixed_product",
+      discount_value: 15,
+      free_shipping: true,
+      min_spend: "0",
+      max_spend: "0",
+      products_included: [2733],
+      products_excluded: [],
+      categories_included: [],
+      categories_excluded: [],
+      usage_limit: null,
+      usage_count: null,
+      usage_limit_per_user: null,
+      used_by: [],
+      expires_on: "",
+      meta_data: [], // No custom percentage
+    };
+
+    const checkoutData = createCheckoutData({
+      cartItems: [
+        createCartItem({
+          id: 2733,
+          name: "Banjo Bloxx",
+          basePrice: 189,
+          quantity: 1,
+          discountApplied: 15,
+        }),
+      ],
+      coupon,
+      subtotal: 189,
+      discountTotal: 15,
+      shippingCost: 0, // Free shipping
+      total: 174, // 189 - 15
+    });
+
+    const orderData = buildOrderData(checkoutData);
+
+    // Should use coupon_lines (WooCommerce native)
+    expect(orderData.coupon_lines).toHaveLength(1);
+    expect(orderData.coupon_lines[0].code).toBe("15BANJO");
+    expect(orderData.coupon_lines[0].used_by).toBe("test@example.com");
+
+    // Should NOT use fee_lines
+    expect(orderData.fee_lines).toHaveLength(0);
+  });
+
+  test("fixed_product with multiple items goes to coupon_lines", () => {
+    const coupon: Coupon = {
+      id: 4,
+      code: "15BANJO",
+      description: "$15 off Banjo Bloxx",
+      discount_type: "fixed_product",
+      discount_value: 15,
+      free_shipping: false,
+      min_spend: "0",
+      max_spend: "0",
+      products_included: [2733],
+      products_excluded: [],
+      categories_included: [],
+      categories_excluded: [],
+      usage_limit: null,
+      usage_count: null,
+      usage_limit_per_user: null,
+      used_by: [],
+      expires_on: "",
+      meta_data: [],
+    };
+
+    const checkoutData = createCheckoutData({
+      cartItems: [
+        createCartItem({
+          id: 2733,
+          name: "Banjo Bloxx",
+          basePrice: 189,
+          quantity: 2,
+          discountApplied: 30, // $15 * 2
+        }),
+      ],
+      coupon,
+      subtotal: 378, // 189 * 2
+      discountTotal: 30,
+      shippingCost: 35,
+      total: 383, // 378 - 30 + 35
+    });
+
+    const orderData = buildOrderData(checkoutData);
+
+    expect(orderData.coupon_lines).toHaveLength(1);
+    expect(orderData.coupon_lines[0].code).toBe("15BANJO");
+    expect(orderData.fee_lines).toHaveLength(0);
+  });
+});

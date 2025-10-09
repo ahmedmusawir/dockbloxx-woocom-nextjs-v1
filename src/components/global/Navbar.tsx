@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ShoppingBagIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { MenuIcon } from "lucide-react";
+import { MenuIcon, Search, Users, MapPin, LogIn, HelpCircle } from "lucide-react";
 import { getImageUrl } from "@/lib/utils";
 import { useCartStore } from "@/store/useCartStore";
 import { usePathname } from "next/navigation";
@@ -154,7 +154,8 @@ const Navbar = () => {
           {/* Secondary Nav */}
 
           <div className="flex items-center space-x-4 text-xs text-gray-600">
-            <Link href="/search" className="hover:text-blue-600">
+            <Link href="/search" className="hover:text-blue-600 flex items-center gap-1.5">
+              <Search className="w-3.5 h-3.5" />
               Search Products
             </Link>
             <span className="border-r border-gray-300 h-4" />
@@ -164,8 +165,9 @@ const Navbar = () => {
               {/* Main Trigger (clickable) */}
               <span
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="hover:text-blue-600 cursor-pointer"
+                className="hover:text-blue-600 cursor-pointer flex items-center gap-1.5"
               >
+                <Users className="w-3.5 h-3.5" />
                 Community
               </span>
 
@@ -189,12 +191,14 @@ const Navbar = () => {
             </div>
             <span className="border-r border-gray-300 h-4" />
 
-            <Link href="/dealer-locator" className="hover:text-blue-600">
+            <Link href="/dealer-locator" className="hover:text-blue-600 flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5" />
               Dealer Locator
             </Link>
             <span className="border-r border-gray-300 h-4" />
 
-            <Link href="/dealer-login" className="hover:text-blue-600">
+            <Link href="/dealer-login" className="hover:text-blue-600 flex items-center gap-1.5">
+              <LogIn className="w-3.5 h-3.5" />
               Dealer Login
             </Link>
             <span className="border-r border-gray-300 h-4" />
@@ -207,8 +211,9 @@ const Navbar = () => {
               {/* Main Trigger (clickable) */}
               <span
                 onClick={() => setIsHelpDropdownOpen(!isHelpDropdownOpen)}
-                className="hover:text-blue-600 cursor-pointer"
+                className="hover:text-blue-600 cursor-pointer flex items-center gap-1.5"
               >
+                <HelpCircle className="w-3.5 h-3.5" />
                 Help
               </span>
 

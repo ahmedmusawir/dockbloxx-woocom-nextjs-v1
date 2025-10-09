@@ -37,17 +37,23 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
   if (coupon) {
     const meta = parseCouponMeta(coupon);
 
+    console.log("🎫 [Coupon Debug]:", {
+      code: coupon.code,
+      discount_type: coupon.discount_type,
+      discount_value: coupon.discount_value,
+      percentPerProduct: meta.percentPerProduct,
+      products_included: coupon.products_included,
+    });
+
     // High-priority check for our custom per-product percentage discount
-    // if (meta.percentPerProduct && coupon.products_included.length > 0) {
-    // High-priority check for our custom per-product percentage discount
+    // Must have a POSITIVE percentage value (0 means not using custom discount)
     if (
       typeof meta.percentPerProduct === "number" &&
+      meta.percentPerProduct > 0 &&
       coupon.products_included.length > 0
     ) {
-      // --- START: THE FIX ---
-      // Create a new constant. TypeScript knows this is a 'number', not 'number | undefined'.
+      // --- START: CUSTOM PERCENTAGE DISCOUNT ---
       const discountPercent = meta.percentPerProduct;
-      // --- END: THE FIX ---
 
       discountTotal = updatedCartItems.reduce((acc, item) => {
         // Check if the current item is one of the coupon's designated products
@@ -69,6 +75,34 @@ export function updateCheckoutTotals(checkoutData: CheckoutData): CheckoutData {
         }
         return acc;
       }, 0);
+      // --- END: CUSTOM PERCENTAGE DISCOUNT ---
+    } else if (
+      coupon.discount_type === "fixed_product" &&
+      coupon.products_included.length > 0
+    ) {
+      // --- START: NATIVE FIXED PRODUCT DISCOUNT ---
+      // WooCommerce native: Fixed dollar amount per product (e.g., $30 off)
+      discountTotal = updatedCartItems.reduce((acc, item) => {
+        if (coupon.products_included.includes(item.id)) {
+          const itemTotal = item.basePrice * item.quantity;
+          
+          // Apply fixed discount per item, but don't exceed item total
+          const discountPerItem = Math.min(coupon.discount_value, item.basePrice);
+          const itemDiscount = discountPerItem * item.quantity;
+
+          // Add the discount amount to the item itself
+          item.discountApplied = itemDiscount;
+
+          // If discount equals or exceeds price, flag as free
+          if (discountPerItem >= item.basePrice) {
+            item.isFree = true;
+          }
+
+          return acc + itemDiscount;
+        }
+        return acc;
+      }, 0);
+      // --- END: NATIVE FIXED PRODUCT DISCOUNT ---
     } else {
       // Fallback to the original logic for all standard coupon types
       discountTotal = calculateCouponDiscount(
