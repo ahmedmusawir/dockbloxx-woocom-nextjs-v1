@@ -1,0 +1,71 @@
+# --- STAGE 1: DEPENDENCIES (The Supply Chain) ---
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy package manager lockfiles
+COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+
+# Install dependencies based on the preferred package manager
+RUN \
+  if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+  elif [ -f package-lock.json ]; then npm ci; \
+  elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i --frozen-lockfile; \
+  else echo "Lockfile not found." && exit 1; \
+  fi
+
+# --- STAGE 2: BUILDER (The Factory) ---
+FROM node:18-alpine AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Disable telemetry during build
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# BUILD-TIME SECRETS: Injected via --set-build-env-vars from deploy.sh
+ARG WOOCOM_CONSUMER_KEY
+ARG WOOCOM_CONSUMER_SECRET
+ARG STRIPE_SECRET_KEY
+ARG NEXT_PUBLIC_APP_URL
+ARG NEXT_PUBLIC_BACKEND_URL
+ARG NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+
+# Convert ARGs to ENVs so Next.js can see them during build
+ENV WOOCOM_CONSUMER_KEY=ck_73eddd9e76**********************80d7da4c4e6
+ENV WOOCOM_CONSUMER_SECRET=cs_aabe301**********************85657999172
+ENV STRIPE_SECRET_KEY=sk_test_51QsxN9**********CqLNB3o6eZDWP00FZ89rXmj
+ENV NEXT_PUBLIC_APP_URL="https://dockbloxx-dev-staging-gs7ebanlsq-ue.a.run.app"
+ENV NEXT_PUBLIC_BACKEND_URL="https://dockbloxx.mystagingwebsite.com"
+ENV NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_***LienN2wMvn00FmEKheXy
+
+# Build the application
+RUN npm run build
+
+# --- STAGE 3: RUNNER (The Flight Suit) ---
+FROM node:18-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+ENV NEXT_TELEMETRY_DISABLED 1
+
+# SECURITY: Create a non-root user (UID 1001)
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy only the necessary public assets
+COPY --from=builder /app/public ./public
+
+# Automatically leverage output traces to reduce image size
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+# Switch context to the non-root user
+USER nextjs
+
+# Expose the port
+EXPOSE 3000
+ENV PORT 3000
+
+# Launch
+CMD ["node", "server.js"]
