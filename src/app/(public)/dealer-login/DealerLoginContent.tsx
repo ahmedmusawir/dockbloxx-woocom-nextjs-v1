@@ -10,7 +10,7 @@ const DealerLoginContent = () => {
     <>
       <Head>
         <title>Build-a-Bloxx - Custom Dock Accessories</title>
-        <meta name="description" content="Dealer Login DockBloxx" />
+        <meta name="description" content="Dealer Application DockBloxx" />
       </Head>
 
       {/* Hero Section with Background Image */}
@@ -24,7 +24,7 @@ const DealerLoginContent = () => {
         />
         <div className="absolute inset-0 flex items-center justify-center">
           <h1 className="text-4xl md:text-5xl text-white font-bold">
-            Coming Soon
+            Dealer Application
           </h1>
         </div>
       </div>

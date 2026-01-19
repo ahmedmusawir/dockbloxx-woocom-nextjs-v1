@@ -22,6 +22,7 @@ type ProductACF = {
   what_is_included: IncludedItem[];
   shipping_returns_warranty: string;
   youtube: string;
+  animation_youtube_id: string;
 };
 
 // Represents a single product returned from the WooCommerce REST API

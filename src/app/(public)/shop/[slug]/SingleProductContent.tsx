@@ -1,5 +1,6 @@
 import Page from "@/components/common/Page";
 import SubscribeNow from "@/components/home/SubscribeNow";
+import AnimationVideoBlock from "@/components/shop/product-page/AnimationVideoBlock";
 import InstallVideoBlock from "@/components/shop/product-page/InstallVideoBlock";
 import ProductDescription from "@/components/shop/product-page/ProductDescription";
 import ProductDetails from "@/components/shop/product-page/ProductDetails";
@@ -30,8 +31,12 @@ const SingleProductContent = ({
           <RelatedProducts relatedProducts={relatedProducts} />
 
           {/* How Install Video */}
-          {/* <InstallVideoBlock product={product} /> */}
           {product.acf.youtube && <InstallVideoBlock product={product} />}
+
+          {/* Animation Video */}
+          {product.acf.animation_youtube_id && (
+            <AnimationVideoBlock product={product} />
+          )}
 
           {/* Product FAQ */}
           <ProductFaq />
