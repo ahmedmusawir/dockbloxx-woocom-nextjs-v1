@@ -14,6 +14,9 @@
  * This approach ensures a non-blocking, efficient process for handling backend
  * operations while keeping the client-side components lightweight.
  */
+
+// src/app/layout.tsx
+
 import { Inter } from "next/font/google";
 import "./globals.scss";
 import Navbar from "@/components/global/Navbar";
@@ -25,13 +28,11 @@ import { fetchTrackingScripts } from "@/services/trackingSeoServices";
 
 const inter = Inter({ subsets: ["latin"] });
 
-// For header script cleanup
 export const stripScriptWrapper = (html: string): string => {
   const match = html.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
-  return match ? match[1].trim() : html.trim(); // fallback: untouched
+  return match ? match[1].trim() : html.trim();
 };
 
-// For body html cleanup
 export const stripNoscriptWrapper = (html: string): string => {
   const match = html.match(/<noscript[^>]*>([\s\S]*?)<\/noscript>/i);
   return match ? match[1].trim() : html.trim();
@@ -42,19 +43,19 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { header, body } = await fetchTrackingScripts();
+  const { header, body, footer } = await fetchTrackingScripts();
 
-  // remove wrapper if WP still sends `<script …>`
   const headerJS = stripScriptWrapper(header);
   const bodyHtml = stripNoscriptWrapper(body);
+  const footerJS = stripScriptWrapper(footer);
 
   // console.log("TRACKING SCRIPTS HEADER: [/app/layout.tsx]", headerJS);
-  // console.log("TRACKING SCRIPTS BODY: [/app/layout.tsx]", bodyJS);
+  // console.log("TRACKING SCRIPTS BODY: [/app/layout.tsx]", bodyHtml);
+  // console.log("ATTRIBUTION SCRIPT FOOTER: [/app/layout.tsx]", footerJS);
 
   return (
     <html lang="en">
       <head>
-        {/* Header tracker – loads before hydration */}
         <Script
           id="moose-tracker-head"
           strategy="lazyOnload"
@@ -73,11 +74,16 @@ export default async function RootLayout({
           <CartSlide />
         </div>
 
-        {/* <Toaster /> */}
-        {/* Body‑level tracker */}
         <div
           id="moose-tracker-body"
           dangerouslySetInnerHTML={{ __html: bodyHtml }}
+        />
+
+        {/* Coach's Attribution Script */}
+        <Script
+          id="coach-attribution"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{ __html: footerJS }}
         />
       </body>
     </html>

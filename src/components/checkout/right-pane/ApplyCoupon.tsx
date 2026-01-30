@@ -1,17 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useCheckoutStore } from "@/store/useCheckoutStore";
 import { validateCoupon } from "@/lib/couponUtils";
 import { fetchCouponByCode } from "@/services/checkoutServices";
 import { useCouponTracking } from "@/hooks/useCouponTracking";
+import { getAttribution } from "@/lib/attribution";
 
 const ApplyCoupon = () => {
   const { checkoutData, applyCoupon, removeCoupon } = useCheckoutStore();
   const [couponCode, setCouponCode] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showCouponNotice, setShowCouponNotice] = useState(false);
   const { trackApplyCoupon } = useCouponTracking();
+
+  // Auto-fill coupon from attribution data (QR code)
+  useEffect(() => {
+    const attribution = getAttribution();
+    if (attribution.coupon && !checkoutData.coupon) {
+      setCouponCode(attribution.coupon);
+      setShowCouponNotice(true);
+    }
+  }, [checkoutData.coupon]);
 
   // Handle applying coupon
   const handleApply = async () => {
@@ -43,6 +54,7 @@ const ApplyCoupon = () => {
       applyCoupon(coupon);
       trackApplyCoupon(coupon); // GTM track
       setCouponCode(""); // Clear input field
+      setShowCouponNotice(false); // Hide notice after successful application
     } catch (error) {
       setError("Something went wrong. Please try again.");
       console.error("Error applying coupon:", error);
@@ -61,6 +73,16 @@ const ApplyCoupon = () => {
       <h3 className="text-sm font-medium text-gray-700">
         Coupon/Gift Certificate
       </h3>
+
+      {/* Show notice if coupon was auto-filled from QR code */}
+      {showCouponNotice && !checkoutData.coupon && (
+        <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-none">
+          <p className="text-sm text-blue-800">
+            <strong>Dealer Coupon Detected!</strong> A coupon code has been pre-filled for you. 
+            Please click <strong>"Apply"</strong> to activate your discount.
+          </p>
+        </div>
+      )}
 
       {/* If a coupon is applied, show the applied coupon */}
       {checkoutData.coupon ? (

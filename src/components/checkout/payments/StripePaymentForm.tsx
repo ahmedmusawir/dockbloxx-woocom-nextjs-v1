@@ -12,6 +12,7 @@ import { OrderSummary } from "@/types/order";
 import { useCartStore } from "@/store/useCartStore";
 import { useRouter } from "next/navigation";
 import { useCheckoutTracking } from "@/hooks/useCheckoutTracking";
+import { getAttribution, cleanAttribution } from "@/lib/attribution";
 
 const StripePaymentForm = () => {
   const SITE_URL = process.env.NEXT_PUBLIC_APP_URL;
@@ -60,16 +61,32 @@ const StripePaymentForm = () => {
     }
 
     try {
-      console.log("🛒 [StripePaymentForm] Submitting order with cartItems:", 
-        checkoutData.cartItems.map(item => ({
+      console.log(
+        "🛒 [StripePaymentForm] Submitting order with cartItems:",
+        checkoutData.cartItems.map((item) => ({
           id: item.id,
           basePrice: item.basePrice,
           discountApplied: item.discountApplied,
-          isFree: item.isFree
-        }))
+          isFree: item.isFree,
+        })),
       );
-      
-      const orderResponse = await createWoocomOrder(checkoutData);
+
+      // Read attribution from sessionStorage
+      const attribution = getAttribution();
+      const cleanedAttribution = cleanAttribution(attribution);
+
+      console.log(
+        "📊 [StripePaymentForm] Attribution data:",
+        cleanedAttribution,
+      );
+
+      // Add attribution to checkout data
+      const orderPayload = {
+        ...checkoutData,
+        attribution: cleanedAttribution,
+      };
+
+      const orderResponse = await createWoocomOrder(orderPayload);
       if (!orderResponse) {
         setError("Order submission failed. Please try again.");
         setIsProcessing(false);
@@ -80,11 +97,14 @@ const StripePaymentForm = () => {
 
       // Calculate discount from either discount_total (standard coupons) or fee_lines (custom coupons)
       let discountTotal = orderResponse.discount_total || "0";
-      
+
       // If no discount_total, check for negative fees (custom coupons)
-      if (parseFloat(discountTotal) === 0 && orderResponse.fee_lines?.length > 0) {
-        const discountFee = orderResponse.fee_lines.find((fee: any) => 
-          parseFloat(fee.total) < 0
+      if (
+        parseFloat(discountTotal) === 0 &&
+        orderResponse.fee_lines?.length > 0
+      ) {
+        const discountFee = orderResponse.fee_lines.find(
+          (fee: any) => parseFloat(fee.total) < 0,
         );
         if (discountFee) {
           // Fee is negative, so we take absolute value for display
@@ -109,10 +129,11 @@ const StripePaymentForm = () => {
           price: item.total,
           image: item.image?.src,
         })),
-        coupon: orderResponse.coupon_lines?.[0]?.code ?? 
-                (orderResponse.fee_lines?.[0]?.name?.includes('Coupon:') 
-                  ? orderResponse.fee_lines[0].name.replace('Coupon: ', '') 
-                  : null),
+        coupon:
+          orderResponse.coupon_lines?.[0]?.code ??
+          (orderResponse.fee_lines?.[0]?.name?.includes("Coupon:")
+            ? orderResponse.fee_lines[0].name.replace("Coupon: ", "")
+            : null),
       };
 
       console.log("Simplified Order Object:", orderObject);
@@ -139,7 +160,7 @@ const StripePaymentForm = () => {
   // Process Stripe Payments making calls to Stripe API
   const processPayment = async (
     elements: any,
-    orderInfo: OrderSummary
+    orderInfo: OrderSummary,
   ): Promise<boolean> => {
     const { email, phone, first_name, last_name } = orderInfo.billing || {};
     const fullName = `${(first_name ?? "").trim()} ${(
@@ -194,7 +215,7 @@ const StripePaymentForm = () => {
           try {
             const updateResult = await updateWoocomOrder(
               orderInfo.id,
-              "processing"
+              "processing",
             );
             if (updateResult) {
               router.push("/thankyou"); // Keep the redirect
@@ -227,10 +248,10 @@ const StripePaymentForm = () => {
         // <--- Catch specifically stripe.confirmPayment errors
         console.error(
           "Stripe confirmPayment error:",
-          stripeConfirmPaymentError
+          stripeConfirmPaymentError,
         );
         setModalMessage(
-          "Stripe Payment confirmPayment failed. Please contact support."
+          "Stripe Payment confirmPayment failed. Please contact support.",
         ); // More specific message
         setError("Stripe Payment confirmPayment failed.");
         setIsProcessing(false);

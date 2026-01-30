@@ -1,6 +1,3 @@
-// --------------------------------------------
-// ABOUT: app/about/page.tsx
-// --------------------------------------------
 import AboutPageContent from "./AboutPageContent";
 import { fetchYoastSEOJson, fixUrl } from "@/lib/seoUtils";
 import { mapYoastToMetadata } from "@/lib/yoastMapper";

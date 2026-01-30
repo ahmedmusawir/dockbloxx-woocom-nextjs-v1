@@ -36,4 +36,5 @@ export interface CheckoutData {
   discountTotal: number;
   total: number;
   customerNote: string;
+  attribution?: Record<string, string>;
 }

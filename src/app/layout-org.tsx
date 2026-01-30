@@ -14,25 +14,53 @@
  * This approach ensures a non-blocking, efficient process for handling backend
  * operations while keeping the client-side components lightweight.
  */
-import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.scss";
 import Navbar from "@/components/global/Navbar";
 import Main from "@/components/common/Main";
 import Footer from "@/components/global/Footer";
 import CartSlide from "@/components/cart/CartSlide";
-// import { Toaster } from "@/components/ui/toaster";
-// import { ThemeProvider } from "./providers/ThemeProvider";
+import Script from "next/script";
+import { fetchTrackingScripts } from "@/services/trackingSeoServices";
 
 const inter = Inter({ subsets: ["latin"] });
+
+// For header script cleanup
+export const stripScriptWrapper = (html: string): string => {
+  const match = html.match(/<script[^>]*>([\s\S]*?)<\/script>/i);
+  return match ? match[1].trim() : html.trim(); // fallback: untouched
+};
+
+// For body html cleanup
+export const stripNoscriptWrapper = (html: string): string => {
+  const match = html.match(/<noscript[^>]*>([\s\S]*?)<\/noscript>/i);
+  return match ? match[1].trim() : html.trim();
+};
 
 export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { header, body } = await fetchTrackingScripts();
+
+  // remove wrapper if WP still sends `<script …>`
+  const headerJS = stripScriptWrapper(header);
+  const bodyHtml = stripNoscriptWrapper(body);
+
+  // console.log("TRACKING SCRIPTS HEADER: [/app/layout.tsx]", headerJS);
+  // console.log("TRACKING SCRIPTS BODY: [/app/layout.tsx]", bodyJS);
+
   return (
     <html lang="en">
+      <head>
+        {/* Header tracker – loads before hydration */}
+        <Script
+          id="moose-tracker-head"
+          strategy="lazyOnload"
+          dangerouslySetInnerHTML={{ __html: headerJS }}
+        />
+      </head>
       <body className={inter.className}>
         <div className="flex flex-col min-h-screen">
           <Navbar />
@@ -44,7 +72,13 @@ export default async function RootLayout({
           <Footer />
           <CartSlide />
         </div>
+
         {/* <Toaster /> */}
+        {/* Body‑level tracker */}
+        <div
+          id="moose-tracker-body"
+          dangerouslySetInnerHTML={{ __html: bodyHtml }}
+        />
       </body>
     </html>
   );

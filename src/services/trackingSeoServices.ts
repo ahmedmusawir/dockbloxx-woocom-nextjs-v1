@@ -1,20 +1,11 @@
-// --------------------------------------------
-// /services/trackingSeoServices.ts
-// --------------------------------------------
+// src/services/trackingSeoServices.ts
 
 import { ACF_REST_OPTIONS } from "@/constants/apiEndpoints";
 
-/**
- * Fetch tracking scripts from the ACF Options API.
- * Used globally in the layout.tsx file to inject
- * marketing and analytics snippets.
- *
- * ISR: Cache for 60 seconds
- */
 export async function fetchTrackingScripts() {
   try {
     const res = await fetch(ACF_REST_OPTIONS, {
-      next: { revalidate: 60 }, // ISR cache: 60s
+      next: { revalidate: 3600 },
     });
 
     if (!res.ok) {
@@ -23,17 +14,25 @@ export async function fetchTrackingScripts() {
 
     const json = await res.json();
 
-    // console.log("[TRACKING SCRIPTS SERVICE]", json.acf);
+    const header = json.acf.tracking_scripts_header ?? null;
+    const body = json.acf.tracking_scripts_body ?? null;
+    const footer = json.acf.coach_attribution_scripts_footer ?? null;
+
+    // console.log("[TRACKING SCRIPTS SERVICE - HEADER]", header);
+    // console.log("[TRACKING SCRIPTS SERVICE - BODY]", body);
+    // console.log("[TRACKING SCRIPTS SERVICE - FOOTER (ATTRIBUTION)]", footer);
 
     return {
-      header: json.acf.tracking_scripts_header ?? null,
-      body: json.acf.tracking_scripts_body ?? null,
+      header,
+      body,
+      footer,
     };
   } catch (error) {
     console.error("[fetchTrackingScripts] Error:", error);
     return {
       header: null,
       body: null,
+      footer: null,
     };
   }
 }
